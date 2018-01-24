@@ -13,10 +13,16 @@ page-home {
  }
 
  .verse-container {
-    background-color: rgba(255, 255, 255, 0.70);
+    background-color: rgba(255, 255, 255, 0.80);
+    font-size: 16px;
     border-radius: 3px;
     width: 80%;
     margin: auto;
     padding: 30px 20px;
+    .verse-title {
+        float: right;
+        font-style: oblique;
+        font-weight: bold;
+    }
  }
 }

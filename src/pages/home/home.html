@@ -12,7 +12,12 @@
 <ion-content>
   <div class='container'>
     <div class='verse-container'>
-      {{verse?.bookName}} - {{verse?.chapter}} : {{verse?.verse}}
+      <div>
+        "{{verse?.text}}"
+      </div>
+      <span class="verse-title">
+        {{verse?.bookName}} - {{verse?.chapter}} : {{verse?.verse}}
+      </span>
     </div>
   </div>
 </ion-content>

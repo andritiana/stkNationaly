@@ -4,23 +4,33 @@ page-home {
      background-size: cover;
  }
 
- .container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
- }
-
  .verse-container {
-    background-color: rgba(255, 255, 255, 0.80);
+    background-color: rgba(0, 0, 0, 0.35);
     font-size: 16px;
-    border-radius: 3px;
-    width: 80%;
+    color: white;
+    width: 100%;
     margin: auto;
-    padding: 30px 20px;
+    padding: 2rem 20px;
+    text-align: center;
+    .logo-menu-container {
+        display: flex;
+        justify-content: space-between;
+    }
+    .logo-menu {
+        background-color: rgba(255, 255, 255, 0.85);
+        width: 50px;
+        height: 50px;
+        border-radius: 25px;
+        margin: 0 5px;
+        color: black;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .verse-container-title {
+        margin-top: 2rem;
+    }
     .verse-title {
-        float: right;
         font-style: oblique;
         font-weight: bold;
     }

@@ -8,11 +8,13 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { VerseService } from '../services/verse/verse.service';
+import { AgendaPage } from '../pages/agenda/agenda';
 
 @NgModule({
   declarations: [
     MyApp,
-    HomePage
+    HomePage,
+    AgendaPage
   ],
   imports: [
     BrowserModule,
@@ -23,7 +25,8 @@ import { VerseService } from '../services/verse/verse.service';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
+    HomePage,
+    AgendaPage
   ],
   providers: [
     StatusBar,

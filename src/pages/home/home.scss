@@ -1,38 +1,44 @@
 page-home {
- ion-content {
-     background: url("https://source.unsplash.com/collection/1045802");
-     background-size: cover;
- }
-
- .verse-container {
-    background-color: rgba(0, 0, 0, 0.35);
-    font-size: 16px;
-    color: white;
-    width: 100%;
-    margin: auto;
-    padding: 2rem 20px;
-    text-align: center;
-    .logo-menu-container {
+ 
+    .toolbar-content {
         display: flex;
-        justify-content: space-between;
-    }
-    .logo-menu {
-        background-color: rgba(255, 255, 255, 0.85);
-        width: 50px;
-        height: 50px;
-        border-radius: 25px;
-        margin: 0 5px;
-        color: black;
-        display: flex;
-        align-items: center;
         justify-content: center;
     }
-    .verse-container-title {
-        margin-top: 2rem;
+
+    ion-content {
+        background: url("https://source.unsplash.com/collection/1045802");
+        background-size: cover;
     }
-    .verse-title {
-        font-style: oblique;
-        font-weight: bold;
+
+    .verse-container {
+        background-color: rgba(0, 0, 0, 0.35);
+        font-size: 16px;
+        color: white;
+        width: 100%;
+        margin: auto;
+        padding: 2rem 20px;
+        text-align: center;
+        .logo-menu-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .logo-menu {
+            background-color: rgba(255, 255, 255, 0.85);
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            margin: 0 5px;
+            color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .verse-container-title {
+            margin-top: 2rem;
+        }
+        .verse-title {
+            font-style: oblique;
+            font-weight: bold;
+        }
     }
- }
 }

@@ -8,11 +8,21 @@
 <ion-content>
     <div class="verse-container">
       <div class="logo-menu-container">
-        <div class="logo-menu">H</div>
-        <div class="logo-menu">P</div>
-        <div class="logo-menu">L</div>
-        <div class="logo-menu">Z</div>
-        <div class="logo-menu" (click)="goToPage('agenda')">W</div>
+        <div class="logo-menu" (click)="goToPage('actus')">
+          <ion-icon name="logo-buffer"></ion-icon>
+        </div>
+        <div class="logo-menu" (click)="goToPage('presentation')">
+          <ion-icon name="information-circle"></ion-icon>
+        </div>
+        <div class="logo-menu" (click)="goToPage('spi')">
+          <ion-icon name="book"></ion-icon>
+        </div>
+        <div class="logo-menu" (click)="goToPage('stk-news')">
+          <ion-icon name="albums"></ion-icon>
+        </div>
+        <div class="logo-menu" (click)="goToPage('agenda')">
+          <ion-icon name="calendar"></ion-icon>
+        </div>
       </div>
       <h4 class="verse-container-title">Verset du jour</h4>
       <div>

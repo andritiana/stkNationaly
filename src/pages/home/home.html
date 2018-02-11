@@ -1,14 +1,35 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
+    <img src='../assets/imgs/logo_stk.png'/>
+    <img src='../assets/imgs/stk.jpeg'/>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+<ion-content>
+    <div class="verse-container">
+      <div class="logo-menu-container">
+        <div class="logo-menu" (click)="goToPage('actus')">
+          <ion-icon name="logo-buffer"></ion-icon>
+        </div>
+        <div class="logo-menu" (click)="goToPage('presentation')">
+          <ion-icon name="information-circle"></ion-icon>
+        </div>
+        <div class="logo-menu" (click)="goToPage('spi')">
+          <ion-icon name="book"></ion-icon>
+        </div>
+        <div class="logo-menu" (click)="goToPage('stk-news')">
+          <ion-icon name="albums"></ion-icon>
+        </div>
+        <div class="logo-menu" (click)="goToPage('agenda')">
+          <ion-icon name="calendar"></ion-icon>
+        </div>
+      </div>
+      <h4 class="verse-container-title">Verset du jour</h4>
+      <div>
+        "{{verse?.text}}"
+      </div>
+      <span class="verse-title">
+        {{verse?.bookName}} - {{verse?.chapter}} : {{verse?.verse}}
+      </span>
+    </div>
 </ion-content>

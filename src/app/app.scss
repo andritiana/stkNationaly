@@ -17,15 +17,11 @@
 
 ion-header {
     background-color: white;
-    height: 50px;
-    padding: 5px 0;
-    display: flex;
-    justify-content: center;
     img {
         height: 40px;
+        margin: 0 10px;
     }
-}
-
-.scroll-content {
-    padding-top: 50px;
+    .toolbar-background {
+        background-color: white
+    }
 }

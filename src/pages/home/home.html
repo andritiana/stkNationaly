@@ -6,30 +6,34 @@
 </ion-header>
 
 <ion-content>
-    <div class="verse-container">
-      <div class="logo-menu-container">
-        <div class="logo-menu" (click)="goToPage('actus')">
-          <ion-icon name="logo-buffer"></ion-icon>
-        </div>
-        <div class="logo-menu" (click)="goToPage('presentation')">
-          <ion-icon name="information-circle"></ion-icon>
-        </div>
-        <div class="logo-menu" (click)="goToPage('spi')">
-          <ion-icon name="book"></ion-icon>
-        </div>
-        <div class="logo-menu" (click)="goToPage('stk-news')">
-          <ion-icon name="albums"></ion-icon>
-        </div>
-        <div class="logo-menu" (click)="goToPage('agenda')">
-          <ion-icon name="calendar"></ion-icon>
-        </div>
-      </div>
-      <h4 class="verse-container-title">Verset du jour</h4>
-      <div>
-        "{{verse?.text}}"
-      </div>
-      <span class="verse-title">
-        {{verse?.bookName}} - {{verse?.chapter}} : {{verse?.verse}}
-      </span>
+  <div class="logo-menu-container row">
+    <div class="logo-menu col" (click)="goToPage('actus')">
+      <img src='../assets/imgs/actu.svg'/>
+      <span>Actualités</span>
     </div>
+    <div class="logo-menu col" (click)="goToPage('presentation')">
+      <img src='../assets/imgs/presentation.svg'/>
+      <span>Présentation</span>
+    </div>
+    <div class="logo-menu col" (click)="goToPage('spi')">
+      <img src='../assets/imgs/spi.svg'/>
+      <span>Spi</span>
+    </div>
+    <div class="logo-menu col" (click)="goToPage('stk-news')">
+      <img src='../assets/imgs/stk-news.svg'/>
+      <span>STK News</span>
+    </div>
+    <div class="logo-menu col" (click)="goToPage('agenda')">
+      <img src='../assets/imgs/agenda.svg'/>
+      <span>Agenda</span>
+    </div>
+  </div>
+  <div class="verse-container">
+    <span>
+      "{{verse?.text}}"
+    </span>
+    <span class="verse-title">
+      {{verse?.bookName}} - {{verse?.chapter}} : {{verse?.verse}}
+    </span>
+  </div>
 </ion-content>

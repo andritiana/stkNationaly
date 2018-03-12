@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController } from 'ionic-angular';
 import { VerseService } from '../../services/verse/verse.service';
 import { Verse } from '../../models/verse.interface';
 import { AgendaPage } from '../agenda/agenda';
+import { NavController } from 'ionic-angular';
 
 @Component({
   selector: 'page-home',
@@ -11,7 +11,9 @@ import { AgendaPage } from '../agenda/agenda';
 export class HomePage implements OnInit {
   verse: Verse;
 
-  constructor(public navCtrl: NavController, private verseService: VerseService) {
+  constructor(
+    private verseService: VerseService, 
+    private navController: NavController) {
   }
     
   ngOnInit(): void {
@@ -19,15 +21,13 @@ export class HomePage implements OnInit {
       this.verse = verse;
     });
   }
-
   goToPage(page: string): void {
     switch (page) {
       case 'agenda':
-        this.navCtrl.push(AgendaPage);
+        this.navController.push(AgendaPage);
         break;
       default :
         break;
     }
   }
-
 }

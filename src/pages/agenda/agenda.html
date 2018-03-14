@@ -1,40 +1,21 @@
 <ion-header>
-    <ion-navbar>
-        <img src='../assets/imgs/logo_stk.png'/>
-        <img src='../assets/imgs/stk.jpeg'/>
-      </ion-navbar>
+  <ion-navbar>
+    <img src='../assets/imgs/logo_stk.png'/>
+    <img src='../assets/imgs/stk.jpeg'/>
+    </ion-navbar>
 </ion-header>
   
 <ion-content>
-    <div class="agenda-container">
-        <div class="logo-menu-container">
-          <div class="logo-menu" (click)="goToPage('actus')">
-            <ion-icon name="logo-buffer"></ion-icon>
-          </div>
-          <div class="logo-menu" (click)="goToPage('presentation')">
-            <ion-icon name="information-circle"></ion-icon>
-          </div>
-          <div class="logo-menu" (click)="goToPage('spi')">
-            <ion-icon name="book"></ion-icon>
-          </div>
-          <div class="logo-menu" (click)="goToPage('stk-news')">
-            <ion-icon name="albums"></ion-icon>
-          </div>
-          <div class="logo-menu" (click)="goToPage('agenda')">
-            <ion-icon name="calendar"></ion-icon>
-          </div>
-        </div>
+  <h4 class="agenda-container-title">Evenements</h4>
+  <ion-row>
+    <ion-col>
+      <div *ngFor="let item of data">
+        <ion-item>
+          <h2>{{item.title}}</h2>
+          <span><b>Debut :</b>{{item.startdate}}</span><br>
+          <span><b>Fin :</b>{{item.enddate}}</span>
+        </ion-item>
       </div>
-        <h4 class="agenda-container-title">Evenements</h4>
-        <ion-row>
-          <ion-col>
-            <div *ngFor="let item of data">
-              <ion-item>
-                <h2>{{item.title}}</h2>
-                <span><b>Debut :</b>{{item.startdate}}</span><br>
-                <span><b>Fin :</b>{{item.enddate}}</span>
-              </ion-item>
-            </div>
-          </ion-col>
-        </ion-row>
+    </ion-col>
+  </ion-row>
 </ion-content>

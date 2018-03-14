@@ -33,25 +33,23 @@ ion-header {
     }
 }
 
-.logo-menu-container {
-    display: flex;
-    justify-content: space-between;
-    height: 9vh;
-    .logo-menu {
-        background-color: #19338F;
-        font-size: 11px;
-        margin: 0 5px;
-        color: white;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        margin: 0;
-        img {
-            width: 2.5rem;
-            height: 2.5rem;
-            margin-bottom: 1rem;
-        }
-    }
-    
+.ion-ios-actuality-outline,
+.ion-ios-actuality,.ion-md-actuality,.ion-md-actuality-outline {
+  content: url('../assets/imgs/actu.svg');
+}
+.ion-ios-presentation-outline,
+.ion-ios-presentation,.ion-md-presentation,.ion-md-presentation-outline {
+  content: url('../assets/imgs/presentation.svg');
+}
+.ion-ios-spi-outline,
+.ion-ios-spi,.ion-md-spi,.ion-md-spi-outline {
+  content: url('../assets/imgs/spi.svg');
+}
+.ion-ios-stk-news-outline,
+.ion-ios-stk-news,.ion-md-stk-news,.ion-md-stk-news-outline {
+  content: url('../assets/imgs/stk-news.svg');
+}
+.ion-ios-custom-agenda-outline,
+.ion-ios-custom-agenda,.ion-md-custom-agenda,.ion-md-custom-agenda-outline {
+  content: url('../assets/imgs/agenda.svg');
 }

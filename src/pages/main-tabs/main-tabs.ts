@@ -22,7 +22,8 @@ export class MainTabsPage implements OnInit {
 
   @ViewChild('mainTabs') tabRef: Tabs;
 
-  tab1Root: any;
+  tabHomeRoot = HomePage;
+  tab1Root = ActualityPage;
   tab2Root = PresentationPage;
   tab3Root = SpiPage;
   tab4Root = StkNewsPage;
@@ -32,10 +33,6 @@ export class MainTabsPage implements OnInit {
   }
 
   ngOnInit(): void {
-    this.tab1Root = HomePage;
   }
 
-  changeTab1(): void {
-    this.tab1Root = ActualityPage;
-  }
 }

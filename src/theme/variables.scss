@@ -41,14 +41,17 @@ $colors: (
   dark:       #222
 );
 
-$tabs-background: #19338F;
+$color-blue-primary: #19338F;
+$color-blue-secondary: #264EDB;
+
+$tabs-background: $color-blue-primary;
 
 .tabs-md .tab-button-icon {
   height: 30px;
 }
 
 .tab-button[aria-selected=true] {
-  background-color: #264EDB;
+  background-color: $color-blue-secondary ;
 }
 
 

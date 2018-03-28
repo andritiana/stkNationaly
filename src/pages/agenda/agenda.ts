@@ -11,11 +11,14 @@ import 'rxjs/add/operator/map';
 export class AgendaPage {
   url:string;
   data:any[];
+
   constructor(public http: Http, public navCtrl: NavController) { 
   }
+
   ionViewDidLoad(){
     this.loadAgenda();
   }
+
   loadAgenda(){
     this.http.get('http://localhost:8888/STKNational/website-stk-national/api/events')
       .map(res => res.json())
@@ -26,6 +29,10 @@ export class AgendaPage {
       },err => {
         console.log(err);
       });
+  }
+
+  goToHome() {
+    this.navCtrl.parent.select(0);
   }
 
   goToPage(page: string): void {

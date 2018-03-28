@@ -1,2 +1,7 @@
 page-main-tabs {
+  .tabbar {
+    a:first-child {
+      display: none;
+    }
+  }
 }

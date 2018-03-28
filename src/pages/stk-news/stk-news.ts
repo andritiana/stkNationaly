@@ -17,4 +17,8 @@ export class StkNewsPage {
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
+  goToHome() {
+    this.navCtrl.parent.select(0);
+  }
+
 }

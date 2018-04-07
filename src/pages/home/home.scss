@@ -5,8 +5,8 @@ page-home {
         background-image: url('../../../assets/imgs/img1-stk-2.jpg');
         background-size: cover;
         background-repeat: no-repeat;
-        font-size: 18px;
-        padding: 5px;
+        font-size: 16px;
+        padding: 10px;
         font-weight: bold;
         color: white;
         width: 100%;
@@ -19,7 +19,65 @@ page-home {
         .verse-title {
             font-style: oblique;
             font-weight: bold;
-            margin-top: 4rem;
+            margin-top: 4vh;
+        }
+    }
+    .home-container {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    .button-tag-container {
+        background-color: gainsboro;
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+        .horizontal-button {
+            display: flex;
+            align-items: center;
+            margin: 1vh 0;
+            width: 90%;
+            height: 12vh;
+            background-color: white;
+            margin-left: 5%;
+            border-top: 2px solid $color-blue-primary;
+            color: $color-blue-primary;
+            font-size: 16px;
+            font-weight: bold;
+            span {
+                padding-left: 1rem;
+            }
+            img {
+                fill: $color-blue-primary;
+                height: 4rem;
+                width: 4rem;
+                margin: 1rem;
+            }
+        }
+        .two-buttons {
+            display: flex;
+            .button-column {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                width: 40%;
+                margin: 1vh 5%;
+                height: 18vh;
+                background-color: white;
+                border-top: 2px solid $color-blue-secondary;
+                padding: 1rem;
+                .button-title {
+                    color: $color-blue-secondary;
+                    font-size: 16px;
+                    font-weight: bold;
+                    text-align: center;
+                }
+                .button-text {
+                    margin-top: 2vh;
+                    text-align: center;
+                    color: grey;
+                }
+            }
         }
     }
 }

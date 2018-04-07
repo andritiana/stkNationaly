@@ -6,12 +6,42 @@
 </ion-header>
 
 <ion-content>
-  <div class="verse-container">
-    <span>
-      "{{verse?.text}}"
-    </span>
-    <span class="verse-title">
-      {{verse?.bookName}} - {{verse?.chapter}} : {{verse?.verse}}
-    </span>
+  <div class="home-container" ion-fixed>
+    <div class="verse-container">
+      <span>
+        "{{verse?.text}}"
+      </span>
+      <span class="verse-title">
+        {{verse?.bookName}} - {{verse?.chapter}} : {{verse?.verse}}
+      </span>
+    </div>
+    <div class="button-tag-container">
+      <div class="horizontal-button">
+        <img src="../assets/imgs/presentation_blue.svg"/>
+        <span>Qu'est ce que la STK ?</span>
+      </div>
+      <div class="horizontal-button">
+        <img src="../assets/imgs/commissions_blue.svg"/>
+        <span>Présentation des commissions</span>
+      </div>
+      <div class="two-buttons">
+        <div class="button-column">
+          <span class="button-title">
+            Actualités STK
+          </span>
+          <span class="button-text">
+            Télécharger le péricope 2018
+          </span>
+        </div>
+        <div class="button-column">
+          <span class="button-title">
+            Partage Spi
+          </span>
+          <span class="button-text">
+            Goutez et voyez combien l'Eternel est bon
+          </span>
+        </div>
+      </div>
+    </div>
   </div>
 </ion-content>

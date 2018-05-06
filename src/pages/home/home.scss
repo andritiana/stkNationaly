@@ -1,49 +1,83 @@
 page-home {
- 
-    .toolbar-content {
-        display: flex;
-        justify-content: center;
-    }
-
-    ion-content {
-        background: url("https://source.unsplash.com/collection/1045802");
-        background-size: cover;
-    }
-
-    ion-icon {
-        color: rgba(24, 53, 140, 0.75);
-        font-size: 2em;
-    }
 
     .verse-container {
         background-color: rgba(0, 0, 0, 0.35);
+        background-image: url('../../../assets/imgs/img1-stk-2.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
         font-size: 16px;
+        padding: 10px;
+        font-weight: bold;
         color: white;
         width: 100%;
-        margin: auto;
-        padding: 2rem 20px;
         text-align: center;
-        .logo-menu-container {
-            display: flex;
-            justify-content: space-between;
-        }
-        .logo-menu {
-            background-color: rgba(255, 255, 255, 0.85);
-            width: 50px;
-            height: 50px;
-            border-radius: 25px;
-            margin: 0 5px;
-            color: black;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .verse-container-title {
-            margin-top: 2rem;
-        }
+        height: 30vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         .verse-title {
             font-style: oblique;
             font-weight: bold;
+            margin-top: 4vh;
+        }
+    }
+    .home-container {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    .button-tag-container {
+        background-color: gainsboro;
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+        .horizontal-button {
+            display: flex;
+            align-items: center;
+            margin: 1vh 0;
+            width: 90%;
+            height: 12vh;
+            background-color: white;
+            margin-left: 5%;
+            border-top: 2px solid $color-blue-primary;
+            color: $color-blue-primary;
+            font-size: 16px;
+            font-weight: bold;
+            span {
+                padding-left: 1rem;
+            }
+            img {
+                fill: $color-blue-primary;
+                height: 4rem;
+                width: 4rem;
+                margin: 1rem;
+            }
+        }
+        .two-buttons {
+            display: flex;
+            .button-column {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                width: 40%;
+                margin: 1vh 5%;
+                height: 18vh;
+                background-color: white;
+                border-top: 2px solid $color-blue-secondary;
+                padding: 1rem;
+                .button-title {
+                    color: $color-blue-secondary;
+                    font-size: 16px;
+                    font-weight: bold;
+                    text-align: center;
+                }
+                .button-text {
+                    margin-top: 2vh;
+                    text-align: center;
+                    color: grey;
+                }
+            }
         }
     }
 }

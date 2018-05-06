@@ -1,9 +1,26 @@
 <ion-header>
-    <ion-navbar>
-        <ion-title>AGENDA</ion-title>
-    </ion-navbar>
+
+  <ion-navbar>
+    <ion-title>Evènements</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="goToHome()">
+        <ion-icon class="homeMenu" name="home"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
 </ion-header>
   
 <ion-content>
-    IN AGENDA PAGE
+  <ion-row>
+    <ion-col>
+      <div *ngFor="let item of data">
+        <ion-item>
+          <h2>{{item.title}}</h2>
+          <span><b>Debut :</b>{{item.startdate}}</span><br>
+          <span><b>Fin :</b>{{item.enddate}}</span>
+        </ion-item>
+      </div>
+    </ion-col>
+  </ion-row>
 </ion-content>

@@ -4,29 +4,46 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
+import { HttpModule } from '@angular/http';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { VerseService } from '../services/verse/verse.service';
 import { AgendaPage } from '../pages/agenda/agenda';
+import { SpiPage } from '../pages/spi/spi';
+import { ActualityPage } from '../pages/actuality/actuality';
+import { StkNewsPage } from '../pages/stk-news/stk-news';
+import { MainTabsPage } from '../pages/main-tabs/main-tabs';
+import { PresentationPage } from '../pages/presentation/presentation';
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
-    AgendaPage
+    AgendaPage,
+    SpiPage,
+    ActualityPage,
+    StkNewsPage,
+    MainTabsPage,
+    PresentationPage
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     HttpClientJsonpModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    HttpModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
     HomePage,
-    AgendaPage
+    AgendaPage,
+    SpiPage,
+    ActualityPage,
+    StkNewsPage,
+    MainTabsPage,
+    PresentationPage
   ],
   providers: [
     StatusBar,

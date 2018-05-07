@@ -1,8 +1,8 @@
 import { Component } from "@angular/core";
 import { NavController } from 'ionic-angular';
 import 'rxjs/add/operator/map';
-import { FpmaApiService } from "../../services/fpma-api/fpma-api-service";
 import { AgendaEvent } from "../../models/agenda-event.interface";
+import { FpmaApiService } from "../../services/fpma-api/fpma-api.service";
 
 @Component({
     selector: 'agenda-page',

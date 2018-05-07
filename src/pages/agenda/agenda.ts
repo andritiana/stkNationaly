@@ -3,6 +3,7 @@ import { NavController } from 'ionic-angular';
 import 'rxjs/add/operator/map';
 import { AgendaEvent } from "../../models/agenda-event.interface";
 import { FpmaApiService } from "../../services/fpma-api/fpma-api.service";
+import { DateHelper } from "../../services/utils/date-helper.service";
 
 @Component({
     selector: 'agenda-page',
@@ -12,6 +13,7 @@ import { FpmaApiService } from "../../services/fpma-api/fpma-api.service";
 export class AgendaPage {
   url: string;
   events: AgendaEvent[];
+  DateHelper = DateHelper;
 
   constructor(public fpmaApiService: FpmaApiService, public navCtrl: NavController) { 
   }
@@ -30,15 +32,5 @@ export class AgendaPage {
 
   goToHome() {
     this.navCtrl.parent.select(0);
-  }
-
-  goToPage(page: string): void {
-    switch (page) {
-      case 'agenda':
-        this.navCtrl.push(AgendaPage);
-        break;
-      default :
-        break;
-    }
   }
 }

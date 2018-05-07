@@ -16,9 +16,27 @@
     <ion-col>
       <div *ngFor="let event of events">
         <ion-item>
-          <h2>{{event.title}}</h2>
-          <span><b>Debut :</b>{{event.startDate}}</span><br>
-          <span><b>Fin :</b>{{event.endDate}}</span>
+            <ion-grid>
+                <ion-row>
+                  <ion-col class="col-date" col-2>
+                    <div class="date">
+                      <span class="day">{{DateHelper.getDay(event.startDate)}}</span>
+                      <span class="month">{{DateHelper.getMonth(event.startDate)}}</span>
+                    </div>
+                  </ion-col>
+                  <ion-col col-10>
+                      <h2 class="title">{{event.title}}</h2>
+                      <span *ngIf="DateHelper.getDateFormat(event.startDate) === DateHelper.getDateFormat(event.endDate); else differentDates">
+                        {{DateHelper.getHours(event.startDate)}} - {{DateHelper.getHours(event.endDate)}}
+                      </span>
+                      <ng-template #differentDates>
+                        <span>
+                          {{DateHelper.getDateFormat(event.startDate)}} - {{DateHelper.getDateFormat(event.endDate)}}
+                        </span>
+                      </ng-template>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
         </ion-item>
       </div>
     </ion-col>

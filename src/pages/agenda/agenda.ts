@@ -1,7 +1,8 @@
 import { Component } from "@angular/core";
 import { NavController } from 'ionic-angular';
-import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
+import { FpmaApiService } from "../../services/fpma-api/fpma-api-service";
+import { AgendaEvent } from "../../models/agenda-event.interface";
 
 @Component({
     selector: 'agenda-page',
@@ -9,10 +10,10 @@ import 'rxjs/add/operator/map';
 })
 
 export class AgendaPage {
-  url:string;
-  data:any[];
+  url: string;
+  events: AgendaEvent[];
 
-  constructor(public http: Http, public navCtrl: NavController) { 
+  constructor(public fpmaApiService: FpmaApiService, public navCtrl: NavController) { 
   }
 
   ionViewDidLoad(){
@@ -20,12 +21,8 @@ export class AgendaPage {
   }
 
   loadAgenda(){
-    this.http.get('http://localhost:8888/STKNational/website-stk-national/api/events')
-      .map(res => res.json())
-      .subscribe(data => {
-        this.data = data.events.data;
-        console.log(data.results);
-    
+    this.fpmaApiService.loadAgenda().subscribe((events: AgendaEvent[]) => {
+        this.events = events;
       },err => {
         console.log(err);
       });

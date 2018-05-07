@@ -15,6 +15,7 @@ import { ActualityPage } from '../pages/actuality/actuality';
 import { StkNewsPage } from '../pages/stk-news/stk-news';
 import { MainTabsPage } from '../pages/main-tabs/main-tabs';
 import { PresentationPage } from '../pages/presentation/presentation';
+import { FpmaApiService } from '../services/fpma-api/fpma-api-service';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { PresentationPage } from '../pages/presentation/presentation';
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    VerseService
+    VerseService,
+    FpmaApiService
   ]
 })
 export class AppModule {}

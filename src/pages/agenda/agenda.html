@@ -14,11 +14,11 @@
 <ion-content>
   <ion-row>
     <ion-col>
-      <div *ngFor="let item of data">
+      <div *ngFor="let event of events">
         <ion-item>
-          <h2>{{item.title}}</h2>
-          <span><b>Debut :</b>{{item.startdate}}</span><br>
-          <span><b>Fin :</b>{{item.enddate}}</span>
+          <h2>{{event.title}}</h2>
+          <span><b>Debut :</b>{{event.startDate}}</span><br>
+          <span><b>Fin :</b>{{event.endDate}}</span>
         </ion-item>
       </div>
     </ion-col>

@@ -1,6 +1,6 @@
 {
   "name": "stkNationaly",
-  "app_id": "",
+  "app_id": "stk.nationaly",
   "type": "ionic-angular",
   "integrations": {
     "cordova": {}

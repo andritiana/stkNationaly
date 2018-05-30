@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
 import { AgendaEvent } from "../../models/agenda-event.interface";
+import { DateHelper } from "../utils/date-helper.service";
 
 @Injectable()
 export class FpmaApiService {
@@ -23,8 +24,8 @@ export class FpmaApiService {
         events.push({ 
           id: event.id, 
           title: event.title, 
-          startDate: new Date(event.startdate), 
-          endDate: new Date(event.enddate)
+          startDate: DateHelper.getDate(event.startdate), 
+          endDate: DateHelper.getDate(event.enddate)
         })
       })
     }

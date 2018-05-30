@@ -19,20 +19,23 @@
             <ion-grid>
                 <ion-row>
                   <ion-col class="col-date" col-2>
-                    <div class="date">
+                    <div *ngIf="isDateValid(event.startDate)" class="date">
                       <span class="day">{{DateHelper.getDay(event.startDate)}}</span>
                       <span class="month">{{DateHelper.getMonth(event.startDate)}}</span>
                     </div>
                   </ion-col>
                   <ion-col col-10>
                       <h2 class="title">{{event.title}}</h2>
-                      <span *ngIf="DateHelper.getDateFormat(event.startDate) === DateHelper.getDateFormat(event.endDate); else differentDates">
-                        {{DateHelper.getHours(event.startDate)}} - {{DateHelper.getHours(event.endDate)}}
-                      </span>
-                      <ng-template #differentDates>
-                        <span>
-                          {{DateHelper.getDateFormat(event.startDate)}} - {{DateHelper.getDateFormat(event.endDate)}}
-                        </span>
+                      <span *ngIf="!isDateValid(event.startDate); else displayDate">No date</span>
+                      <ng-template #displayDate>
+                        <span *ngIf="DateHelper.getDateFormat(event.startDate) === DateHelper.getDateFormat(event.endDate); else differentDates">
+                            {{DateHelper.getHours(event.startDate)}} - {{DateHelper.getHours(event.endDate)}}
+                          </span>
+                          <ng-template #differentDates>
+                            <span *ngIf="isDateValid(event.startDate)">
+                              {{DateHelper.getDateFormat(event.startDate)}} - {{DateHelper.getDateFormat(event.endDate)}}
+                            </span>
+                          </ng-template>
                       </ng-template>
                   </ion-col>
                 </ion-row>

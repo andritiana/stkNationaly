@@ -25,4 +25,8 @@ export class DateHelper {
   static getHours(date: Date) {
     return moment(date).format('HH:mm');
   }
+
+  static getDate(string: string): Date {
+    return moment(string).toDate();
+  }
 }

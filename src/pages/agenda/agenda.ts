@@ -30,6 +30,14 @@ export class AgendaPage {
       });
   }
 
+  isDateValid(date: Date) {
+    if (date.toString() !== 'Invalid Date') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   goToHome() {
     this.navCtrl.parent.select(0);
   }

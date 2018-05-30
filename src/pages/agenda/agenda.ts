@@ -1,7 +1,9 @@
 import { Component } from "@angular/core";
 import { NavController } from 'ionic-angular';
-import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
+import { AgendaEvent } from "../../models/agenda-event.interface";
+import { FpmaApiService } from "../../services/fpma-api/fpma-api.service";
+import { DateHelper } from "../../services/utils/date-helper.service";
 
 @Component({
     selector: 'agenda-page',
@@ -9,10 +11,11 @@ import 'rxjs/add/operator/map';
 })
 
 export class AgendaPage {
-  url:string;
-  data:any[];
+  url: string;
+  events: AgendaEvent[];
+  DateHelper = DateHelper;
 
-  constructor(public http: Http, public navCtrl: NavController) { 
+  constructor(public fpmaApiService: FpmaApiService, public navCtrl: NavController) { 
   }
 
   ionViewDidLoad(){
@@ -20,28 +23,22 @@ export class AgendaPage {
   }
 
   loadAgenda(){
-    this.http.get('http://localhost:8888/STKNational/website-stk-national/api/events')
-      .map(res => res.json())
-      .subscribe(data => {
-        this.data = data.events.data;
-        console.log(data.results);
-    
+    this.fpmaApiService.loadAgenda().subscribe((events: AgendaEvent[]) => {
+        this.events = events;
       },err => {
         console.log(err);
       });
   }
 
-  goToHome() {
-    this.navCtrl.parent.select(0);
+  isDateValid(date: Date) {
+    if (date.toString() !== 'Invalid Date') {
+      return true;
+    } else {
+      return false;
+    }
   }
 
-  goToPage(page: string): void {
-    switch (page) {
-      case 'agenda':
-        this.navCtrl.push(AgendaPage);
-        break;
-      default :
-        break;
-    }
+  goToHome() {
+    this.navCtrl.parent.select(0);
   }
 }

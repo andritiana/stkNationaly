@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
 import { AgendaEvent } from "../../models/agenda-event.interface";
 import { DateHelper } from "../utils/date-helper.service";
+import { ArticleSpi } from "../../models/article-spi.interface";
 
 @Injectable()
 export class FpmaApiService {
@@ -17,7 +18,7 @@ export class FpmaApiService {
       .map((res: any) => this.parseEvent(res))
   }
 
-  parseEvent(elem: any): AgendaEvent[] {
+  private parseEvent(elem: any): AgendaEvent[] {
     const events: AgendaEvent[] = [];
     if (elem && elem.events && elem.events.data && elem.events.data.length > 0) {
       elem.events.data.forEach(event => {
@@ -30,5 +31,10 @@ export class FpmaApiService {
       })
     }
     return events;
+  }
+
+  loadPartageSpi(): Observable<ArticleSpi> {
+    return this.http.get('http://stk.fpma.net/api/events')
+      .map((res:any) => )
   }
 }

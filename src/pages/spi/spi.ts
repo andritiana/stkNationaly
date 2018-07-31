@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController } from 'ionic-angular';
+import { FpmaApiService } from '../../services/fpma-api/fpma-api.service';
+import { DateHelper } from '../../services/utils/date-helper';
+import { ArticleSpi } from '../../models/article-spi.interface';
 
 /**
  * Generated class for the SpiPage page.
@@ -14,10 +17,27 @@ import { NavController, NavParams } from 'ionic-angular';
 })
 export class SpiPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  public partages: ArticleSpi[];
+  public DateHelper = DateHelper;
+
+  constructor(
+    public navCtrl: NavController,
+    private fpmaApiService: FpmaApiService) {
   }
 
-  goToHome() {
+  ionViewDidLoad(){
+    this.loadPartages();
+  }
+
+  loadPartages(){
+    this.fpmaApiService.loadPartageSpi().subscribe((partages: ArticleSpi[]) => {
+        this.partages = partages;
+      },err => {
+        console.log(err);
+      });
+  }
+
+  public goToHome() {
     this.navCtrl.parent.select(0);
   }
 

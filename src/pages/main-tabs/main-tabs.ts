@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { NavController, NavParams, Tabs } from 'ionic-angular';
+import { Component, OnInit } from '@angular/core';
 import { HomePage } from '../home/home';
 import { PresentationPage } from '../presentation/presentation';
 import { SpiPage } from '../spi/spi';
@@ -19,9 +18,6 @@ import { ActualityPage } from '../actuality/actuality';
   templateUrl: 'main-tabs.html',
 })
 export class MainTabsPage implements OnInit {
-
-  @ViewChild('mainTabs') tabRef: Tabs;
-
   tabHomeRoot = HomePage;
   tab1Root = ActualityPage;
   tab2Root = PresentationPage;
@@ -29,7 +25,7 @@ export class MainTabsPage implements OnInit {
   tab4Root = StkNewsPage;
   tab5Root = AgendaPage;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor() {
   }
 
   ngOnInit(): void {

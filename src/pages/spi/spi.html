@@ -20,7 +20,7 @@
 
 <ion-content class="card-background-page">
 
-  <ion-card *ngFor="let partage of partages">
+  <ion-card *ngFor="let partage of partages" (click)="goToDetails(partage)">
     <img [src]="partage.thumbnail[0]"/>
     <div class='card-content'>
       <div class='title'>

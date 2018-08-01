@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, App } from 'ionic-angular';
 import { FpmaApiService } from '../../services/fpma-api/fpma-api.service';
 import { DateHelper } from '../../services/utils/date-helper';
 import { ArticleSpi } from '../../models/article-spi.interface';
+import { SpiDetailPage } from './spi-detail/spi-detail';
 
 /**
  * Generated class for the SpiPage page.
@@ -22,6 +23,7 @@ export class SpiPage {
 
   constructor(
     public navCtrl: NavController,
+    private app:  App,
     private fpmaApiService: FpmaApiService) {
   }
 
@@ -39,6 +41,10 @@ export class SpiPage {
 
   public goToHome() {
     this.navCtrl.parent.select(0);
+  }
+
+  public goToDetails(partage: ArticleSpi) {
+    this.app.getActiveNav().push(SpiDetailPage, {article: partage});
   }
 
 }

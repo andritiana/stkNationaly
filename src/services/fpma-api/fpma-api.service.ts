@@ -52,7 +52,7 @@ export class FpmaApiService {
       elem.partages.data.forEach(partage => {
         partages.push({
           id: partage.id,
-          creationDate: new Date(partage.created),
+          creationDate: DateHelper.getDate(partage.created),
           title: partage.title,
           text: partage.rawtext,// for now full text of partage are sent in introtext
           thumbnail: this.parseThumbnailUrls(partage.thumbails) 

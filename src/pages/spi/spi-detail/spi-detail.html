@@ -1,0 +1,25 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>{{articleSpi.title}}</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="goToHome()">
+        <ion-icon class="homeMenu" name="home"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+
+  <img [src]="articleSpi.thumbnail[0]"/>
+  <div class='article-content'>
+    <h1>{{articleSpi.title}}</h1>
+    <h5>{{DateHelper.getDateFormat(articleSpi.creationDate)}}</h5>
+    <p>{{articleSpi.text}}</p>
+  </div>
+  <img *ngIf='articleSpi.thumbnail[1]' [src]="articleSpi.thumbnail[1]"/>
+
+</ion-content>

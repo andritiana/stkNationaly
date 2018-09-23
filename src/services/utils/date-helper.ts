@@ -19,7 +19,7 @@ export class DateHelper {
   }
   
   static getDateWrittenFr(date: Date): string {
-    return moment(date).format('dd MMMM YYYY');
+    return moment(date).locale('fr').format('DD MMMM YYYY');
   }
 
   static getHours(date: Date) {

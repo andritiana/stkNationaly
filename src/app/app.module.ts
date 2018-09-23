@@ -16,6 +16,7 @@ import { StkNewsPage } from '../pages/stk-news/stk-news';
 import { MainTabsPage } from '../pages/main-tabs/main-tabs';
 import { PresentationPage } from '../pages/presentation/presentation';
 import { FpmaApiService } from '../services/fpma-api/fpma-api.service';
+import { SpiDetailPage } from '../pages/spi/spi-detail/spi-detail';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { FpmaApiService } from '../services/fpma-api/fpma-api.service';
     ActualityPage,
     StkNewsPage,
     MainTabsPage,
-    PresentationPage
+    PresentationPage,
+    SpiDetailPage
   ],
   imports: [
     BrowserModule,
@@ -44,7 +46,8 @@ import { FpmaApiService } from '../services/fpma-api/fpma-api.service';
     ActualityPage,
     StkNewsPage,
     MainTabsPage,
-    PresentationPage
+    PresentationPage,
+    SpiDetailPage
   ],
   providers: [
     StatusBar,

@@ -18,6 +18,16 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content class="card-background-page">
+
+  <ion-card *ngFor="let partage of partages" (click)="goToDetails(partage)">
+    <img [src]="partage.thumbnail[0]"/>
+    <div class='card-content'>
+      <div class='title'>
+          <div class="card-title">{{partage.title}}</div>
+          <div class="card-subtitle">{{DateHelper.getDateWrittenFr(partage.creationDate)}}</div>
+      </div>
+    </div>
+  </ion-card>
 
 </ion-content>

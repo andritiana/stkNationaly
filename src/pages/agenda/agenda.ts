@@ -3,7 +3,7 @@ import { NavController } from 'ionic-angular';
 import 'rxjs/add/operator/map';
 import { AgendaEvent } from "../../models/agenda-event.interface";
 import { FpmaApiService } from "../../services/fpma-api/fpma-api.service";
-import { DateHelper } from "../../services/utils/date-helper.service";
+import { DateHelper } from "../../services/utils/date-helper";
 
 @Component({
     selector: 'agenda-page',

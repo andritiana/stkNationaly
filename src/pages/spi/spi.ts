@@ -20,6 +20,7 @@ export class SpiPage {
 
   public partages: ArticleSpi[];
   public DateHelper = DateHelper;
+  public loading = true;
 
   constructor(
     public navCtrl: NavController,
@@ -32,10 +33,12 @@ export class SpiPage {
   }
 
   loadPartages(){
+    this.loading = true;
     this.fpmaApiService.loadPartageSpi().subscribe((partages: ArticleSpi[]) => {
         this.partages = partages;
-      },err => {
-        console.log(err);
+        this.loading = false;
+      },() => {
+        this.loading = false;
       });
   }
 

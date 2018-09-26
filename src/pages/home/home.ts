@@ -19,6 +19,8 @@ export class HomePage implements OnInit {
   ngOnInit(): void {
     this.verseService.getVerseOfTheDay().subscribe((verse: Verse) => {
       this.verse = verse;
+    }, () => {
+      this.verse = { bookName: '1 Corinthiens', chapter: 11, verse: 1, text: 'Soyez mes imitateurs, comme je le suis moi-même de Christ.' }
     });
   }
   goToPage(page: string): void {

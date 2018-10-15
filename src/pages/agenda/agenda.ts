@@ -11,9 +11,10 @@ import { DateHelper } from "../../services/utils/date-helper";
 })
 
 export class AgendaPage {
-  url: string;
-  events: AgendaEvent[];
-  DateHelper = DateHelper;
+  public url: string;
+  public events: AgendaEvent[];
+  public DateHelper = DateHelper;
+  public loading = true;
 
   constructor(public fpmaApiService: FpmaApiService, public navCtrl: NavController) { 
   }
@@ -23,9 +24,12 @@ export class AgendaPage {
   }
 
   loadAgenda(){
+    this.loading = true;
     this.fpmaApiService.loadAgenda().subscribe((events: AgendaEvent[]) => {
         this.events = events;
+        this.loading = false;
       },err => {
+        this.loading = false;
         console.log(err);
       });
   }

@@ -8,12 +8,15 @@
 <ion-content>
   <div class="home-container" ion-fixed>
     <div class="verse-container">
-      <span>
-        "{{verse?.text}}"
-      </span>
-      <span class="verse-title">
-        {{verse?.bookName}} - {{verse?.chapter}} : {{verse?.verse}}
-      </span>
+      <ion-spinner *ngIf="loading; else verseText" name="dots"></ion-spinner>
+      <ng-template #verseText>
+        <span>
+          "{{verse?.text}}"
+        </span>
+        <span class="verse-title">
+          {{verse?.bookName}} - {{verse?.chapter}} : {{verse?.verse}}
+        </span>
+      </ng-template>
     </div>
     <div class="button-tag-container">
       <div class="horizontal-button">

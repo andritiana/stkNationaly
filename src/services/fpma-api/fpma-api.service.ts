@@ -21,6 +21,9 @@ export class FpmaApiService {
   loadAgenda(): Observable<AgendaEvent[]> {
     return this.http.get(`${this.FPMA_DOMAIN}api/events`)
       .map((res: any) => this.parseEvent(res))
+      .catch((e: any) => {
+        return Observable.throw(e);
+    })
   }
 
   /**
@@ -29,6 +32,9 @@ export class FpmaApiService {
   loadPartageSpi(): Observable<ArticleSpi[]> {
     return this.http.get(`${this.FPMA_DOMAIN}api/partages`)
       .map((res:any) => this.parsePartage(res))
+      .catch((e: any) => {
+        return Observable.throw(e);
+    })
   }
 
   private parseEvent(elem: any): AgendaEvent[] {

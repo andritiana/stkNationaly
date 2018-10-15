@@ -10,6 +10,7 @@ import { NavController } from 'ionic-angular';
 })
 export class HomePage implements OnInit {
   verse: Verse;
+  loading = true;
 
   constructor(
     private verseService: VerseService, 
@@ -17,10 +18,13 @@ export class HomePage implements OnInit {
   }
     
   ngOnInit(): void {
+    this.loading = true;
     this.verseService.getVerseOfTheDay().subscribe((verse: Verse) => {
       this.verse = verse;
+      this.loading = false;
     }, () => {
       this.verse = { bookName: '1 Corinthiens', chapter: 11, verse: 1, text: 'Soyez mes imitateurs, comme je le suis moi-même de Christ.' }
+      this.loading = false;  
     });
   }
   goToPage(page: string): void {

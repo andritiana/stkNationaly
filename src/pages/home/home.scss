@@ -1,5 +1,10 @@
 page-home {
 
+    ion-spinner {
+        svg, svg circle {
+            fill: white!important;
+        }
+    }
     .verse-container {
         background-color: rgba(0, 0, 0, 0.35);
         background-image: url('../assets/imgs/img1-stk-2.jpg');

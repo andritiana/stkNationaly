@@ -9,8 +9,8 @@ import { NavController } from 'ionic-angular';
   templateUrl: 'home.html'
 })
 export class HomePage implements OnInit {
-  verse: Verse;
-  loading = true;
+  public verse: Verse;
+  public loading = true;
 
   constructor(
     private verseService: VerseService, 

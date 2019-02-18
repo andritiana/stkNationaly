@@ -34,22 +34,25 @@ page-home {
         flex-direction: column;
     }
     .button-tag-container {
-        background-color: gainsboro;
+        background-color: $color-light-grey;
         display: flex;
         flex-direction: column;
         flex: 1 1 auto;
+        justify-content: space-around;
         .horizontal-button {
+            border-radius: 3rem;
             display: flex;
             align-items: center;
             margin: 1vh 0;
+            padding: 2rem;
             width: 90%;
-            height: 12vh;
+            height: 9vh;
             background-color: white;
             margin-left: 5%;
-            border-top: 2px solid $color-blue-primary;
             color: $color-blue-primary;
             font-size: 16px;
             font-weight: bold;
+            box-shadow: 0px 5px 5px 0px #656565;
             span {
                 padding-left: 1rem;
             }
@@ -57,7 +60,6 @@ page-home {
                 fill: $color-blue-primary;
                 height: 4rem;
                 width: 4rem;
-                margin: 1rem;
             }
         }
         .two-buttons {
@@ -69,11 +71,11 @@ page-home {
                 width: 40%;
                 margin: 1vh 5%;
                 height: 18vh;
-                background-color: white;
-                border-top: 2px solid $color-blue-secondary;
+                background-color: $color-blue-secondary;
+                border-radius: 3rem;
                 padding: 1rem;
+                color: white;
                 .button-title {
-                    color: $color-blue-secondary;
                     font-size: 16px;
                     font-weight: bold;
                     text-align: center;
@@ -81,7 +83,6 @@ page-home {
                 .button-text {
                     margin-top: 2vh;
                     text-align: center;
-                    color: grey;
                 }
             }
         }

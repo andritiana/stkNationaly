@@ -24,12 +24,17 @@
 
   <ng-template #list>
     <ng-container *ngIf="partages && partages.length; else noPartage">
-      <ion-card *ngFor="let partage of partages" (click)="goToDetails(partage)">
-        <img [src]="partage.thumbnail[0]"/>
+      <ion-card class="card-spi" *ngFor="let partage of partages" (click)="goToDetails(partage)">
+        <div class="card-image-spi">
+            <img [src]="partage.thumbnail[0]"/>
+        </div>
         <div class='card-content'>
           <div class='title'>
               <div class="card-title">{{partage.title}}</div>
               <div class="card-subtitle">{{DateHelper.getDateWrittenFr(partage.creationDate)}}</div>
+          </div>
+          <div class="play-icon">
+            <ion-icon name="play"></ion-icon>
           </div>
         </div>
       </ion-card>

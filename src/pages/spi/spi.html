@@ -24,7 +24,7 @@
 
   <ng-template #list>
     <ng-container *ngIf="partages && partages.length; else noPartage">
-      <ion-card class="card-spi" *ngFor="let partage of partages" (click)="goToDetails(partage)">
+      <ion-card class="card-spi" *ngFor="let partage of partages; let i = index" (click)="goToDetails(i)">
         <div class="card-image-spi">
             <img [src]="partage.thumbnail[0]"/>
         </div>

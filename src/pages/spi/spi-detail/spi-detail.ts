@@ -12,7 +12,8 @@ import { DateHelper } from '../../../services/utils/date-helper';
 
 export class SpiDetailPage implements OnInit {
 
-  public articleSpi: ArticleSpi;
+  public partages: ArticleSpi[];
+  public articleIndex: number;
   public DateHelper = DateHelper;
 
 
@@ -21,6 +22,7 @@ export class SpiDetailPage implements OnInit {
   ){}
 
   ngOnInit(): void {
-    this.articleSpi = this.navParams.get('article');
+    this.partages = this.navParams.get('articles');
+    this.articleIndex = this.navParams.get('index');
   }
 }

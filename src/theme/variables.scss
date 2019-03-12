@@ -41,19 +41,36 @@ $colors: (
   dark:       #222
 );
 
+$color-blue-primary: #19338F;
+$color-blue-secondary: #264EDB;
+$color-light-grey: rgb(238,238,238);
+
+$tabs-background: $color-blue-primary;
+
+.tabs-md .tab-button-icon {
+  height: 30px;
+}
+
+.tab-button[aria-selected=true] {
+  background-color: $color-blue-secondary ;
+}
+
 
 // App iOS Variables
 // --------------------------------------------------
 // iOS only Sass variables can go here
-
+$tabs-tab-color-active: #fff;
+$tabs-tab-color-inactive: #fff;
 
 
 
 // App Material Design Variables
 // --------------------------------------------------
 // Material Design only Sass variables can go here
-
-
+$tabs-md-tab-font-size: 1rem;
+$tabs-md-tab-text-color-active: #fff;
+$tabs-md-tab-color-inactive: #fff;
+$tabs-md-tab-font-size-active: 1.3rem;
 
 
 // App Windows Variables

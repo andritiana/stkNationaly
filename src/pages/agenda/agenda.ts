@@ -45,4 +45,8 @@ export class AgendaPage {
   goToHome() {
     this.navCtrl.parent.select(0);
   }
+
+  public refresh() {
+    this.loadAgenda();
+  }
 }

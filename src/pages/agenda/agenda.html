@@ -3,6 +3,11 @@
   <ion-navbar>
     <ion-title>Evènements</ion-title>
     <ion-buttons end>
+      <button ion-button icon-only (click)="refresh()">
+        <ion-icon class="refresh-button" name="refresh"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons end>
       <button ion-button icon-only (click)="goToHome()">
         <ion-icon class="homeMenu" name="home"></ion-icon>
       </button>

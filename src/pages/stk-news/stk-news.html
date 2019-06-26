@@ -25,11 +25,11 @@
 <ion-content padding>
   <ion-grid>
     <ion-row>
-      <ion-col *ngFor="let stkNews of listOfStkNews" col-6>
-        <div>
+      <ion-col class="stk-news-card" *ngFor="let stkNews of listOfStkNews" col-6>
+        <div class="news-img">
             <img [src]="stkNews.thumbnails[0]"/>
         </div>
-        <div>{{stkNews.title}}</div>
+        <div class="news-title">{{stkNews.title}}</div>
       </ion-col>
     </ion-row>
   </ion-grid>

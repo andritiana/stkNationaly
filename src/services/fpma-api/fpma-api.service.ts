@@ -97,7 +97,7 @@ export class FpmaApiService {
         news.push({
           id: Number(newElem.id),
           title: newElem.title,
-          thumbnails: newElem.thumbnails || [],
+          thumbnails: this.parseThumbnailUrls(newElem.thumbails),
           pdf: newElem.pdf
         })
       })

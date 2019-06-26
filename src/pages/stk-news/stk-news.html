@@ -26,7 +26,7 @@
   <ion-grid>
     <ion-row>
       <ion-col class="stk-news-grid" *ngFor="let stkNews of listOfStkNews" col-6>
-        <div class="stk-news-card">
+        <div class="stk-news-card" (click)="openPdf(stkNews.pdf)">
           <div class="news-img">
               <img [src]="stkNews.thumbnails[0]"/>
           </div>

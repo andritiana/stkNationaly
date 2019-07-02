@@ -23,10 +23,17 @@
 </ion-header>
 
 <ion-content padding>
+  <pdf-viewer 
+    [src]="pdfToDisplay"
+    [render-text]="true"
+    [original-size]="false"
+    [autoresize]="true"
+    style="display: block;">
+  </pdf-viewer>
   <ion-grid>
     <ion-row>
       <ion-col class="stk-news-grid" *ngFor="let stkNews of listOfStkNews" col-6>
-        <div class="stk-news-card" (click)="openPdf(stkNews.pdf)">
+        <div class="stk-news-card" (click)="openPdf(stkNews)">
           <div class="news-img">
               <img [src]="stkNews.thumbnails[0]"/>
           </div>

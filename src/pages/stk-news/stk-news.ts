@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { FpmaApiService } from '../../services/fpma-api/fpma-api.service';
 import { StkNews } from '../../models/stk-news.interface';
-import { DocumentViewer, DocumentViewerOptions } from '@ionic-native/document-viewer';
+import { PdfViewerComponent } from 'ng2-pdf-viewer';
 
 /**
  * Generated class for the StkNewsPage page.
@@ -14,17 +14,18 @@ import { DocumentViewer, DocumentViewerOptions } from '@ionic-native/document-vi
 @Component({
   selector: 'page-stk-news',
   templateUrl: 'stk-news.html',
+  providers: [PdfViewerComponent]
 })
 export class StkNewsPage {
 
   public listOfStkNews: StkNews[];
+  public pdfToDisplay: string | null = null;
 
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private fpmaApiService: FpmaApiService,
-    private document: DocumentViewer) {
+    private fpmaApiService: FpmaApiService) {
   }
 
   ionViewDidLoad() {
@@ -42,12 +43,9 @@ export class StkNewsPage {
     this.loadStkNews();
   }
 
-  public openPdf(urlPdf: string) {
-    const options: DocumentViewerOptions = {
-      title: 'My PDF'
-    }
-    
-    this.document.viewDocument(urlPdf, 'application/pdf', options);
+  public openPdf(stkNews: StkNews) {
+    this.pdfToDisplay = stkNews.pdf;
+    console.log(stkNews.pdf);
   }
 
   goToHome() {

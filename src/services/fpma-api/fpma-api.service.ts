@@ -98,7 +98,7 @@ export class FpmaApiService {
           id: Number(newElem.id),
           title: newElem.title,
           thumbnails: this.parseThumbnailUrls(newElem.thumbails),
-          pdf: newElem.pdf
+          pdf: newElem.files && newElem.files.length > 0 ? `${this.FPMA_DOMAIN}${newElem.files[0]}` : ''
         })
       })
     }

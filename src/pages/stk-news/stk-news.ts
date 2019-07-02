@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, App } from 'ionic-angular';
 import { FpmaApiService } from '../../services/fpma-api/fpma-api.service';
 import { StkNews } from '../../models/stk-news.interface';
-import { PdfViewerComponent } from 'ng2-pdf-viewer';
+import { StkNewsPdfPage } from './stk-new-pdf/stk-news-pdf';
 
 /**
  * Generated class for the StkNewsPage page.
@@ -13,8 +13,7 @@ import { PdfViewerComponent } from 'ng2-pdf-viewer';
 
 @Component({
   selector: 'page-stk-news',
-  templateUrl: 'stk-news.html',
-  providers: [PdfViewerComponent]
+  templateUrl: 'stk-news.html'
 })
 export class StkNewsPage {
 
@@ -24,6 +23,7 @@ export class StkNewsPage {
 
   constructor(
     public navCtrl: NavController,
+    private app:  App,
     public navParams: NavParams,
     private fpmaApiService: FpmaApiService) {
   }
@@ -45,7 +45,7 @@ export class StkNewsPage {
 
   public openPdf(stkNews: StkNews) {
     this.pdfToDisplay = stkNews.pdf;
-    console.log(stkNews.pdf);
+    this.app.getActiveNav().push(StkNewsPdfPage, {pdfUrl: stkNews.pdf, title: stkNews.title});
   }
 
   goToHome() {

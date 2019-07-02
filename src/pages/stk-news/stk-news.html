@@ -23,13 +23,6 @@
 </ion-header>
 
 <ion-content padding>
-  <pdf-viewer 
-    [src]="pdfToDisplay"
-    [render-text]="true"
-    [original-size]="false"
-    [autoresize]="true"
-    style="display: block;">
-  </pdf-viewer>
   <ion-grid>
     <ion-row>
       <ion-col class="stk-news-grid" *ngFor="let stkNews of listOfStkNews" col-6>

@@ -20,4 +20,25 @@
 
 <ion-content padding>
 
+    <ion-spinner *ngIf="loading; else list" name="dots"pager="true"></ion-spinner>
+
+        <ion-slides  >
+
+          <ion-slide *ngFor="let presentation of presentations; let i = index">
+            <div class="swipe-content">
+                <div class="article-container">
+                  <img [src]="presentation.thumbnail[0]"/>
+                  <div class='article-content'>
+                    <h5>{{DateHelper.getDateWrittenFr(presentation.created)}}</h5>
+                    <h3>{{presentation.title}}</h3>
+                    <p>{{presentation.text}}</p>
+                  </div>  
+                  <img *ngIf='presentation.thumbnail[1]' [src]="presentation.thumbnail[1]"/>
+                </div>
+              </div>
+            <h1></h1>
+            <p></p>
+          </ion-slide>
+      
+        </ion-slides>
 </ion-content>

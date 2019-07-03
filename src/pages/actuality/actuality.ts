@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
+import { FpmaApiService } from '../../services/fpma-api/fpma-api.service';
+import { DateHelper } from '../../services/utils/date-helper';
+import { ArticleSpi } from '../../models/article-spi.interface';
 
 /**
  * Generated class for the ActualityPage page.
@@ -14,7 +17,25 @@ import { NavController, NavParams } from 'ionic-angular';
 })
 export class ActualityPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  public actuality: ArticleSpi[];
+  public DateHelper = DateHelper;
+  public loading = true;
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, private fpmaApiService: FpmaApiService) {
+  }
+
+  ionViewDidLoad(){
+    this.loadActuality();
+  }
+
+  loadActuality(){
+    this.loading = true;
+    this.fpmaApiService.loadActuality().subscribe((actuality: ArticleSpi[]) => {
+        this.actuality = actuality;
+        this.loading = false;
+      },() => {
+        this.loading = false;
+      });
   }
 
   goToHome() {

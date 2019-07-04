@@ -17,5 +17,25 @@
 
 
 <ion-content padding>
+  <ion-spinner *ngIf="loading; else list" name="dots"pager="true"></ion-spinner>
 
+  <ion-slides  >
+
+    <ion-slide *ngFor="let actuality of actualities; let i = index">
+      <div class="swipe-content">
+          <div class="article-container">
+            <img [src]="actuality.thumbnail[0]"/>
+            <div class='article-content'>
+              <h5>{{DateHelper.getDateWrittenFr(actuality.created)}}</h5>
+              <h3>{{actuality.title}}</h3>
+              <p>{{actuality.text}}</p>
+            </div>  
+            <img *ngIf='actuality.thumbnail[1]' [src]="actuality.thumbnail[1]"/>
+          </div>
+        </div>
+      <h1></h1>
+      <p></p>
+    </ion-slide>
+
+  </ion-slides>
 </ion-content>

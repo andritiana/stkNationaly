@@ -5,11 +5,13 @@ import { AgendaEvent } from "../../models/agenda-event.interface";
 import { DateHelper } from "../utils/date-helper";
 import { ArticleSpi } from "../../models/article-spi.interface";
 import { Presentations } from "../../models/presentations.interface";
+import { Actualities } from "../../models/actuality.interface";
 
 @Injectable()
 export class FpmaApiService {
   
-  private FPMA_DOMAIN = 'http://stk.fpma.net/';
+  // private FPMA_DOMAIN = 'http://stk.fpma.net/';
+  private FPMA_DOMAIN = 'http://localhost/stk-national-api/';
 
   constructor(
     public http: HttpClient
@@ -41,9 +43,9 @@ export class FpmaApiService {
   /**
    * Method that retrieve list of actuality from the stk.fpma api
    */
-  loadActuality(): Observable<ArticleSpi[]> {
+  loadActuality(): Observable<Actualities[]> {
     return this.http.get(`${this.FPMA_DOMAIN}api/actuality`)
-      .map((res:any) => this.parsePartage(res))
+      .map((res:any) => this.parseActuality(res))
       .catch((e: any) => {
         return Observable.throw(e);
     })
@@ -74,7 +76,7 @@ export class FpmaApiService {
     return events;
   }
   private parsePresentation(elem: any): Presentations[] {
-    const presentations: Presentations[] = [];   console.log(elem);
+    const presentations: Presentations[] = [];
     if (elem && elem.presentations && elem.presentations.data && elem.presentations.data.length) {
       elem.presentations.data.forEach(presentation => {
         presentations.push({ 
@@ -88,6 +90,21 @@ export class FpmaApiService {
       })
     }
     return presentations;
+  }
+  private parseActuality(elem: any): Actualities[] {
+    const atualities: Actualities[] = [];
+    if (elem && elem.actualites && elem.actualites.data && elem.actualites.data.length) {
+      elem.actualites.data.forEach(atuality => {
+        atualities.push({ 
+          id: atuality.id, 
+          title: atuality.title, 
+          created: DateHelper.getDate(atuality.created),
+          text: atuality.rawtext,
+          thumbnail: this.parseThumbnailUrls(atuality.thumbails) 
+        })
+      })
+    }
+    return atualities;
   }
 
   private parsePartage(elem:any): ArticleSpi[] {

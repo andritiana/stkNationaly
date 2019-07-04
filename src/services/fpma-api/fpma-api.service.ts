@@ -29,47 +29,6 @@ export class FpmaApiService {
     })
   }
 
-  /**
-   * Method that retrieve list of spi article from the stk.fpma api
-   */
-  public loadPartageSpi(): Observable<ArticleSpi[]> {
-    return this.http.get(`${this.FPMA_DOMAIN}api/partages`)
-      .map((res:any) => this.parsePartage(res))
-      .catch((e: any) => {
-        return Observable.throw(e);
-    })
-  }
-
-  /**
-   * Method that retrieve list of actuality from the stk.fpma api
-   */
-  loadActuality(): Observable<Actualities[]> {
-    return this.http.get(`${this.FPMA_DOMAIN}api/actuality`)
-      .map((res:any) => this.parseActuality(res))
-      .catch((e: any) => {
-        return Observable.throw(e);
-    })
-  }
-  /**
-   * Method that retrieve list of presentation from the stk.fpma api
-   */
-  loadPresentation(): Observable<Presentations[]> {
-    return this.http.get(`${this.FPMA_DOMAIN}api/presentation`)
-      .map((res:any) => this.parsePresentation(res))
-      .catch((e: any) => {
-        return Observable.throw(e);
-    })
-  }
-
-
-  public loadStkNews(): Observable<StkNews[]> {
-    return this.http.get(`${this.FPMA_DOMAIN}api/news`)
-      .map((res: any) => this.parseStkNews(res))
-      .catch((e: any) => {
-        return Observable.throw(e);
-    })
-  }
-
   private parseEvent(elem: any): AgendaEvent[] {
     const events: AgendaEvent[] = [];
     if (elem && elem.events && elem.events.data && elem.events.data.length) {
@@ -84,36 +43,16 @@ export class FpmaApiService {
     }
     return events;
   }
-  private parsePresentation(elem: any): Presentations[] {
-    const presentations: Presentations[] = [];
-    if (elem && elem.presentations && elem.presentations.data && elem.presentations.data.length) {
-      elem.presentations.data.forEach(presentation => {
-        presentations.push({ 
-          id: presentation.id, 
-          title: presentation.title, 
-          introtext: presentation.introtext,
-          created: DateHelper.getDate(presentation.created),
-          text: presentation.rawtext,
-          thumbnail: this.parseThumbnailUrls(presentation.thumbails) 
-        })
-      })
-    }
-    return presentations;
-  }
-  private parseActuality(elem: any): Actualities[] {
-    const atualities: Actualities[] = [];
-    if (elem && elem.actualites && elem.actualites.data && elem.actualites.data.length) {
-      elem.actualites.data.forEach(atuality => {
-        atualities.push({ 
-          id: atuality.id, 
-          title: atuality.title, 
-          created: DateHelper.getDate(atuality.created),
-          text: atuality.rawtext,
-          thumbnail: this.parseThumbnailUrls(atuality.thumbails) 
-        })
-      })
-    }
-    return atualities;
+
+  /**
+   * Method that retrieve list of spi article from the stk.fpma api
+   */
+  public loadPartageSpi(): Observable<ArticleSpi[]> {
+    return this.http.get(`${this.FPMA_DOMAIN}api/partages`)
+      .map((res:any) => this.parsePartage(res))
+      .catch((e: any) => {
+        return Observable.throw(e);
+    })
   }
 
   private parsePartage(elem:any): ArticleSpi[] {
@@ -134,16 +73,68 @@ export class FpmaApiService {
     return partages;
   }
 
-  private parseThumbnailUrls(thumbnailsUrl: any): string[] {
-    const thumbnailsArray = [];
-    if (thumbnailsUrl && thumbnailsUrl.length) {
-      thumbnailsUrl.map((url: string) => {
-        thumbnailsArray.push(`${this.FPMA_DOMAIN}${url}`);
+  /**
+   * Method that retrieve list of actuality from the stk.fpma api
+   */
+  public loadActuality(): Observable<Actualities[]> {
+    return this.http.get(`${this.FPMA_DOMAIN}api/broadcasts`)
+      .map((res:any) => this.parseActuality(res))
+      .catch((e: any) => {
+        return Observable.throw(e);
+    })
+  }
+
+  private parseActuality(elem: any): Actualities[] {
+    const atualities: Actualities[] = [];
+    if (elem && elem.actualites && elem.actualites.data && elem.actualites.data.length) {
+      elem.actualites.data.forEach(atuality => {
+        atualities.push({ 
+          id: atuality.id, 
+          title: atuality.title, 
+          created: DateHelper.getDate(atuality.created),
+          text: atuality.rawtext,
+          thumbnail: this.parseThumbnailUrls(atuality.thumbails) 
+        })
       })
-      return thumbnailsArray;
-    } else {
-      return [];
     }
+    return atualities;
+  }
+
+  /**
+   * Method that retrieve list of presentation from the stk.fpma api
+   */
+  public loadPresentation(): Observable<Presentations[]> {
+    return this.http.get(`${this.FPMA_DOMAIN}api/presentations`)
+      .map((res:any) => this.parsePresentation(res))
+      .catch((e: any) => {
+        return Observable.throw(e);
+    })
+  }
+
+  private parsePresentation(elem: any): Presentations[] {
+    const presentations: Presentations[] = [];
+    if (elem && elem.presentations && elem.presentations.data && elem.presentations.data.length) {
+      elem.presentations.data.forEach(presentation => {
+        presentations.push({ 
+          id: presentation.id, 
+          title: presentation.title, 
+          introtext: presentation.introtext,
+          created: DateHelper.getDate(presentation.created),
+          text: presentation.rawtext,
+          thumbnail: this.parseThumbnailUrls(presentation.thumbails) 
+        })
+      })
+    }
+    return presentations;
+  }
+
+
+  public loadStkNews(): Observable<StkNews[]> {
+    return this.http.get(`${this.FPMA_DOMAIN}api/news`)
+      .map((res: any) => this.parseStkNews(res))
+      .catch((e: any) => {
+        return Observable.throw(e);
+    })
   }
 
   private parseStkNews(elem: any): StkNews[] {
@@ -160,6 +151,18 @@ export class FpmaApiService {
       })
     }
     return news;
+  }
+  
+  private parseThumbnailUrls(thumbnailsUrl: any): string[] {
+    const thumbnailsArray = [];
+    if (thumbnailsUrl && thumbnailsUrl.length) {
+      thumbnailsUrl.map((url: string) => {
+        thumbnailsArray.push(`${this.FPMA_DOMAIN}${url}`);
+      })
+      return thumbnailsArray;
+    } else {
+      return [];
+    }
   }
 
 }

@@ -10,8 +10,7 @@ import { Actualities } from "../../models/actuality.interface";
 @Injectable()
 export class FpmaApiService {
   
-  // private FPMA_DOMAIN = 'http://stk.fpma.net/';
-  private FPMA_DOMAIN = 'http://localhost/stk-national-api/';
+  private FPMA_DOMAIN = 'http://stk.fpma.church/';
 
   constructor(
     public http: HttpClient

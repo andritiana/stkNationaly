@@ -4,6 +4,7 @@ import { Observable } from "rxjs/Observable";
 import { AgendaEvent } from "../../models/agenda-event.interface";
 import { DateHelper } from "../utils/date-helper";
 import { ArticleSpi } from "../../models/article-spi.interface";
+import { StkNews } from "../../models/stk-news.interface";
 
 @Injectable()
 export class FpmaApiService {
@@ -18,7 +19,7 @@ export class FpmaApiService {
   /**
    * Method that retrieve list of events from the stk.fpma api
    */
-  loadAgenda(): Observable<AgendaEvent[]> {
+  public loadAgenda(): Observable<AgendaEvent[]> {
     return this.http.get(`${this.FPMA_DOMAIN}api/events`)
       .map((res: any) => this.parseEvent(res))
       .catch((e: any) => {
@@ -29,9 +30,17 @@ export class FpmaApiService {
   /**
    * Method that retrieve list of spi article from the stk.fpma api
    */
-  loadPartageSpi(): Observable<ArticleSpi[]> {
+  public loadPartageSpi(): Observable<ArticleSpi[]> {
     return this.http.get(`${this.FPMA_DOMAIN}api/partages`)
       .map((res:any) => this.parsePartage(res))
+      .catch((e: any) => {
+        return Observable.throw(e);
+    })
+  }
+
+  public loadStkNews(): Observable<StkNews[]> {
+    return this.http.get(`${this.FPMA_DOMAIN}api/news`)
+      .map((res: any) => this.parseStkNews(res))
       .catch((e: any) => {
         return Observable.throw(e);
     })
@@ -79,4 +88,21 @@ export class FpmaApiService {
       return [];
     }
   }
+
+  private parseStkNews(elem: any): StkNews[] {
+    const news: StkNews[] = [];
+    if (elem && elem.news && elem.news.data && elem.news.data.length > 0) {
+      const newsElem: any[] = elem.news.data;
+      newsElem.forEach( newElem => {
+        news.push({
+          id: Number(newElem.id),
+          title: newElem.title,
+          thumbnails: this.parseThumbnailUrls(newElem.thumbails),
+          pdf: newElem.files && newElem.files.length > 0 ? `${this.FPMA_DOMAIN}${newElem.files[0]}` : ''
+        })
+      })
+    }
+    return news;
+  }
+
 }

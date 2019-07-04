@@ -1,6 +1,7 @@
 import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
@@ -19,6 +20,7 @@ import { MainTabsPage } from '../pages/main-tabs/main-tabs';
 import { PresentationPage } from '../pages/presentation/presentation';
 import { FpmaApiService } from '../services/fpma-api/fpma-api.service';
 import { SpiDetailPage } from '../pages/spi/spi-detail/spi-detail';
+import { StkNewsPdfPage } from '../pages/stk-news/stk-new-pdf/stk-news-pdf';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,8 @@ import { SpiDetailPage } from '../pages/spi/spi-detail/spi-detail';
     StkNewsPage,
     MainTabsPage,
     PresentationPage,
-    SpiDetailPage
+    SpiDetailPage,
+    StkNewsPdfPage
   ],
   imports: [
     BrowserModule,
@@ -38,6 +41,7 @@ import { SpiDetailPage } from '../pages/spi/spi-detail/spi-detail';
     HttpClientModule,
     HttpClientJsonpModule,
     IonicModule.forRoot(MyApp),
+    PdfViewerModule,
     HttpModule
   ],
   bootstrap: [IonicApp],
@@ -50,7 +54,8 @@ import { SpiDetailPage } from '../pages/spi/spi-detail/spi-detail';
     StkNewsPage,
     MainTabsPage,
     PresentationPage,
-    SpiDetailPage
+    SpiDetailPage,
+    StkNewsPdfPage
   ],
   providers: [
     StatusBar,

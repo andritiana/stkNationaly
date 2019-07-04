@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController } from 'ionic-angular';
 import { FpmaApiService } from '../../services/fpma-api/fpma-api.service';
-import { ArticleSpi } from '../../models/article-spi.interface';
 import { DateHelper } from '../../services/utils/date-helper';
 import { Presentations } from '../../models/presentations.interface';
 

@@ -31,8 +31,6 @@ export class PresentationPage {
   loadPresentations(){
     this.loading = true;
     this.fpmaApiService.loadPresentation().subscribe((presentations: Presentations[]) => {
-      console.log(presentations);
-        
       this.presentations = presentations;
         this.loading = false;
       },() => {

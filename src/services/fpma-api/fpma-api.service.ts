@@ -11,7 +11,7 @@ import { StkNews } from "../../models/stk-news.interface";
 @Injectable()
 export class FpmaApiService {
   
-  private FPMA_DOMAIN = 'http://stk.fpma.church/';
+  private FPMA_DOMAIN = 'https://stk.fpma.church/';
 
   constructor(
     public http: HttpClient
@@ -57,8 +57,6 @@ export class FpmaApiService {
 
   private parsePartage(elem:any): ArticleSpi[] {
     const partages: ArticleSpi[] = [];
- 
-    
     if (elem && elem.partages && elem.partages.data && elem.partages.data.length) {
       elem.partages.data.forEach(partage => {
         partages.push({
@@ -86,8 +84,8 @@ export class FpmaApiService {
 
   private parseActuality(elem: any): Actualities[] {
     const atualities: Actualities[] = [];
-    if (elem && elem.actualites && elem.actualites.data && elem.actualites.data.length) {
-      elem.actualites.data.forEach(atuality => {
+    if (elem && elem.broadcast && elem.broadcast.data && elem.broadcast.data.length) {
+      elem.broadcast.data.forEach(atuality => {
         atualities.push({ 
           id: atuality.id, 
           title: atuality.title, 

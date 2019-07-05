@@ -31,8 +31,6 @@ export class ActualityPage {
   loadActuality(){
     this.loading = true;
     this.fpmaApiService.loadActuality().subscribe((actuality: Actualities[]) => {
-        console.log(actuality);
-        
         this.actualities = actuality;
         this.loading = false;
       },() => {

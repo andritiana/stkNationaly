@@ -90,7 +90,7 @@ export class FpmaApiService {
           id: atuality.id, 
           title: atuality.title, 
           created: DateHelper.getDate(atuality.created),
-          text: atuality.rawtext,
+          text: atuality.introtext,
           thumbnail: this.parseThumbnailUrls(atuality.thumbails) 
         })
       })

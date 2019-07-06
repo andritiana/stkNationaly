@@ -28,7 +28,7 @@
             <div class='article-content'>
               <h5>{{DateHelper.getDateWrittenFr(actuality.created)}}</h5>
               <h3>{{actuality.title}}</h3>
-              <p>{{actuality.text}}</p>
+              <div [innerHTML]="actuality.text"></div>
             </div>  
             <img *ngIf='actuality.thumbnail[1]' [src]="actuality.thumbnail[1]"/>
           </div>

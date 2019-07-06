@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, App } from 'ionic-angular';
 import { FpmaApiService } from '../../services/fpma-api/fpma-api.service';
-import { DateHelper } from '../../services/utils/date-helper';
-import { Presentations } from '../../models/presentations.interface';
+import { Presentation } from '../../models/presentation.interface';
+import { PresentationDetailPage } from './presentation-detail/presentation-detail';
 
 /**
  * Generated class for the PresentationPage page.
@@ -17,11 +17,13 @@ import { Presentations } from '../../models/presentations.interface';
 })
 export class PresentationPage {
 
-  public presentations: Presentations[];
-  public DateHelper = DateHelper; 
+  public presentations: Presentation[];
   public loading = true;
 
-  constructor(public navCtrl: NavController, private fpmaApiService: FpmaApiService) {
+  constructor(
+    public navCtrl: NavController,
+    private fpmaApiService: FpmaApiService,
+    private app:  App) {
   }
 
   ionViewDidLoad(){
@@ -30,12 +32,16 @@ export class PresentationPage {
 
   loadPresentations(){
     this.loading = true;
-    this.fpmaApiService.loadPresentation().subscribe((presentations: Presentations[]) => {
+    this.fpmaApiService.loadPresentations().subscribe((presentations: Presentation[]) => {
       this.presentations = presentations;
         this.loading = false;
       },() => {
         this.loading = false;
       });
+  }
+
+  public goToDetails(index: number) {
+    this.app.getActiveNav().push(PresentationDetailPage, {id: index});
   }
 
   goToHome() {

@@ -4,7 +4,7 @@ import { Observable } from "rxjs/Observable";
 import { AgendaEvent } from "../../models/agenda-event.interface";
 import { DateHelper } from "../utils/date-helper";
 import { ArticleSpi } from "../../models/article-spi.interface";
-import { Presentations } from "../../models/presentations.interface";
+import { Presentation } from "../../models/presentation.interface";
 import { Actualities } from "../../models/actuality.interface";
 import { StkNews } from "../../models/stk-news.interface";
 
@@ -101,16 +101,16 @@ export class FpmaApiService {
   /**
    * Method that retrieve list of presentation from the stk.fpma api
    */
-  public loadPresentation(): Observable<Presentations[]> {
+  public loadPresentations(): Observable<Presentation[]> {
     return this.http.get(`${this.FPMA_DOMAIN}api/presentations`)
-      .map((res:any) => this.parsePresentation(res))
+      .map((res:any) => this.parsePresentations(res))
       .catch((e: any) => {
         return Observable.throw(e);
     })
   }
 
-  private parsePresentation(elem: any): Presentations[] {
-    const presentations: Presentations[] = [];
+  private parsePresentations(elem: any): Presentation[] {
+    const presentations: Presentation[] = [];
     if (elem && elem.presentations && elem.presentations.data && elem.presentations.data.length) {
       elem.presentations.data.forEach(presentation => {
         presentations.push({ 
@@ -124,6 +124,30 @@ export class FpmaApiService {
       })
     }
     return presentations;
+  }
+
+  public loadPresentation(id: number): Observable<Presentation | null> {
+    return this.http.get(`${this.FPMA_DOMAIN}api/presentations/${id}`)
+      .map((res:any) => this.parsePresentation(res))
+      .catch((e: any) => {
+        return Observable.throw(e);
+    })
+  }
+
+  private parsePresentation(elem: any): Presentation | null {
+    if (elem && elem.length) {
+      const presentation = elem[0]; 
+      return {
+        id: presentation.id,
+        title: presentation.title, 
+        introtext: presentation.introtext,
+        created: DateHelper.getDate(presentation.created),
+        text: presentation.rawtext,
+        thumbnail: this.parseThumbnailUrls(presentation.thumbails) 
+      }
+    } else {
+      return null;
+    }
   }
 
 

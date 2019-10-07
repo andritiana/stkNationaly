@@ -1,3 +1,5 @@
+import { StkPage } from './../pages/stk/stk';
+import { CommissionsPage } from './../pages/commissions/commissions';
 import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -35,7 +37,9 @@ import { PresentationDetailPage } from '../pages/presentation/presentation-detai
     PresentationPage,
     SpiDetailPage,
     StkNewsPdfPage,
-    PresentationDetailPage
+    PresentationDetailPage,
+    CommissionsPage,
+    StkPage
   ],
   imports: [
     BrowserModule,
@@ -58,7 +62,9 @@ import { PresentationDetailPage } from '../pages/presentation/presentation-detai
     PresentationPage,
     SpiDetailPage,
     StkNewsPdfPage,
-    PresentationDetailPage
+    PresentationDetailPage,
+    CommissionsPage,
+    StkPage
   ],
   providers: [
     StatusBar,

@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { NavParams } from 'ionic-angular';
 import { Presentation } from "../../../models/presentation.interface";
 import { FpmaApiService } from "../../../services/fpma-api/fpma-api.service";
+import { DomSanitizer } from "@angular/platform-browser";
 
 
 
@@ -19,7 +20,8 @@ export class PresentationDetailPage implements OnInit {
 
   constructor(
     private navParams: NavParams,
-    private fpmaApiService: FpmaApiService
+    private fpmaApiService: FpmaApiService,
+    private sanitized: DomSanitizer
   ){}
 
   ngOnInit(): void {
@@ -38,5 +40,11 @@ export class PresentationDetailPage implements OnInit {
       },() => {
         this.loading = false;
       });
+  }
+
+  public removeHtmlLink(textHtml: string) {
+    let htmlWithoutLink = textHtml.replace(/href/g,'alt');
+    htmlWithoutLink = this.sanitized.bypassSecurityTrustHtml(htmlWithoutLink) as string;
+    return htmlWithoutLink;
   }
 }

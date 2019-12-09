@@ -13,17 +13,17 @@
 
 
 <ion-content padding>
-   
+
   <ion-spinner *ngIf="loading; else presentationContent" name="dots"pager="true"></ion-spinner>
-  
+
   <ng-template #presentationContent>
     <img *ngIf='presentation.thumbnail[0]' [src]="presentation.thumbnail[0]"/>
     <div class='article-content'>
       <h3>{{presentation.title}}</h3>
-      <div [innerHTML]="presentation.introtext"></div>
+      <div [innerHTML]="removeHtmlLink(presentation.introtext)"></div>
     </div>
     <img *ngIf='presentation.thumbnail[1]' [src]="presentation.thumbnail[1]"/>
-  </ng-template>  
+  </ng-template>
 
 
 </ion-content>

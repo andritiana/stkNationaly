@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="toky.randria" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>stkNationaly</name>
-    <description>An awesome Ionic/Cordova app.</description>
-    <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
+<widget id="com.stknational.app" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>STK National</name>
+    <description>Application de la section jeune de l'Eglise protestante malgache en France.</description>
+    <author email="marc@stk-national.fr" href="http://ionicframework.com/">STK National</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />

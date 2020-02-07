@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { VerseService } from '../../services/verse/verse.service';
 import { Verse } from '../../models/verse.interface';
-import { AgendaPage } from '../agenda/agenda';
 import { NavController } from 'ionic-angular';
 
 @Component({
@@ -29,9 +28,13 @@ export class HomePage implements OnInit {
   }
   goToPage(page: string): void {
     switch (page) {
-      case 'agenda':
-        this.navController.push(AgendaPage);
+      case 'actus':
+        this.navController.parent.select(1);
         break;
+      case 'partage':
+        this.navController.parent.select(3);
+      case 'presentation':
+        this.navController.parent.select(2);
       default :
         break;
     }

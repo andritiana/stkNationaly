@@ -19,16 +19,16 @@
       </ng-template>
     </div>
     <div class="button-tag-container">
-      <div class="horizontal-button">
+      <div class="horizontal-button" (click)="goToPage('presentation')">
         <img src="assets/imgs/presentation_blue.svg"/>
         <span>Qu'est ce que la STK ?</span>
       </div>
-      <div class="horizontal-button">
+      <div class="horizontal-button" (click)="goToPage('presentation')">
         <img src="assets/imgs/commissions_blue.svg"/>
         <span>Présentation des commissions</span>
       </div>
       <div class="two-buttons">
-        <div class="button-column">
+        <div class="button-column" (click)="goToPage('actus')">
           <span class="button-title">
             Actualités STK
           </span>
@@ -36,7 +36,7 @@
             Télécharger le péricope 2018
           </span>
         </div>
-        <div class="button-column prime">
+        <div class="button-column prime" (click)="goToPage('partage')">
           <span class="button-title">
             Partage Spi
           </span>

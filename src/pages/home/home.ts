@@ -12,10 +12,10 @@ export class HomePage implements OnInit {
   public loading = true;
 
   constructor(
-    private verseService: VerseService, 
+    private verseService: VerseService,
     private navController: NavController) {
   }
-    
+
   ngOnInit(): void {
     this.loading = true;
     this.verseService.getVerseOfTheDay().subscribe((verse: Verse) => {
@@ -23,20 +23,16 @@ export class HomePage implements OnInit {
       this.loading = false;
     }, () => {
       this.verse = { bookName: '1 Corinthiens', chapter: 11, verse: 1, text: 'Soyez mes imitateurs, comme je le suis moi-même de Christ.' }
-      this.loading = false;  
+      this.loading = false;
     });
   }
   goToPage(page: string): void {
-    switch (page) {
-      case 'actus':
-        this.navController.parent.select(1);
-        break;
-      case 'partage':
-        this.navController.parent.select(3);
-      case 'presentation':
-        this.navController.parent.select(2);
-      default :
-        break;
+    if (page === 'partage') {
+      this.navController.parent.select(3);
+    } else if (page === 'presentation') {
+      this.navController.parent.select(2);
+    } else if (page === 'actus') {
+      this.navController.parent.select(1);
     }
   }
 }

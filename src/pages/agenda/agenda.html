@@ -15,38 +15,61 @@
   </ion-navbar>
 
 </ion-header>
-  
+
 <ion-content>
+  <ion-buttons start>
+    {{ title }}
+
+  </ion-buttons>
+  <ion-buttons end>
+    <button ion-button [disabled]="isToday" (click)="today()">Today</button>
+    <button ion-button (click)="changeMode('month')">M</button>
+    <button ion-button (click)="changeMode('week')">W</button>
+    <button ion-button (click)="changeMode('day')">D</button>
+    <button ion-button>prev</button>
+    <button ion-button>next</button>
+
+  </ion-buttons>
+
+  <calendar [monthviewEventDetailTemplate]="template" [eventSource]="eventSource" [calendarMode]="calendar.mode"
+    [currentDate]="calendar.currentDate" (onCurrentDateChanged)="onCurrentDateChanged($event)"
+    (onRangeChanged)="reloadSource(startTime, endTime)" (onEventSelected)="onEventSelected($event)"
+    (onTitleChanged)="onViewTitleChanged($event)" (onTimeSelected)="onTimeSelected($event)" step="30"
+    startingDayMonth="1" startingDayWeek="1">
+
+  </calendar>
+
   <ion-spinner *ngIf="loading; else list" name="dots"></ion-spinner>
-  <ng-template #list>
+  <!-- <ng-template #list>
     <ion-row *ngIf="events && events.length; else noEvents">
       <ion-col>
         <div *ngFor="let event of events">
           <ion-item>
-              <ion-grid>
-                  <ion-row>
-                    <ion-col class="col-date" col-2>
-                      <div *ngIf="isDateValid(event.startDate)" class="date">
-                        <span class="day">{{DateHelper.getDay(event.startDate)}}</span>
-                        <span class="month">{{DateHelper.getMonth(event.startDate)}}</span>
-                      </div>
-                    </ion-col>
-                    <ion-col col-10>
-                        <h2 class="title">{{event.title}}</h2>
-                        <span *ngIf="!isDateValid(event.startDate); else displayDate">No date</span>
-                        <ng-template #displayDate>
-                          <span *ngIf="DateHelper.getDateFormat(event.startDate) === DateHelper.getDateFormat(event.endDate); else differentDates">
-                              {{DateHelper.getHours(event.startDate)}} - {{DateHelper.getHours(event.endDate)}}
-                            </span>
-                            <ng-template #differentDates>
-                              <span *ngIf="isDateValid(event.startDate)">
-                                {{DateHelper.getDateFormat(event.startDate)}} - {{DateHelper.getDateFormat(event.endDate)}}
-                              </span>
-                            </ng-template>
-                        </ng-template>
-                    </ion-col>
-                  </ion-row>
-                </ion-grid>
+            <ion-grid>
+              <ion-row>
+                <ion-col class="col-date" col-2>
+                  <div *ngIf="isDateValid(event.startDate)" class="date">
+                    <span class="day">{{DateHelper.getDay(event.startDate)}}</span>
+                    <span class="month">{{DateHelper.getMonth(event.startDate)}}</span>
+                  </div>
+                </ion-col>
+                <ion-col col-10>
+                  <h2 class="title">{{event.title}}</h2>
+                  <span *ngIf="!isDateValid(event.startDate); else displayDate">No date</span>
+                  <ng-template #displayDate>
+                    <span
+                      *ngIf="DateHelper.getDateFormat(event.startDate) === DateHelper.getDateFormat(event.endDate); else differentDates">
+                      {{DateHelper.getHours(event.startDate)}} - {{DateHelper.getHours(event.endDate)}}
+                    </span>
+                    <ng-template #differentDates>
+                      <span *ngIf="isDateValid(event.startDate)">
+                        {{DateHelper.getDateFormat(event.startDate)}} - {{DateHelper.getDateFormat(event.endDate)}}
+                      </span>
+                    </ng-template>
+                  </ng-template>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
           </ion-item>
         </div>
       </ion-col>
@@ -56,5 +79,5 @@
         Désolé, l'agenda n'a pas pu être récuperé.
       </div>
     </ng-template>
-  </ng-template>
+  </ng-template> -->
 </ion-content>

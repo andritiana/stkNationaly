@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { ArticleSpi } from "../../../models/article-spi.interface";
-import { NavParams } from 'ionic-angular';
+import { NavParams, NavController } from 'ionic-angular';
 import { DateHelper } from '../../../services/utils/date-helper';
 
 
@@ -18,11 +18,16 @@ export class SpiDetailPage implements OnInit {
 
 
   constructor(
-    private navParams: NavParams
+    private navParams: NavParams,
+    private navCtrl: NavController
   ){}
 
   ngOnInit(): void {
     this.partages = this.navParams.get('articles');
     this.articleIndex = this.navParams.get('index');
+  }
+
+  public goToHome() {
+    this.navCtrl.parent.select(0);
   }
 }

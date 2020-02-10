@@ -10,14 +10,12 @@ spi-detail-page {
     }
   }
   .swipe-content {
-    margin: 1.5rem;
     .article-container {
       background-color: white;
-      padding: 1rem;
     }
   }
   .article-content {
-    padding: 0 1rem;
+    padding: 0 2rem 2rem 2rem;
     text-align: left;
     color: $color-blue-primary;
     h3, h5 {

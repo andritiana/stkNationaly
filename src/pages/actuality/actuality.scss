@@ -10,16 +10,14 @@ page-actuality {
         }
       }
       .swipe-content {
-        margin: 1.5rem;
         height: 100%;
         .article-container {
           background-color: white;
-          padding: 1rem;
           min-height: 100%;
         }
       }
       .article-content {
-        padding: 0 1rem;
+        padding: 2rem;
         text-align: left;
         color: $color-blue-primary;
         h3, h5 {
@@ -29,6 +27,7 @@ page-actuality {
           margin-bottom: 0;
         }
         h5 {
+          margin-top: 0;
           color: darkgray;
         }
         p {

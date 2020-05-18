@@ -31,4 +31,30 @@ export class MainTabsPage implements OnInit {
   ngOnInit(): void {
   }
 
+
+  tabChanged($ev){
+    switch ($ev.tabTitle) {
+      case 'Home':
+        $ev.setRoot(HomePage);
+        break;
+      case 'Actualites':
+        $ev.setRoot(ActualityPage);
+        break;
+      case 'Presentation':
+        $ev.setRoot(PresentationPage);
+        break;
+      case 'Spi':
+        $ev.setRoot(SpiPage);
+        break;
+      case 'Stk-News':
+        $ev.setRoot(StkNewsPage);
+        break;
+      case 'Agenda':
+        $ev.setRoot(AgendaPage);
+        break;
+      default:
+        console.log(`no page`);
+    }
+  }
+
 }

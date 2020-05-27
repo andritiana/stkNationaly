@@ -1,13 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, trigger, transition, animate, style } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { MainTabsPage } from '../pages/main-tabs/main-tabs';
 @Component({
-  templateUrl: 'app.html'
+  templateUrl: 'app.html',
+  animations: [
+    trigger(
+      'enterAnimation', [
+        transition(':leave', [
+          style({opacity: 1}),
+          animate('500ms', style({opacity: 0}))
+        ])
+      ]
+    )
+  ]
 })
 export class MyApp {
   rootPage:any = MainTabsPage;
+  showSplash = true;
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
     platform.ready().then(() => {
@@ -15,6 +26,9 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
       splashScreen.hide();
+      setTimeout(() => {
+        this.showSplash = false
+      }, 3000);
     });
   }
 }

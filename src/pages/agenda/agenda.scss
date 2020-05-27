@@ -1,25 +1,33 @@
 agenda-page {
-    .col-date {
-        border-right: 2px solid $color-blue-primary;
-        .date {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            .day {
-                font-size: 20px;
-                font-weight: bold;
-                color: darkgray;
-            }
-            .month {
-                font-size: 18px;
-                font-weight: bold;
-                color: $color-blue-primary;
-            }
-        }
-    }
-    .title {
+  .col-date {
+    border-right: 2px solid $color-blue-primary;
+
+    .date {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      .day {
+        font-size: 20px;
         font-weight: bold;
-        white-space: normal;
-    }  
+        color: darkgray;
+      }
+
+      .month {
+        font-size: 18px;
+        font-weight: bold;
+        color: $color-blue-primary;
+      }
+    }
+  }
+
+  .title {
+    font-weight: bold;
+    white-space: normal;
+  }
+
+  .monthview-selected {
+    color: red;
+  }
 }

@@ -9,6 +9,11 @@
   <ion-navbar>
     <ion-title>Stk News</ion-title>
     <ion-buttons end>
+      <button ion-button icon-only (click)="refresh()">
+        <ion-icon class="refresh-button" name="refresh"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons end>
       <button ion-button icon-only (click)="goToHome()">
         <ion-icon class="homeMenu" name="home"></ion-icon>
       </button>
@@ -17,7 +22,17 @@
 
 </ion-header>
 
-
 <ion-content padding>
-
+  <ion-grid>
+    <ion-row>
+      <ion-col class="stk-news-grid" *ngFor="let stkNews of listOfStkNews" col-6>
+        <div class="stk-news-card" (click)="openPdf(stkNews)">
+          <div class="news-img">
+              <img [src]="stkNews.thumbnails[0]"/>
+          </div>
+          <div class="news-title">{{stkNews.title}}</div>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

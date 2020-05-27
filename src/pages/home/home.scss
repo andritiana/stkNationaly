@@ -46,7 +46,7 @@ page-home {
             margin: 1vh 0;
             padding: 2rem;
             width: 90%;
-            height: 9vh;
+            height: 8vh;
             background-color: white;
             margin-left: 5%;
             color: $color-blue-primary;
@@ -83,6 +83,9 @@ page-home {
                 .button-text {
                     margin-top: 2vh;
                     text-align: center;
+                }
+                &.prime {
+                    background-color: $color-blue-primary;
                 }
             }
         }

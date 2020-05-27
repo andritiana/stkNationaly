@@ -46,6 +46,10 @@ export class SpiPage {
     this.navCtrl.parent.select(0);
   }
 
+  public refresh() {
+    this.loadPartages();
+  }
+
   public goToDetails(index: number) {
     this.app.getActiveNav().push(SpiDetailPage, {articles: this.partages, index});
   }

@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, App } from 'ionic-angular';
+import { FpmaApiService } from '../../services/fpma-api/fpma-api.service';
+import { Presentation } from '../../models/presentation.interface';
+import { PresentationDetailPage } from './presentation-detail/presentation-detail';
 
 /**
  * Generated class for the PresentationPage page.
@@ -14,7 +17,31 @@ import { NavController, NavParams } from 'ionic-angular';
 })
 export class PresentationPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  public presentations: Presentation[];
+  public loading = true;
+
+  constructor(
+    public navCtrl: NavController,
+    private fpmaApiService: FpmaApiService,
+    private app:  App) {
+  }
+
+  ionViewDidLoad(){
+    this.loadPresentations();
+  }
+
+  loadPresentations(){
+    this.loading = true;
+    this.fpmaApiService.loadPresentations().subscribe((presentations: Presentation[]) => {
+      this.presentations = presentations;
+        this.loading = false;
+      },() => {
+        this.loading = false;
+      });
+  }
+
+  public goToDetails(index: number) {
+    this.app.getActiveNav().push(PresentationDetailPage, {id: index});
   }
 
   goToHome() {

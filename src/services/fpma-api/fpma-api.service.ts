@@ -10,12 +10,12 @@ import { StkNews } from "../../models/stk-news.interface";
 
 @Injectable()
 export class FpmaApiService {
-  
+
   private FPMA_DOMAIN = 'https://stk.fpma.church/';
 
   constructor(
     public http: HttpClient
-  ) { 
+  ) {
   }
 
   /**
@@ -33,10 +33,10 @@ export class FpmaApiService {
     const events: AgendaEvent[] = [];
     if (elem && elem.events && elem.events.data && elem.events.data.length) {
       elem.events.data.forEach(event => {
-        events.push({ 
-          id: event.id, 
-          title: event.title, 
-          startDate: DateHelper.getDate(event.startdate), 
+        events.push({
+          id: event.id,
+          title: event.title,
+          startDate: DateHelper.getDate(event.startdate),
           endDate: DateHelper.getDate(event.enddate)
         })
       })
@@ -64,7 +64,7 @@ export class FpmaApiService {
           creationDate: DateHelper.getDate(partage.created),
           title: partage.title,
           text: partage.rawtext,// for now full text of partage are sent in introtext
-          thumbnail: this.parseThumbnailUrls(partage.thumbnails) 
+          thumbnail: this.parseThumbnailUrls(partage.thumbnails)
         })
       })
     }
@@ -86,12 +86,13 @@ export class FpmaApiService {
     const atualities: Actualities[] = [];
     if (elem && elem.broadcast && elem.broadcast.data && elem.broadcast.data.length) {
       elem.broadcast.data.forEach(atuality => {
-        atualities.push({ 
-          id: atuality.id, 
-          title: atuality.title, 
+        atualities.push({
+          id: atuality.id,
+          title: atuality.title,
           created: DateHelper.getDate(atuality.created),
           text: atuality.introtext,
-          thumbnail: this.parseThumbnailUrls(atuality.thumbnails) 
+          rawtext: atuality.rawtext,
+          thumbnail: this.parseThumbnailUrls(atuality.thumbnails)
         })
       })
     }
@@ -113,13 +114,13 @@ export class FpmaApiService {
     const presentations: Presentation[] = [];
     if (elem && elem.presentations && elem.presentations.data && elem.presentations.data.length) {
       elem.presentations.data.forEach(presentation => {
-        presentations.push({ 
-          id: presentation.id, 
-          title: presentation.title, 
+        presentations.push({
+          id: presentation.id,
+          title: presentation.title,
           introtext: presentation.introtext,
           created: DateHelper.getDate(presentation.created),
           text: presentation.rawtext,
-          thumbnail: this.parseThumbnailUrls(presentation.thumbnails) 
+          thumbnail: this.parseThumbnailUrls(presentation.thumbnails)
         })
       })
     }
@@ -136,14 +137,14 @@ export class FpmaApiService {
 
   private parsePresentation(elem: any): Presentation | null {
     if (elem && elem.presentations && elem.presentations.data ) {
-      const presentation = elem.presentations.data; 
+      const presentation = elem.presentations.data;
       return {
         id: presentation.id,
-        title: presentation.title, 
+        title: presentation.title,
         introtext: presentation.introtext,
         created: DateHelper.getDate(presentation.created),
         text: presentation.rawtext,
-        thumbnail: this.parseThumbnailUrls(presentation.thumbnails) 
+        thumbnail: this.parseThumbnailUrls(presentation.thumbnails)
       }
     } else {
       return null;
@@ -174,7 +175,7 @@ export class FpmaApiService {
     }
     return news;
   }
-  
+
   private parseThumbnailUrls(thumbnailsUrl: any): string[] {
     const thumbnailsArray = [];
     if (thumbnailsUrl && thumbnailsUrl.length) {

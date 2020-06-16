@@ -1,5 +1,6 @@
+import { ActualityDetailPage } from './actuality-detail/actuality-detail';
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, App } from 'ionic-angular';
 import { FpmaApiService } from '../../services/fpma-api/fpma-api.service';
 import { DateHelper } from '../../services/utils/date-helper';
 import { Actualities } from '../../models/actuality.interface';
@@ -21,7 +22,12 @@ export class ActualityPage {
   public DateHelper = DateHelper;
   public loading = true;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private fpmaApiService: FpmaApiService) {
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private fpmaApiService: FpmaApiService,
+    private app:  App
+    ) {
   }
 
   ionViewDidLoad(){
@@ -36,6 +42,10 @@ export class ActualityPage {
       },() => {
         this.loading = false;
       });
+  }
+
+  public goToDetails(index: number) {
+    this.app.getActiveNav().push(ActualityDetailPage, {actualities: this.actualities, index});
   }
 
   goToHome() {

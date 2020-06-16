@@ -22,6 +22,7 @@ import { FpmaApiService } from '../services/fpma-api/fpma-api.service';
 import { SpiDetailPage } from '../pages/spi/spi-detail/spi-detail';
 import { StkNewsPdfPage } from '../pages/stk-news/stk-new-pdf/stk-news-pdf';
 import { PresentationDetailPage } from '../pages/presentation/presentation-detail/presentation-detail';
+import { ActualityDetailPage } from '../pages/actuality/actuality-detail/actuality-detail';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { PresentationDetailPage } from '../pages/presentation/presentation-detai
     PresentationPage,
     SpiDetailPage,
     StkNewsPdfPage,
-    PresentationDetailPage
+    PresentationDetailPage,
+    ActualityDetailPage
   ],
   imports: [
     BrowserModule,
@@ -58,7 +60,8 @@ import { PresentationDetailPage } from '../pages/presentation/presentation-detai
     PresentationPage,
     SpiDetailPage,
     StkNewsPdfPage,
-    PresentationDetailPage
+    PresentationDetailPage,
+    ActualityDetailPage
   ],
   providers: [
     StatusBar,

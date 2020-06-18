@@ -48,6 +48,10 @@ export class ActualityPage {
     this.app.getActiveNav().push(ActualityDetailPage, {actualities: this.actualities, index});
   }
 
+  public refresh() {
+    this.loadActuality();
+  }
+
   goToHome() {
     this.navCtrl.parent.select(0);
   }

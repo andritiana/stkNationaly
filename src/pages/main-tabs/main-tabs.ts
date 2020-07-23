@@ -26,10 +26,10 @@ export class MainTabsPage implements OnInit, AfterViewInit {
   tab4Root = StkNewsPage;
   tab5Root = AgendaPage;
 
-  public nbBroadcastsUpdated: number;
-  public nbNewsUpdated: number;
-  public nbEventsUpdated: number;
-  public nbPartagesUpdated: number;
+  public nbBroadcastsUpdated = 0;
+  public nbNewsUpdated = 0;
+  public nbEventsUpdated = 0;
+  public nbPartagesUpdated = 0;
 
   constructor(
     private contentUpdateService: ContentUpdateService
@@ -37,17 +37,21 @@ export class MainTabsPage implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.contentUpdateService.getNbBroadcastsUpdated().subscribe( nb => this.nbBroadcastsUpdated = nb);
-    this.contentUpdateService.getNbNewsUpdated().subscribe( nb => this.nbNewsUpdated = nb);
-    this.contentUpdateService.getNbEventsUpdated().subscribe( nb => this.nbEventsUpdated = nb);
-    this.contentUpdateService.getNbPartagesUpdated().subscribe( nb => this.nbPartagesUpdated = nb);
   }
 
   ngAfterViewInit(): void {
-    const spanNb = document.createElement("SPAN");                 // Create a <span> node
-    const textnode = document.createTextNode("2");         // Create a text node
-    spanNb.appendChild(textnode);                              // Append the text to <li>
-    document.getElementsByClassName('tab-button')[1].appendChild(spanNb);
+    this.contentUpdateService.getBroadcastUpdateObservable().subscribe( (nbBroadcasts) => {
+      this.updateNotificationIcon('broadcastNotification', nbBroadcasts);
+    });
+    this.contentUpdateService.getEventUpdateObservable().subscribe( (nbEvents) => {
+      this.updateNotificationIcon('eventNotification', nbEvents);
+    });
+    this.contentUpdateService.getNewsUpdateObservable().subscribe( (nbNews) => {
+      this.updateNotificationIcon('newsNotification', nbNews);
+    });
+    this.contentUpdateService.getPartageUpdateObservable().subscribe( (nbPartages) => {
+      this.updateNotificationIcon('partageNotification', nbPartages);
+    });
   }
 
   tabChanged($ev){
@@ -72,6 +76,43 @@ export class MainTabsPage implements OnInit, AfterViewInit {
         break;
       default:
         console.log(`no page`);
+    }
+  }
+
+  private updateNotificationIcon(id: string, nb: number) {
+      const existingElmt = document.getElementById("id");
+      if (existingElmt) {
+        if (nb) {
+          existingElmt.innerHTML = nb.toString();
+        } else {
+          existingElmt.remove();
+        }
+      } else {
+        if (nb) {
+          const spanNb = document.createElement("SPAN");
+          spanNb.id = id;
+          spanNb.innerHTML = nb.toString();
+          this.createElementNotification(spanNb, id);
+        }
+      }
+  }
+
+  private createElementNotification(element, id) {
+    switch (id) {
+      case 'broadcastNotification':
+        document.getElementsByClassName('tab-button')[1].appendChild(element);
+        break;
+      case 'eventNotification':
+        document.getElementsByClassName('tab-button')[5].appendChild(element);
+        break;
+      case 'newsNotification':
+        document.getElementsByClassName('tab-button')[4].appendChild(element);
+        break;
+      case 'partageNotification':
+        document.getElementsByClassName('tab-button')[3].appendChild(element);
+        break;
+      default:
+        console.log(`no notification`);
     }
   }
 

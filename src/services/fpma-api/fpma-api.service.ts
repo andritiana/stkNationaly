@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
 import { AgendaEvent } from "../../models/agenda-event.interface";
 import { DateHelper } from "../utils/date-helper";
@@ -7,6 +7,7 @@ import { ArticleSpi } from "../../models/article-spi.interface";
 import { Presentation } from "../../models/presentation.interface";
 import { Actualities } from "../../models/actuality.interface";
 import { StkNews } from "../../models/stk-news.interface";
+import { LastVisitTimestamps, LastVisitUpdates } from "../../models/lastVisitTimestamps.interface";
 
 @Injectable()
 export class FpmaApiService {
@@ -188,4 +189,30 @@ export class FpmaApiService {
     }
   }
 
+  public getContentUpdated(lastVisitTimestamps: LastVisitTimestamps): Observable<LastVisitUpdates> {
+    const params = new HttpParams()
+                      .set('broadcasts', lastVisitTimestamps.broadcasts.toString())
+                      .set('events', lastVisitTimestamps.events.toString())
+                      .set('news', lastVisitTimestamps.news.toString())
+                      .set('partages', lastVisitTimestamps.partages.toString())
+    return this.http.get(`${this.FPMA_DOMAIN}api/content-updates`, { params })
+      .map((res: any) => this.parseContentUpdates(res))
+      .catch((e: any) => {
+        return Observable.throw(e);
+    })
+  }
+
+  private parseContentUpdates(data: any): LastVisitUpdates {
+    const contentUpdated = data ? data['content-updates'] : null;
+    if ( contentUpdated && contentUpdated.data) {
+      return {
+        broadcasts: contentUpdated.data.broadcasts,
+        events: contentUpdated.data.events,
+        news: contentUpdated.data.news,
+        partages: contentUpdated.data.partages
+      }
+    } else {
+      return null;
+    }
+  }
 }

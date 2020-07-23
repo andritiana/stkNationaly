@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { HomePage } from '../home/home';
 import { PresentationPage } from '../presentation/presentation';
 import { SpiPage } from '../spi/spi';
 import { StkNewsPage } from '../stk-news/stk-news';
 import { AgendaPage } from '../agenda/agenda';
 import { ActualityPage } from '../actuality/actuality';
+import { ContentUpdateService } from '../../services/utils/content-update.service';
 
 /**
  * Generated class for the MainTabsPage page.
@@ -17,7 +18,7 @@ import { ActualityPage } from '../actuality/actuality';
   selector: 'page-main-tabs',
   templateUrl: 'main-tabs.html',
 })
-export class MainTabsPage implements OnInit {
+export class MainTabsPage implements OnInit, AfterViewInit {
   tabHomeRoot = HomePage;
   tab1Root = ActualityPage;
   tab2Root = PresentationPage;
@@ -25,12 +26,29 @@ export class MainTabsPage implements OnInit {
   tab4Root = StkNewsPage;
   tab5Root = AgendaPage;
 
-  constructor() {
+  public nbBroadcastsUpdated: number;
+  public nbNewsUpdated: number;
+  public nbEventsUpdated: number;
+  public nbPartagesUpdated: number;
+
+  constructor(
+    private contentUpdateService: ContentUpdateService
+  ) {
   }
 
   ngOnInit(): void {
+    this.contentUpdateService.getNbBroadcastsUpdated().subscribe( nb => this.nbBroadcastsUpdated = nb);
+    this.contentUpdateService.getNbNewsUpdated().subscribe( nb => this.nbNewsUpdated = nb);
+    this.contentUpdateService.getNbEventsUpdated().subscribe( nb => this.nbEventsUpdated = nb);
+    this.contentUpdateService.getNbPartagesUpdated().subscribe( nb => this.nbPartagesUpdated = nb);
   }
 
+  ngAfterViewInit(): void {
+    const spanNb = document.createElement("SPAN");                 // Create a <span> node
+    const textnode = document.createTextNode("2");         // Create a text node
+    spanNb.appendChild(textnode);                              // Append the text to <li>
+    document.getElementsByClassName('tab-button')[1].appendChild(spanNb);
+  }
 
   tabChanged($ev){
     switch ($ev.tabTitle) {

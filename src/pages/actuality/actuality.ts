@@ -4,6 +4,7 @@ import { NavController, NavParams, App } from 'ionic-angular';
 import { FpmaApiService } from '../../services/fpma-api/fpma-api.service';
 import { DateHelper } from '../../services/utils/date-helper';
 import { Actualities } from '../../models/actuality.interface';
+import { ContentUpdateService } from '../../services/utils/content-update.service';
 
 /**
  * Generated class for the ActualityPage page.
@@ -26,12 +27,14 @@ export class ActualityPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private fpmaApiService: FpmaApiService,
-    private app:  App
+    private app:  App,
+    private contentUpdateService: ContentUpdateService
     ) {
   }
 
   ionViewDidLoad(){
     this.loadActuality();
+    this.contentUpdateService.resetNbUpdated('broadcasts');
   }
 
   loadActuality(){

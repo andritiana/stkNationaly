@@ -3,6 +3,7 @@ import { NavController, NavParams, App } from 'ionic-angular';
 import { FpmaApiService } from '../../services/fpma-api/fpma-api.service';
 import { StkNews } from '../../models/stk-news.interface';
 import { StkNewsPdfPage } from './stk-new-pdf/stk-news-pdf';
+import { ContentUpdateService } from '../../services/utils/content-update.service';
 
 /**
  * Generated class for the StkNewsPage page.
@@ -25,11 +26,13 @@ export class StkNewsPage {
     public navCtrl: NavController,
     private app:  App,
     public navParams: NavParams,
-    private fpmaApiService: FpmaApiService) {
+    private fpmaApiService: FpmaApiService,
+    private contentUpdateService: ContentUpdateService) {
   }
 
   ionViewDidLoad() {
     this.loadStkNews();
+    this.contentUpdateService.resetNbUpdated('news');
   }
 
   loadStkNews() {

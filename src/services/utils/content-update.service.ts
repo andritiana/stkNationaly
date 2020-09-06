@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
-import { LastVisitUpdates } from "../../models/lastVisitTimestamps.interface";
+import { LastVisitUpdates, LastVisitTimestamps } from "../../models/lastVisitTimestamps.interface";
 import { Observable } from "rxjs/Observable";
 import { Subject } from "rxjs/Subject";
+import { Storage } from '@ionic/storage';
 
 @Injectable()
 export class ContentUpdateService {
@@ -11,7 +12,7 @@ export class ContentUpdateService {
   private partageUpdateObservable = new Subject<number>();
 
 
-  constructor() {}
+  constructor(private storage: Storage) {}
 
   public initNbUpdated(lastVisitUpdated: LastVisitUpdates) {
     this.updateBroadcastsNb(lastVisitUpdated.broadcasts);
@@ -36,6 +37,7 @@ export class ContentUpdateService {
   public updateBroadcastsNb(nbBroadcastssUpdated: number): void {
     this.broadcastUpdateObservable.next(nbBroadcastssUpdated);
   }
+
   public updateEventsNb(nbEventsUpdated: number): void {
     this.eventUpdateObservable.next(nbEventsUpdated);
   }
@@ -46,23 +48,37 @@ export class ContentUpdateService {
     this.partageUpdateObservable.next(nbPartagesUpdated);
   }
 
+  public updateEpochTimeStored(content: string): void {
+    this.storage.get('lastVisitTimestamp').then((val: LastVisitTimestamps) => {
+        let contentsEpochTime: LastVisitTimestamps;
+        contentsEpochTime = val;
+        const now = new Date();
+        const secondsSinceEpoch = Math.round(now.getTime() / 1000);
+        contentsEpochTime[content] = secondsSinceEpoch;
+        this.storage.set('lastVisitTimestamp', contentsEpochTime);
+    });
+  }
 
   public resetNbUpdated(content: string) {
     switch (content) {
       case 'broadcasts' : {
         this.updateBroadcastsNb(0);
+        this.updateEpochTimeStored('broadcasts');
         break;
       }
       case 'events' : {
         this.updateEventsNb(0);
+        this.updateEpochTimeStored('events');
         break;
       }
       case 'partages' : {
         this.updatePartagesNb(0);
+        this.updateEpochTimeStored('partages');
         break;
       }
       case 'news' : {
         this.updateNewsNb(0);
+        this.updateEpochTimeStored('news');
         break;
       }
       default: {
@@ -71,4 +87,5 @@ export class ContentUpdateService {
     }
 
   }
+
 }

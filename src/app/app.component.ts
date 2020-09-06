@@ -41,11 +41,13 @@ export class MyApp {
             this.contentUpdateService.initNbUpdated(contentUpdated);
           })
         } else {
+          const now = new Date();
+          const secondsSinceEpoch = Math.round(now.getTime() / 1000);
           const currentTimestamp:LastVisitTimestamps = {
-            broadcasts: 2,
-            news : 3,
-            partages: 4,
-            events: 6
+            broadcasts: secondsSinceEpoch,
+            news : secondsSinceEpoch,
+            partages: secondsSinceEpoch,
+            events: secondsSinceEpoch
           }
           this.storage.set('lastVisitTimestamp', currentTimestamp);
         }

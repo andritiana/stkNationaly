@@ -80,7 +80,7 @@ export class MainTabsPage implements OnInit, AfterViewInit {
   }
 
   private updateNotificationIcon(id: string, nb: number) {
-      const existingElmt = document.getElementById("id");
+      const existingElmt = document.getElementById(id);
       if (existingElmt) {
         if (nb) {
           existingElmt.innerHTML = nb.toString();

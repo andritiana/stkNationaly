@@ -4,6 +4,7 @@ import { FpmaApiService } from '../../services/fpma-api/fpma-api.service';
 import { DateHelper } from '../../services/utils/date-helper';
 import { ArticleSpi } from '../../models/article-spi.interface';
 import { SpiDetailPage } from './spi-detail/spi-detail';
+import { ContentUpdateService } from '../../services/utils/content-update.service';
 
 /**
  * Generated class for the SpiPage page.
@@ -25,11 +26,13 @@ export class SpiPage {
   constructor(
     public navCtrl: NavController,
     private app:  App,
-    private fpmaApiService: FpmaApiService) {
+    private fpmaApiService: FpmaApiService,
+    private contentUpdateService: ContentUpdateService) {
   }
 
   ionViewDidLoad(){
     this.loadPartages();
+    this.contentUpdateService.resetNbUpdated('partages');
   }
 
   loadPartages(){

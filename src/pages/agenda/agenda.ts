@@ -4,6 +4,7 @@ import 'rxjs/add/operator/map';
 import { AgendaEvent } from "../../models/agenda-event.interface";
 import { FpmaApiService } from "../../services/fpma-api/fpma-api.service";
 import { DateHelper } from "../../services/utils/date-helper";
+import { ContentUpdateService } from "../../services/utils/content-update.service";
 
 @Component({
     selector: 'agenda-page',
@@ -16,11 +17,16 @@ export class AgendaPage {
   public DateHelper = DateHelper;
   public loading = true;
 
-  constructor(public fpmaApiService: FpmaApiService, public navCtrl: NavController) { 
+  constructor(
+    public fpmaApiService: FpmaApiService,
+    public navCtrl: NavController,
+    private contentUpdateService: ContentUpdateService
+    ) { 
   }
 
   ionViewDidLoad(){
     this.loadAgenda();
+    this.contentUpdateService.resetNbUpdated('events');
   }
 
   loadAgenda(){

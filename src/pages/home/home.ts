@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { VerseService } from '../../services/verse/verse.service';
 import { Verse } from '../../models/verse.interface';
-import { NavController } from 'ionic-angular';
+import { NavController, App } from 'ionic-angular';
+import { PresentationDetailPage } from '../presentation/presentation-detail/presentation-detail';
 
 @Component({
   selector: 'page-home',
@@ -13,7 +14,8 @@ export class HomePage implements OnInit {
 
   constructor(
     private verseService: VerseService,
-    private navController: NavController) {
+    private navController: NavController,
+    private app:  App) {
   }
 
   ngOnInit(): void {
@@ -29,8 +31,10 @@ export class HomePage implements OnInit {
   goToPage(page: string): void {
     if (page === 'partage') {
       this.navController.parent.select(3);
-    } else if (page === 'presentation') {
-      this.navController.parent.select(2);
+    } else if (page === 'stk') {
+      this.app.getActiveNav().push(PresentationDetailPage, {id: 27});
+    } else if (page === 'hymne') {
+      this.app.getActiveNav().push(PresentationDetailPage, {id: 91});
     } else if (page === 'actus') {
       this.navController.parent.select(1);
     }

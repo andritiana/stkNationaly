@@ -8,6 +8,11 @@
   <ion-navbar>
     <ion-title>Actualités</ion-title>
     <ion-buttons end>
+      <button ion-button icon-only (click)="refresh()">
+        <ion-icon class="refresh-button" name="refresh"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons end>
       <button ion-button icon-only (click)="goToHome()">
         <ion-icon class="homeMenu" name="home"></ion-icon>
       </button>
@@ -19,23 +24,13 @@
 <ion-content>
   <ion-spinner *ngIf="loading; else list" name="dots"pager="true"></ion-spinner>
 
-  <ion-slides>
-
-    <ion-slide *ngFor="let actuality of actualities; let i = index">
-      <div class="swipe-content">
-          <div class="article-container">
-            <img *ngIf="!!actuality.thumbnail[0]" [src]="actuality.thumbnail[0]"/>
-            <div class='article-content'>
-              <h5>{{DateHelper.getDateWrittenFr(actuality.created)}}</h5>
-              <h3>{{actuality.title}}</h3>
-              <div [innerHTML]="actuality.text"></div>
-            </div>  
-            <img *ngIf='actuality.thumbnail[1]' [src]="actuality.thumbnail[1]"/>
-          </div>
-        </div>
-      <h1></h1>
-      <p></p>
-    </ion-slide>
-
-  </ion-slides>
+  <ng-template #list>
+    <div class="actuality-card" *ngFor="let actuality of actualities; let i = index" (click)="goToDetails(i)">
+      <img *ngIf="!!actuality.thumbnail[0]" [src]="actuality.thumbnail[0]"/>
+      <div class="titles-container">
+          <div class="actuality-title">{{actuality.title}}</div>
+          <div>{{actuality.rawtext}}</div>
+      </div>
+    </div>
+  </ng-template>
 </ion-content>

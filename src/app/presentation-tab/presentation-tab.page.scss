@@ -1,0 +1,26 @@
+ion-content {
+  --padding-bottom: 1rem;
+  --padding-top: 1rem;
+  --padding-start: 1rem;
+  --padding-end: 1rem;
+}
+.presentation-section {
+  display: inline-block;
+  width: 100%;
+  background-color: white;
+  box-shadow: 1px 1px 1px 0px #656565;
+  padding: 2rem;
+  border-left: 5px solid #19338F;
+  margin-bottom: 2rem;
+  border-radius: 5px;
+
+  ion-icon {
+    float: right;
+    color: #19338F;
+  }
+
+  .presentation-title {
+    color: #19338F;
+    font-weight: bold;
+  }
+}

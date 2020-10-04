@@ -1,0 +1,22 @@
+<ion-header>
+
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{pdfTitle}}</ion-title>
+  </ion-toolbar>
+
+</ion-header>
+  
+  
+<ion-content padding>
+  <pdf-viewer 
+    [src]="pdf"
+    [render-text]="true"
+    [original-size]="false"
+    [autoresize]="true"
+    style="display: block;">
+  </pdf-viewer>
+</ion-content>
+  

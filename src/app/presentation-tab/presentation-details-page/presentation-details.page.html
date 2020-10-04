@@ -1,0 +1,28 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Presentation
+    </ion-title>
+    <ion-buttons slot="end">
+      <button ion-button icon-only (click)="goToHome()">
+        <ion-icon class="homeMenu" name="home"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-spinner *ngIf="loading; else presentationContent" name="dots"pager="true"></ion-spinner>
+
+  <ng-template #presentationContent>
+    <img *ngIf='presentation.thumbnail[0]' [src]="presentation.thumbnail[0]"/>
+    <div class='article-content'>
+      <h3>{{presentation.title}}</h3>
+      <div [innerHTML]="removeHtmlLink(presentation.introtext)"></div>
+    </div>
+    <img *ngIf='presentation.thumbnail[1]' [src]="presentation.thumbnail[1]"/>
+  </ng-template>
+</ion-content>

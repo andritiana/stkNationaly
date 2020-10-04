@@ -1,0 +1,40 @@
+
+  ion-slides {
+    height: 100%;
+  }
+  ion-slide {
+    display: block;
+    overflow-y: scroll;
+    .slide-zoom {
+      height: 100%;
+    }
+  }
+  .swipe-content {
+    height: 100%;
+    .article-container {
+      background-color: white;
+      min-height: 100%;
+    }
+  }
+  .article-content {
+    padding: 2rem;
+    text-align: left;
+    color: #19338F;
+    h3, h5 {
+      font-weight: bolder;
+    }
+    h3 {
+      margin-bottom: 0;
+    }
+    h5 {
+      margin-top: 0;
+      color: darkgray;
+    }
+    p {
+      text-align: justify;
+    }
+  }
+  img {
+    height: 25vh;
+    width: 100%;
+  }

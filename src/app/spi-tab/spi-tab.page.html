@@ -1,0 +1,42 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Presentation
+    </ion-title>
+    <ion-buttons slot="end">
+      <button ion-button icon-only (click)="goToHome()">
+        <ion-icon class="homeMenu" name="home"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="card-background-page" [fullscreen]="true">
+
+  <ion-spinner *ngIf="loading; else list" name="dots"></ion-spinner>
+
+  <ng-template #list>
+    <ng-container *ngIf="partages && partages.length; else noPartage">
+      <ion-card class="card-spi" *ngFor="let partage of partages; let i = index" (click)="goToDetails(i)">
+        <div class="card-image-spi">
+            <img [src]="partage.thumbnail[0]"/>
+        </div>
+        <div class='card-content'>
+          <div class='title'>
+              <div class="card-title">{{partage.title}}</div>
+              <div class="card-subtitle">{{DateHelper.getDateWrittenFr(partage.creationDate)}}</div>
+          </div>
+          <div class="play-icon">
+            <ion-icon name="play"></ion-icon>
+          </div>
+        </div>
+      </ion-card>
+    </ng-container>
+    <ng-template #noPartage>
+      <div class="error-message-page">
+        Désolé, les partatages n'ont pas pu être récuperés.
+      </div>
+    </ng-template>
+  </ng-template>
+
+</ion-content>

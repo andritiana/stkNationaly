@@ -13,10 +13,13 @@
   .news-title {
       height: 20%;
       overflow: hidden;
-      padding-top: 0.5rem;
+      padding-top: 1rem;
       text-align: center;
       color: var(--ion-color-secondary);
       font-weight: bold;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      font-size: 0.8rem;
   }
   .news-img {
       height: 80%;

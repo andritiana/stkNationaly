@@ -9,4 +9,12 @@
 
 ion-tab-bar {
   --background: #19338F;
+  img {
+    filter: opacity(0.6);
+  }
+  .tab-selected {
+    img {
+      filter: opacity(1);
+    }
+  }
 }

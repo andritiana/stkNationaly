@@ -17,14 +17,17 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div *ngIf="!loading" >
+  <ion-spinner *ngIf="loading; else list" name="dots"pager="true"></ion-spinner>
 
-    <div class="actuality-card" *ngFor="let actuality of actualities; let i = index" (click)="goToDetails(i)">
-      <img *ngIf="!!actuality.thumbnail[0]" [src]="actuality.thumbnail[0]"/>
-      <div class="titles-container">
-          <div class="actuality-title">{{actuality.title}}</div>
-          <div>{{actuality.rawtext}}</div>
-      </div>
+  <ng-template #list>
+    <div>
+      <ion-card class="actuality-card" *ngFor="let actuality of actualities; let i = index" (click)="goToDetails(i)">
+        <img *ngIf="!!actuality.thumbnail[0]" [src]="actuality.thumbnail[0]"/>
+        <div class="titles-container">
+            <div class="actuality-title">{{actuality.title}}</div>
+            <div>{{actuality.rawtext}}</div>
+        </div>
+      </ion-card>
     </div>
-  </div>
+  </ng-template>
 </ion-content>

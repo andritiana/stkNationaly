@@ -20,12 +20,12 @@
   <ion-grid>
     <ion-row>
       <ion-col class="stk-news-grid" *ngFor="let stkNews of listOfStkNews" size="6">
-        <div class="stk-news-card" (click)="openPdf(stkNews)">
+        <ion-card class="stk-news-card" (click)="openPdf(stkNews)">
           <div class="news-img">
               <img [src]="stkNews.thumbnails[0]"/>
           </div>
           <div class="news-title">{{stkNews.title}}</div>
-        </div>
+        </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>

@@ -1,9 +1,13 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <span>
+      <img src='assets/imgs/logo_stk.png'/>
+      <img src='assets/imgs/stk.jpeg'/>
+    </span>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content [fullscreen]="true">
-  <div class="home-header">
-    <img src='assets/imgs/logo_stk.png'/>
-    <img src='assets/imgs/stk.jpeg'/>
-  </div>
   <div class="home-container">
     <div class="verse-container">
       <ion-spinner *ngIf="loading; else verseText" name="dots"></ion-spinner>

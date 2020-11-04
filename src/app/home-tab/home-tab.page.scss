@@ -3,20 +3,12 @@ ion-spinner {
       fill: white!important;
   }
 }
-.home-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-  height: 3.5rem;
-  background-color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  img {
-      height: 5vh;
-      margin: 0 1rem;
-  }
+
+ion-toolbar {
+    text-align: center;
+    span img {
+        height: 5vh;
+    }
 }
 .verse-container {
   background-color: rgba(0, 0, 0, 0.35);
@@ -44,7 +36,6 @@ ion-spinner {
   width: 100%;
   display: flex;
   flex-direction: column;
-  padding-top: 3.5rem;
 }
 .button-tag-container {
   background-color: #f8f8f8;
@@ -58,7 +49,7 @@ ion-spinner {
       align-items: center;
       margin: 0.5rem 0;
       padding: 2rem;
-      height: 14vh;
+      height: 12vh;
       background-color: white;
       color: #19338F;
       font-size: 16px;

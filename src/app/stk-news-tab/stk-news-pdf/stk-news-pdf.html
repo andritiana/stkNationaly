@@ -14,9 +14,14 @@
   <pdf-viewer 
     [src]="pdf"
     [render-text]="true"
-    [original-size]="false"
     [autoresize]="true"
+    [original-size]="false"
+    [zoom]="zoomTo"
     style="display: block;">
   </pdf-viewer>
+  <div class="zoom-button">
+    <div (click)="zoom('in')">+</div>
+    <div (click)="zoom('out')">-</div>
+  </div>
 </ion-content>
   

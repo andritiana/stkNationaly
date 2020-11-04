@@ -15,10 +15,12 @@
   <ion-spinner *ngIf="loading; else list" name="dots"pager="true"></ion-spinner>
 
   <ng-template #list>
-    <div class="presentation-section" *ngFor="let presentation of presentations; let i = index" 
+    <div>
+      <ion-card class="presentation-section" *ngFor="let presentation of presentations; let i = index" 
       (click)="goToDetails(presentation.id)">
       <span class="presentation-title">{{presentation.title}}</span>
       <ion-icon name="arrow-forward"></ion-icon>
+    </ion-card>
     </div>
   </ng-template>
 </ion-content>

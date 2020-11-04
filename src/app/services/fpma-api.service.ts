@@ -70,7 +70,7 @@ export class FpmaApiService {
           id: partage.id,
           creationDate: DateHelper.getDate(partage.created),
           title: partage.title,
-          text: partage.rawtext, // for now full text of partage are sent in introtext
+          text: partage.introtext, // for now full text of partage are sent in introtext
           thumbnail: this.parseThumbnailUrls(partage.thumbnails)
         });
       });

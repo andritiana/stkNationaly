@@ -23,7 +23,7 @@
               <div class='article-content'>
                 <h5>{{DateHelper.getDateWrittenFr(partage.creationDate)}}</h5>
                 <h3>{{partage.title}}</h3>
-                <p>{{partage.text}}</p>
+                <p [innerHTML]="partage.text"></p>
               </div>
               <img *ngIf='partage.thumbnail[1]' [src]="partage.thumbnail[1]"/>
             </div>

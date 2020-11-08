@@ -15,6 +15,7 @@ ion-tab-bar {
   .tab-selected {
     img {
       filter: opacity(1);
+      transform: scale(1.2);;
     }
   }
 }

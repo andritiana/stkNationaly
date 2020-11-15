@@ -9,6 +9,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 import { IonicStorageModule } from '@ionic/storage';
+import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -19,11 +20,12 @@ import { IonicStorageModule } from '@ionic/storage';
     AppRoutingModule,
     HttpClientModule,
     HttpClientJsonpModule,
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
   ],
   providers: [
     StatusBar,
     SplashScreen,
+    FirebaseAnalytics,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

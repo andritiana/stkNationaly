@@ -10,38 +10,29 @@ import { Observable } from 'rxjs/internal/Observable';
 })
 export class VerseService {
 
+    private FPMA_DOMAIN = 'https://stk.fpma.church/';
+
+
     constructor(private http: HttpClient) {}
 
+    /**
+     * Method that retrieve list of events from the stk.fpma api
+     */
     public getVerseOfTheDay(): Observable<Verse> {
-        return this.http.jsonp('http://labs.bible.org/api/?passage=votd&type=json', 'callback').pipe(
-        map((response: Response) => this.parseVerseParam(response[0])),
-        flatMap((res: Verse) => {
-            return this.http.jsonp(`http://getbible.net/json?p=${res.bookName}${res.chapter}:${res.verse}&v=ostervald`, 'callback')
-            .pipe(
-                map(result => {
-                return {bookName: res.bookName, chapter: res.chapter, verse: res.verse, text: this.getVerseText(result, res.verse)};
-             }),
-             catchError((e: any) => {
-                 return Observable.throw(this.handleError(e));
-             }));
-        })
-        );
+        return this.http.get(`${this.FPMA_DOMAIN}api/votd`)
+        .pipe(
+            map((res: any) => this.parseVerse(res)),
+            catchError((e: any) => {
+            return Observable.throw(e);
+        }));
     }
 
-    private parseVerseParam(data: any): Verse {
-        return {bookName: data.bookname, chapter: +data.chapter, verse: +data.verse};
-    }
-
-    private getVerseText(data: any, verseNumber: number): string {
-        let verseText = '';
-        if (data && data.book[0] && data.book[0].chapter[verseNumber]) {
-            verseText = data.book[0].chapter[verseNumber].verse;
-            verseText = verseText.slice(0, -3);
+    private parseVerse(res: any): Verse {
+        if (res && res.votd && res.votd.data) {
+            const verseData = res.votd.data;
+            return {ref: verseData.ref, verse: verseData.verse, mention: verseData.mention};
+        } else {
+            throw console.error('no verse data');
         }
-        return verseText;
-    }
-
-    private handleError(error: any) {
-        console.log(error);
     }
 }

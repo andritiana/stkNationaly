@@ -1,6 +1,5 @@
 export interface Verse {
-    bookName: string,
-    chapter: number,
-    verse: number,
-    text?: string
+    ref: string;
+    verse: string;
+    mention?: string;
 }

@@ -13,11 +13,12 @@
       <ion-spinner *ngIf="loading; else verseText" name="dots"></ion-spinner>
       <ng-template #verseText>
         <span>
-          "{{verse?.text}}"
+          {{verse?.verse}}
         </span>
         <span class="verse-title">
-          {{verse?.bookName}} - {{verse?.chapter}} : {{verse?.verse}}
+          {{verse?.ref}}
         </span>
+        <span class="mention">{{verse?.mention}}</span>
       </ng-template>
     </div>
     <div class="button-tag-container">

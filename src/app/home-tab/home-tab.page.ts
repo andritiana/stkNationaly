@@ -25,7 +25,7 @@ export class HomeTabPage implements OnInit {
       this.verse = verse;
       this.loading = false;
     }, () => {
-      this.verse = { bookName: '1 Corinthiens', chapter: 11, verse: 1, text: 'Soyez mes imitateurs, comme je le suis moi-même de Christ.' };
+      this.verse = { ref: '1 Corinthiens 11:1', verse: 'Soyez mes imitateurs, comme je le suis moi-même de Christ.' };
       this.loading = false;
     });
   }

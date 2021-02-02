@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { AgendaEvent } from '../models/agenda-event.interface';
 import { DateHelper } from '../utils/date-helper';
 import { ArticleSpi } from '../models/article-spi.interface';
@@ -17,6 +17,7 @@ import { catchError } from 'rxjs/internal/operators/catchError';
 export class FpmaApiService {
 
   private FPMA_DOMAIN = 'https://stk.fpma.church/';
+  private isDevMode = false;
 
   constructor(
     public http: HttpClient
@@ -54,6 +55,12 @@ export class FpmaApiService {
    * Method that retrieve list of spi article from the stk.fpma api
    */
   public loadPartageSpi(): Observable<ArticleSpi[]> {
+    // const httpOptions =  this.isDevMode ? {
+    //   headers: new HttpHeaders({
+    //     'dev-mode':  ''
+    //   })
+    // } : {};
+
     return this.http.get(`${this.FPMA_DOMAIN}api/partages`)
       .pipe(
         map((res: any) => this.parsePartage(res)),
@@ -225,5 +232,13 @@ export class FpmaApiService {
     } else {
       return null;
     }
+  }
+
+  public activateDevMode() {
+    this.isDevMode = true;
+  }
+
+  public deactivateDevMode() {
+    this.isDevMode = false;
   }
 }

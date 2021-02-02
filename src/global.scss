@@ -59,7 +59,14 @@ ion-header {
     border-radius: 1rem;
     padding-top: 0.4rem;
     position: absolute;
-    right: 10px;
+    right: 0;
     top: 5px;
     color: white;
   }
+
+
+.my-pop-up {
+  .alert-wrapper{
+      background-color: white;
+  }
+}

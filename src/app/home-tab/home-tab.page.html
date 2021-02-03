@@ -4,6 +4,11 @@
       <img src='assets/imgs/logo_stk.png' (click)="enableDevMode()"/>
       <img src='assets/imgs/stk.jpeg'/>
     </span>
+    <ion-buttons *ngIf="isDevMode" slot="end">
+      <button ion-button icon-only (click)="quitDevModePopup()">
+        <ion-icon class="homeMenu" name="close"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 

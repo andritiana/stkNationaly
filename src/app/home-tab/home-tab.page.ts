@@ -14,6 +14,7 @@ export class HomeTabPage implements OnInit {
 
   public verse: Verse;
   public loading = true;
+  public isDevMode = false;
   private devModeCounter = 0;
   private DEV_MODE_ACTIVATION_NUMBER = 4;
   private previousClickTimestamp: number;
@@ -79,6 +80,31 @@ export class HomeTabPage implements OnInit {
           text: 'Confirmer',
           handler: () => {
             this.fpmaApiService.activateDevMode();
+            this.isDevMode = true;
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  async quitDevModePopup() {
+    const alert = await this.alertController.create({
+      cssClass: 'my-pop-up',
+      header: 'Dev Mode',
+      message: 'Desactiver le mode developper ?',
+      buttons: [
+        {
+          text: 'Annuler',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {}
+        }, {
+          text: 'Confirmer',
+          handler: () => {
+            this.fpmaApiService.deactivateDevMode();
+            this.isDevMode = false;
           }
         }
       ]

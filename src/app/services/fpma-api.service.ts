@@ -28,7 +28,13 @@ export class FpmaApiService {
    * Method that retrieve list of events from the stk.fpma api
    */
   public loadAgenda(): Observable<AgendaEvent[]> {
-    return this.http.get(`${this.FPMA_DOMAIN}api/events`)
+    const httpOptions =  this.isDevMode ? {
+      headers: new HttpHeaders({
+        'dev-mode':  ''
+      })
+    } : {};
+
+    return this.http.get(`${this.FPMA_DOMAIN}api/events`, httpOptions)
       .pipe(
         map((res: any) => this.parseEvent(res)),
         catchError((e: any) => {
@@ -55,13 +61,13 @@ export class FpmaApiService {
    * Method that retrieve list of spi article from the stk.fpma api
    */
   public loadPartageSpi(): Observable<ArticleSpi[]> {
-    // const httpOptions =  this.isDevMode ? {
-    //   headers: new HttpHeaders({
-    //     'dev-mode':  ''
-    //   })
-    // } : {};
+    const httpOptions =  this.isDevMode ? {
+      headers: new HttpHeaders({
+        'dev-mode':  ''
+      })
+    } : {};
 
-    return this.http.get(`${this.FPMA_DOMAIN}api/partages`)
+    return this.http.get(`${this.FPMA_DOMAIN}api/partages`, httpOptions)
       .pipe(
         map((res: any) => this.parsePartage(res)),
         catchError((e: any) => {
@@ -89,7 +95,12 @@ export class FpmaApiService {
    * Method that retrieve list of actuality from the stk.fpma api
    */
   public loadActuality(): Observable<Actualities[]> {
-    return this.http.get(`${this.FPMA_DOMAIN}api/broadcasts`)
+    const httpOptions =  this.isDevMode ? {
+      headers: new HttpHeaders({
+        'dev-mode':  ''
+      })
+    } : {};
+    return this.http.get(`${this.FPMA_DOMAIN}api/broadcasts`, httpOptions)
     .pipe(
       map((res: any) => this.parseActuality(res)),
       catchError((e: any) => {
@@ -118,7 +129,12 @@ export class FpmaApiService {
    * Method that retrieve list of presentation from the stk.fpma api
    */
   public loadPresentations(): Observable<Presentation[]> {
-    return this.http.get(`${this.FPMA_DOMAIN}api/presentations`)
+    const httpOptions =  this.isDevMode ? {
+      headers: new HttpHeaders({
+        'dev-mode':  ''
+      })
+    } : {};
+    return this.http.get(`${this.FPMA_DOMAIN}api/presentations`, httpOptions)
       .pipe(
         map((res: any) => this.parsePresentations(res)),
         catchError((e: any) => {
@@ -144,7 +160,12 @@ export class FpmaApiService {
   }
 
   public loadPresentation(id: number): Observable<Presentation | null> {
-    return this.http.get(`${this.FPMA_DOMAIN}api/presentations/${id}`)
+    const httpOptions =  this.isDevMode ? {
+      headers: new HttpHeaders({
+        'dev-mode':  ''
+      })
+    } : {};
+    return this.http.get(`${this.FPMA_DOMAIN}api/presentations/${id}`, httpOptions)
       .pipe(
         map((res: any) => this.parsePresentation(res)),
         catchError((e: any) => {
@@ -170,7 +191,12 @@ export class FpmaApiService {
 
 
   public loadStkNews(): Observable<StkNews[]> {
-    return this.http.get(`${this.FPMA_DOMAIN}api/news`)
+    const httpOptions =  this.isDevMode ? {
+      headers: new HttpHeaders({
+        'dev-mode':  ''
+      })
+    } : {};
+    return this.http.get(`${this.FPMA_DOMAIN}api/news`, httpOptions)
       .pipe(
         map((res: any) => this.parseStkNews(res)),
         catchError((e: any) => {

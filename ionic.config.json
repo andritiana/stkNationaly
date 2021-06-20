@@ -1,8 +1,7 @@
 {
-  "name": "stkNationaly",
-  "app_id": "stk.nationaly",
-  "type": "ionic-angular",
+  "name": "updateStkApp",
   "integrations": {
     "cordova": {}
-  }
+  },
+  "type": "angular"
 }

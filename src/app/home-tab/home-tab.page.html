@@ -1,0 +1,52 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <span>
+      <img src='assets/imgs/logo_stk.png' (click)="enableDevMode()"/>
+      <img src='assets/imgs/stk.jpeg'/>
+    </span>
+    <ion-buttons *ngIf="isDevMode" slot="end">
+      <button ion-button icon-only (click)="quitDevModePopup()">
+        <ion-icon class="homeMenu" name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="home-container">
+    <div class="verse-container">
+      <ion-spinner *ngIf="loading; else verseText" name="dots"></ion-spinner>
+      <ng-template #verseText>
+        <span>
+          {{verse?.verse}}
+        </span>
+        <span class="verse-title">
+          {{verse?.ref}}
+        </span>
+        <span class="mention">{{verse?.mention}}</span>
+      </ng-template>
+    </div>
+    <div class="button-tag-container">
+      <div class="horizontal-button" (click)="goToPage('stk')">
+        <img src="assets/imgs/presentation_blue.svg"/>
+        <span>Qu'est ce que la STK ?</span>
+      </div>
+      <div class="horizontal-button" (click)="goToPage('hymne')">
+        <img src="assets/imgs/interface.svg"/>
+        <span>Hymne STK</span>
+      </div>
+      <div class="two-buttons">
+        <div class="button-column" (click)="goToPage('actus')">
+          <span class="button-title">
+            Actualités STK
+          </span>
+        </div>
+        <div class="button-column prime" (click)="goToPage('partage')">
+          <span class="button-title">
+            Partage Spi
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

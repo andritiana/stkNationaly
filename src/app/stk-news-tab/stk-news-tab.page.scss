@@ -1,0 +1,28 @@
+.grid {
+  padding: 0;
+}
+.stk-news-grid {
+  padding: 1rem;
+  .stk-news-card {
+      background-color: white;
+      height: 15rem;
+      overflow: hidden;
+      margin: 0;
+  }
+  .news-title {
+      height: 20%;
+      overflow: hidden;
+      padding: 1rem 0.5rem;;
+      text-align: center;
+      color: var(--ion-color-secondary);
+      font-weight: bold;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      font-size: 0.8rem;
+  }
+  .news-img {
+      height: 80%;
+      overflow: hidden;
+  }
+
+}

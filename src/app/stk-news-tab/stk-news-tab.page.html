@@ -1,0 +1,32 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      STK NEWS
+    </ion-title>
+    <ion-buttons slot="end">
+      <button ion-button icon-only (click)="refresh()">
+        <ion-icon class="refresh-button" name="refresh"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <button ion-button icon-only (click)="goToHome()">
+        <ion-icon class="homeMenu" name="home"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-grid>
+    <ion-row>
+      <ion-col class="stk-news-grid" *ngFor="let stkNews of listOfStkNews" size="6">
+        <ion-card class="stk-news-card" (click)="openPdf(stkNews)">
+          <div class="news-img">
+              <img [src]="stkNews.thumbnails[0]"/>
+          </div>
+          <div class="news-title">{{stkNews.title}}</div>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

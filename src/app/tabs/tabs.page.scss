@@ -1,0 +1,21 @@
+.tab-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.home-tab {
+  display: none;
+}
+
+ion-tab-bar {
+  --background: #19338F;
+  img {
+    filter: opacity(0.6);
+  }
+  .tab-selected {
+    img {
+      filter: opacity(1);
+      transform: scale(1.2);;
+    }
+  }
+}

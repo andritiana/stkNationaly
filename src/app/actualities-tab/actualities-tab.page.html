@@ -1,0 +1,33 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Actualités
+    </ion-title>
+    <ion-buttons slot="end">
+      <button ion-button icon-only (click)="refresh()">
+        <ion-icon class="refresh-button" name="refresh"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <button ion-button icon-only (click)="goToHome()">
+        <ion-icon class="homeMenu" name="home"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-spinner *ngIf="loading; else list" name="dots"pager="true"></ion-spinner>
+
+  <ng-template #list>
+    <div>
+      <ion-card class="actuality-card" *ngFor="let actuality of actualities; let i = index" (click)="goToDetails(i)">
+        <img *ngIf="!!actuality.thumbnail[0]" [src]="actuality.thumbnail[0]"/>
+        <div class="titles-container">
+            <div class="actuality-title">{{actuality.title}}</div>
+            <div>{{actuality.rawtext}}</div>
+        </div>
+      </ion-card>
+    </div>
+  </ng-template>
+</ion-content>

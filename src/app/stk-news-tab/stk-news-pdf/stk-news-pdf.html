@@ -1,0 +1,27 @@
+<ion-header>
+
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{pdfTitle}}</ion-title>
+  </ion-toolbar>
+
+</ion-header>
+  
+  
+<ion-content padding>
+  <pdf-viewer 
+    [src]="pdf"
+    [render-text]="true"
+    [autoresize]="true"
+    [original-size]="false"
+    [zoom]="zoomTo"
+    style="display: block;">
+  </pdf-viewer>
+  <div class="zoom-button">
+    <div (click)="zoom('in')">+</div>
+    <div (click)="zoom('out')">-</div>
+  </div>
+</ion-content>
+  

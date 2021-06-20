@@ -1,0 +1,36 @@
+ion-item {
+  --background: white;
+}
+ion-grid {
+  padding: 1rem 0;
+}
+.col-event {
+  padding-left: 1rem;
+}
+h2 {
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+.col-date {
+  border-right: 2px solid var(--ion-color-primary);
+  .date {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      .day {
+          font-size: 1rem;
+          font-weight: bold;
+          color: darkgray;
+      }
+      .month {
+          font-size: 1rem;
+          font-weight: bold;
+          color: var(--ion-color-primary);
+      }
+  }
+}
+.title {
+  font-weight: bold;
+  white-space: normal;
+}  

@@ -1,63 +1,60 @@
-import { Component, trigger, transition, animate, style } from '@angular/core';
+import { Component } from '@angular/core';
+
+import { Platform } from '@ionic/angular';
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { FpmaApiService } from './services/fpma-api.service';
+import { ContentUpdateService } from './services/content-update.service';
+import { LastVisitTimestamps } from './models/lastVisitTimestamps.interface';
 import { Storage } from '@ionic/storage';
-import { Platform } from 'ionic-angular';
-import { StatusBar } from '@ionic-native/status-bar';
-import { SplashScreen } from '@ionic-native/splash-screen';
-import { MainTabsPage } from '../pages/main-tabs/main-tabs';
-import { LastVisitTimestamps } from '../models/lastVisitTimestamps.interface';
-import { FpmaApiService } from '../services/fpma-api/fpma-api.service';
-import { ContentUpdateService } from '../services/utils/content-update.service';
+import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx';
+
 @Component({
-  templateUrl: 'app.html',
-  animations: [
-    trigger(
-      'enterAnimation', [
-        transition(':leave', [
-          style({opacity: 1}),
-          animate('500ms', style({opacity: 0}))
-        ])
-      ]
-    )
-  ]
+  selector: 'app-root',
+  templateUrl: 'app.component.html',
+  styleUrls: ['app.component.scss']
 })
-export class MyApp {
-  rootPage:any = MainTabsPage;
-  showSplash = true; 
+export class AppComponent {
+  public showSplash = true;
   constructor(
-    platform: Platform,
-    statusBar: StatusBar,
-    splashScreen: SplashScreen,
+    private platform: Platform,
+    private splashScreen: SplashScreen,
+    private statusBar: StatusBar,
     private storage: Storage,
     private fpmaService: FpmaApiService,
-    private contentUpdateService: ContentUpdateService
-    ) {
-    platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
-      statusBar.styleDefault();
+    private contentUpdateService: ContentUpdateService,
+    private firebaseAnalytics: FirebaseAnalytics
+  ) {
+    this.initializeApp();
+  }
+
+  initializeApp() {
+    this.platform.ready().then(() => {
+      this.statusBar.styleDefault();
+      this.firebaseAnalytics.logEvent('page_view', {page: 'home'})
+        .then((res: any) => console.log(res))
+        .catch((error: any) => console.error(error));
       this.storage.get('lastVisitTimestamp').then((val: LastVisitTimestamps) => {
         if (val) {
           this.fpmaService.getContentUpdated(val).subscribe( contentUpdated => {
             this.contentUpdateService.initNbUpdated(contentUpdated);
-          })
+          });
         } else {
           const now = new Date();
           const secondsSinceEpoch = Math.round(now.getTime() / 1000);
-          const currentTimestamp:LastVisitTimestamps = {
+          const currentTimestamp: LastVisitTimestamps = {
             broadcasts: secondsSinceEpoch,
             news : secondsSinceEpoch,
             partages: secondsSinceEpoch,
             events: secondsSinceEpoch
-          }
+          };
           this.storage.set('lastVisitTimestamp', currentTimestamp);
         }
       });
-      
-      splashScreen.hide();
+      this.splashScreen.hide();
       setTimeout(() => {
-        this.showSplash = false
+        this.showSplash = false;
       }, 3000);
     });
   }
 }
-

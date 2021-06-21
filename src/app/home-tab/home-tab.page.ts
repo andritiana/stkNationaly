@@ -4,6 +4,9 @@ import { VerseService } from '../services/verse.service';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { FpmaApiService } from '../services/fpma-api.service';
+import { LiveSection } from '../models/live-section.interface';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home-tab',
@@ -14,6 +17,8 @@ export class HomeTabPage implements OnInit {
 
   public verse: Verse;
   public loading = true;
+  public liveSections: LiveSection[];
+  public displayLiveSections = false;
   public isDevMode = false;
   private devModeCounter = 0;
   private DEV_MODE_ACTIVATION_NUMBER = 4;
@@ -29,11 +34,18 @@ export class HomeTabPage implements OnInit {
 
   ngOnInit(): void {
     this.loading = true;
-    this.verseService.getVerseOfTheDay().subscribe((verse: Verse) => {
-      this.verse = verse;
-      this.loading = false;
-    }, () => {
-      this.verse = { ref: '1 Corinthiens 11:1', verse: 'Soyez mes imitateurs, comme je le suis moi-même de Christ.' };
+
+    const verse$ = this.verseService.getVerseOfTheDay().pipe(catchError(e => of(null)));
+    const liveSections$ = this.fpmaApiService.loadLiveSections().pipe(catchError(e => of(null)));
+    forkJoin({
+      verse: verse$,
+      liveSections: liveSections$
+    }).subscribe(({ verse, liveSections}) => {
+      this.verse = verse || { ref: '1 Corinthiens 11:1', verse: 'Soyez mes imitateurs, comme je le suis moi-même de Christ.' };
+      this.liveSections = liveSections || [];
+
+      this.displayLiveSections = this.liveSections.some(ls => !ls.isDevModeOnly);
+
       this.loading = false;
     });
   }

@@ -10,6 +10,7 @@ import { LastVisitTimestamps, LastVisitUpdates } from '../models/lastVisitTimest
 import { Observable } from 'rxjs/internal/Observable';
 import { map } from 'rxjs/internal/operators/map';
 import { catchError } from 'rxjs/internal/operators/catchError';
+import { LiveSection } from '../models/live-section.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -218,6 +219,28 @@ export class FpmaApiService {
       });
     }
     return news;
+  }
+
+  /**
+   * Method that retrieve list of live sections from the stk.fpma api
+   */
+  public loadLiveSections(): Observable<LiveSection[]> {
+    return this.http.get(`${this.FPMA_DOMAIN}api/live-sections`)
+      .pipe(
+        map((res: any) => this.parseLiveSections(res)),
+        catchError((e: any) => {
+          return Observable.throw(e);
+        }));
+  }
+
+  private parseLiveSections(elem: any): LiveSection[] {
+    const liveSections: LiveSection[] = [];
+    if (elem && elem['live-sections'] && elem['live-sections'].data && elem['live-sections'].data.length) {
+      elem['live-sections'].data.forEach(liveSection => {
+        liveSections.push(liveSection);
+      });
+    }
+    return liveSections;
   }
 
   private parseThumbnailUrls(thumbnailsUrl: any): string[] {

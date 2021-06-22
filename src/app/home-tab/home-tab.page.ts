@@ -62,6 +62,10 @@ export class HomeTabPage implements OnInit {
     }
   }
 
+  goToSection(section: string): void {
+    this.router.navigate(['/tabs/live-sections-page/' + section]);
+  }
+
   public enableDevMode() {
     const currentClickTimestamp = Date.now();
     if (this.previousClickTimestamp && (currentClickTimestamp - this.previousClickTimestamp <= 1000)){

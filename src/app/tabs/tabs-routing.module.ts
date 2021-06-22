@@ -32,6 +32,10 @@ const routes: Routes = [
         loadChildren: () => import('../agenda-tab/agenda-tab.module').then(m => m.AgendaTabPageModule)
       },
       {
+        path: 'live-sections-page',
+        loadChildren: () => import('../live-sections-page/live-sections-page.module').then(m => m.LiveSectionsPagePageModule)
+      },
+      {
         path: '',
         redirectTo: '/tabs/tab0',
         pathMatch: 'full'

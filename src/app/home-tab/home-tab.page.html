@@ -39,7 +39,7 @@
       <ng-container *ngIf="displayLiveSections; else defaultDisplay">
         <ng-container *ngFor="let liveSection of liveSections">
           
-          <div *ngIf="!liveSection.isDevModeOnly || isDevMode" class="horizontal-button">
+          <div *ngIf="!liveSection.isDevModeOnly || isDevMode" class="horizontal-button" (click)="goToSection(liveSection.fetchCategory)">
             <img [attr.src]="liveSection?.themeIcon" />
             <span>{{liveSection?.title}}</span>
           </div>

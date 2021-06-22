@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Verse } from '../models/verse.interface';
 import { VerseService } from '../services/verse.service';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { FpmaApiService } from '../services/fpma-api.service';
 import { LiveSection } from '../models/live-section.interface';
@@ -62,8 +62,9 @@ export class HomeTabPage implements OnInit {
     }
   }
 
-  goToSection(section: string): void {
-    this.router.navigate(['/tabs/live-sections-page/' + section]);
+  goToSection({title, fetchCategory}): void {
+    const navigationExtras: NavigationExtras = { state: { title, fetchCategory } };
+    this.router.navigate(['/tabs/live-sections-page'], navigationExtras);
   }
 
   public enableDevMode() {

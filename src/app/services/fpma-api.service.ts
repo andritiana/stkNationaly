@@ -11,6 +11,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { map } from 'rxjs/internal/operators/map';
 import { catchError } from 'rxjs/internal/operators/catchError';
 import { LiveSection } from '../models/live-section.interface';
+import { GenericPost } from '../models/generic-post.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -241,6 +242,39 @@ export class FpmaApiService {
       });
     }
     return liveSections;
+  }
+
+  /**
+   * Method that retrieve list of generic posts from the stk.fpma api
+   */
+  public loadGenericPosts(category: string): Observable<GenericPost[]> {
+    const httpOptions = this.isDevMode ? {
+      headers: new HttpHeaders({
+        'dev-mode': ''
+      })
+    } : {};
+    return this.http.get(`${this.FPMA_DOMAIN}api/posts/category/${category}`, httpOptions)
+      .pipe(
+        map((res: any) => this.parseGenericPosts(res)),
+        catchError((e: any) => {
+          return Observable.throw(e);
+        }));
+  }
+
+  private parseGenericPosts(elem: any): GenericPost[] {
+    const posts: GenericPost[] = [];
+    if (elem && elem.posts && elem.posts.data && elem.posts.data.length) {
+      elem.posts.data.forEach(post => {
+        posts.push({
+          title: post.title,
+          created: DateHelper.getDate(post.created),
+          text: post.text,
+          rawtext: post.rawtext,
+          thumbnails: this.parseThumbnailUrls(post.thumbnails)
+        });
+      });
+    }
+    return posts;
   }
 
   private parseThumbnailUrls(thumbnailsUrl: any): string[] {

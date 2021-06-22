@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Nom de la section (A modifier)
+      {{title}}
     </ion-title>
     <ion-buttons slot="end">
       <button ion-button icon-only (click)="refresh()">
@@ -16,6 +16,18 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-
+<ion-content [fullscreen]="true">
+  <ion-spinner *ngIf="loading; else list" name="dots" pager="true"></ion-spinner>
+  
+  <ng-template #list>
+    <div>
+      <ion-card class="post-card" *ngFor="let post of posts">
+        <img *ngIf="!!post.thumbnails[0]" [src]="post.thumbnails[0]" />
+        <div class="titles-container">
+          <div class="post-title">{{post.title}}</div>
+          <div>{{post.rawtext}}</div>
+        </div>
+      </ion-card>
+    </div>
+  </ng-template>
 </ion-content>

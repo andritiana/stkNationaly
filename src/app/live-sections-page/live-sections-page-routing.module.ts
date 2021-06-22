@@ -5,7 +5,7 @@ import { LiveSectionsPagePage } from './live-sections-page.page';
 
 const routes: Routes = [
   {
-    path: ':section',
+    path: '',
     component: LiveSectionsPagePage
   }
 ];

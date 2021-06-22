@@ -37,10 +37,14 @@
       </div>
 
       <ng-container *ngIf="displayLiveSections; else defaultDisplay">
-        <div *ngFor="let liveSection of liveSections" class="horizontal-button">
-          <img [attr.src]="liveSection?.themeIcon" />
-          <span>{{liveSection?.title}}</span>
-        </div>
+        <ng-container *ngFor="let liveSection of liveSections">
+          
+          <div *ngIf="!liveSection.isDevModeOnly || isDevMode" class="horizontal-button">
+            <img [attr.src]="liveSection?.themeIcon" />
+            <span>{{liveSection?.title}}</span>
+          </div>
+
+        </ng-container>
       </ng-container>
       <ng-template #defaultDisplay>
         <div class="two-buttons">

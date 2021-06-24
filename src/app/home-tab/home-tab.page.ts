@@ -17,8 +17,8 @@ export class HomeTabPage implements OnInit {
 
   public verse: Verse;
   public loading = true;
-  public liveSections: LiveSection[];
   public displayLiveSections = false;
+  public liveSections: LiveSection[] = [];
   public isDevMode = false;
   private devModeCounter = 0;
   private DEV_MODE_ACTIVATION_NUMBER = 4;
@@ -43,11 +43,18 @@ export class HomeTabPage implements OnInit {
     }).subscribe(({ verse, liveSections}) => {
       this.verse = verse || { ref: '1 Corinthiens 11:1', verse: 'Soyez mes imitateurs, comme je le suis moi-même de Christ.' };
       this.liveSections = liveSections || [];
-
-      this.displayLiveSections = this.liveSections.some(ls => !ls.isDevModeOnly);
+      this.computeDisplayLiveSections();
 
       this.loading = false;
     });
+  }
+
+  computeDisplayLiveSections (): void {
+    if (!this.isDevMode) {
+      this.displayLiveSections = this.liveSections.some(ls => !ls.isDevModeOnly);
+    } else {
+      this.displayLiveSections = this.liveSections.length > 0;
+    }
   }
 
   goToPage(page: string): void {
@@ -98,6 +105,7 @@ export class HomeTabPage implements OnInit {
           handler: () => {
             this.fpmaApiService.activateDevMode();
             this.isDevMode = true;
+            this.computeDisplayLiveSections();
           }
         }
       ]
@@ -122,6 +130,7 @@ export class HomeTabPage implements OnInit {
           handler: () => {
             this.fpmaApiService.deactivateDevMode();
             this.isDevMode = false;
+            this.computeDisplayLiveSections();
           }
         }
       ]

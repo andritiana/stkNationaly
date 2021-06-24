@@ -21,8 +21,8 @@
   
   <ng-template #list>
     <div>
-      <ion-card class="post-card" *ngFor="let post of posts">
-        <img *ngIf="!!post.thumbnails[0]" [src]="post.thumbnails[0]" />
+      <ion-card class="post-card" *ngFor="let post of posts; let i = index" (click)="goToDetails(i)">
+        <img *ngIf="!!post.thumbnails[0]" [src]="post.thumbnails[0]" onerror="this.style.display='none'" />
         <div class="titles-container">
           <div class="post-title">{{post.title}}</div>
           <div>{{post.rawtext}}</div>

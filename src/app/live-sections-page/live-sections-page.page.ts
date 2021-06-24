@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { GenericPost } from '../models/generic-post.interface';
 import { FpmaApiService } from '../services/fpma-api.service';
@@ -39,6 +39,11 @@ export class LiveSectionsPagePage {
     }, () => {
       this.loading = false;
     });
+  }
+
+  public goToDetails(index: number) {
+    const navigationExtras: NavigationExtras = { state: { sectionTitle: this.title, posts: this.posts, id: index } };
+    this.router.navigate(['/tabs/live-sections-page/details'], navigationExtras);
   }
 
   public refresh() {

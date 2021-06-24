@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { LiveSectionsPagePageRoutingModule } from './live-sections-page-routing.module';
 
 import { LiveSectionsPagePage } from './live-sections-page.page';
+import { LiveSectionDetailsPagePage } from './live-section-details-page/live-section-details-page.page';
 
 @NgModule({
   imports: [
@@ -15,6 +16,6 @@ import { LiveSectionsPagePage } from './live-sections-page.page';
     IonicModule,
     LiveSectionsPagePageRoutingModule
   ],
-  declarations: [LiveSectionsPagePage]
+  declarations: [LiveSectionsPagePage, LiveSectionDetailsPagePage]
 })
 export class LiveSectionsPagePageModule {}

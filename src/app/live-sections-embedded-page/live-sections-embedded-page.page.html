@@ -1,0 +1,16 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      {{title}}
+    </ion-title>
+    <ion-buttons slot="end">
+      <button ion-button icon-only (click)="goToHome()">
+        <ion-icon class="homeMenu" name="home"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  A completer avec l'iframe {{url}}
+</ion-content>

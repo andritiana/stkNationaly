@@ -19,7 +19,7 @@ export class LiveSectionsPagePage {
   constructor(
     private route: ActivatedRoute,
     private fpmaApiService: FpmaApiService,
-    private router: Router) { 
+    private router: Router) {
 
     this.route.queryParams.subscribe(params => {
       if (this.router.getCurrentNavigation().extras.state) {

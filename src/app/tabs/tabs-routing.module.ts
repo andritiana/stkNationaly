@@ -36,6 +36,10 @@ const routes: Routes = [
         loadChildren: () => import('../live-sections-page/live-sections-page.module').then(m => m.LiveSectionsPagePageModule)
       },
       {
+        path: 'live-sections-embedded-page',
+        loadChildren: () => import('../live-sections-embedded-page/live-sections-embedded-page.module').then(m => m.LiveSectionsEmbeddedPagePageModule)
+      },
+      {
         path: '',
         redirectTo: '/tabs/tab0',
         pathMatch: 'full'

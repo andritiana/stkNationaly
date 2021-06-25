@@ -4,7 +4,7 @@ import { VerseService } from '../services/verse.service';
 import { NavigationExtras, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { FpmaApiService } from '../services/fpma-api.service';
-import { LiveSection } from '../models/live-section.interface';
+import { LiveSection, LiveSectionEmbeddedContent, LiveSectionPosts } from '../models/live-section.interface';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -69,9 +69,20 @@ export class HomeTabPage implements OnInit {
     }
   }
 
-  goToSection({title, fetchCategory}): void {
-    const navigationExtras: NavigationExtras = { state: { title, fetchCategory } };
-    this.router.navigate(['/tabs/live-sections-page'], navigationExtras);
+  goToSection(section: LiveSection): void {
+    switch(section.type) {
+      // Section of posts by category
+      case 'posts':
+        const postNavExtras: NavigationExtras = { state: { title: section.title, fetchCategory: (section as LiveSectionPosts).category } };
+        this.router.navigate(['/tabs/live-sections-page'], postNavExtras);
+        break;
+
+      // Embedded content with url
+      case 'embedded':
+        const embeddedNavExtras: NavigationExtras = { state: { title: section.title, url: (section as LiveSectionEmbeddedContent).url } };
+        this.router.navigate(['/tabs/live-sections-embedded-page'], embeddedNavExtras);
+        break;
+    }
   }
 
   public enableDevMode() {

@@ -1,9 +1,16 @@
 export interface LiveSection {
     title: string;
+    type: string;
     description: string;
     themeIcon: string;
-    rawtext: string;
     themeColor: string;
-    fetchCategory: string;
     isDevModeOnly: boolean;
+}
+
+export interface LiveSectionPosts extends LiveSection {
+    category: string;
+}
+
+export interface LiveSectionEmbeddedContent extends LiveSection {
+    url: string;
 }

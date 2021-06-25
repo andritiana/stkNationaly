@@ -12,5 +12,6 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  A completer avec l'iframe {{url}}
+  <iframe class= 'webPage' name= "eventsPage" [src]="getUrlSanitized()" allowfullscreen>
+  </iframe>
 </ion-content>

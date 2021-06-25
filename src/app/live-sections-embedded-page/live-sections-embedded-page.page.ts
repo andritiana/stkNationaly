@@ -1,5 +1,5 @@
-import { TypeScriptEmitter } from '@angular/compiler';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -13,9 +13,11 @@ export class LiveSectionsEmbeddedPagePage {
   public url: string;
   public loading = true;
 
-  constructor(private route: ActivatedRoute,
-    private router: Router) { 
-
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private sanitizer: DomSanitizer
+    ) {
     this.route.queryParams.subscribe(params => {
       if (this.router.getCurrentNavigation().extras.state) {
         this.title = this.router.getCurrentNavigation().extras.state.title;
@@ -26,6 +28,10 @@ export class LiveSectionsEmbeddedPagePage {
 
   goToHome() {
     this.router.navigate(['/tabs/tab0']);
+  }
+
+  getUrlSanitized() {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(this.url);
   }
 
 }

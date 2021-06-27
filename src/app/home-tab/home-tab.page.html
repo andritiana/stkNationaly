@@ -35,18 +35,31 @@
         <img src="assets/imgs/interface.svg"/>
         <span>Hymne STK</span>
       </div>
-      <div class="two-buttons">
-        <div class="button-column" (click)="goToPage('actus')">
-          <span class="button-title">
-            Actualités STK
-          </span>
+
+      <ng-container *ngIf="displayLiveSections; else defaultDisplay">
+        <ng-container *ngFor="let liveSection of liveSections">
+          
+          <div *ngIf="!liveSection.isDevModeOnly || isDevMode" class="horizontal-button" [ngStyle]="{'border-color': getColor(liveSection.themeColor)}" (click)="goToSection(liveSection)">
+            <img [attr.src]="liveSection?.themeIcon" />
+            <span>{{liveSection?.title}}</span>
+          </div>
+
+        </ng-container>
+      </ng-container>
+      <ng-template #defaultDisplay>
+        <div class="two-buttons">
+          <div class="button-column" (click)="goToPage('actus')">
+            <span class="button-title">
+              Actualités STK
+            </span>
+          </div>
+          <div class="button-column prime" (click)="goToPage('partage')">
+            <span class="button-title">
+              Partage Spi
+            </span>
+          </div>
         </div>
-        <div class="button-column prime" (click)="goToPage('partage')">
-          <span class="button-title">
-            Partage Spi
-          </span>
-        </div>
-      </div>
+      </ng-template>
     </div>
   </div>
 </ion-content>

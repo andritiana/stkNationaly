@@ -12,6 +12,10 @@ ion-toolbar {
     }
 }
 
+ion-content {
+    --background: #f8f8f8;
+}
+
 .verse-container {
   background-color: rgba(0, 0, 0, 0.35);
   background-image: url('../../assets/imgs/img1-stk-2.jpg');

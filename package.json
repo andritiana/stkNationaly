@@ -1,6 +1,6 @@
 {
   "name": "stk-national",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "author": "Eglise Protestante Malgache en France",
   "homepage": "https://stk.fpma.church/",
   "scripts": {
@@ -25,7 +25,6 @@
     "@ionic-native/status-bar": "^5.0.0",
     "@ionic/angular": "^5.0.0",
     "@ionic/storage": "^2.3.1",
-    "cordova-android": "8.1.0",
     "cordova-plugin-firebase-analytics": "^5.0.0",
     "cordova-sqlite-storage": "^5.1.0",
     "cordova-support-android-plugin": "^1.0.2",
@@ -47,6 +46,7 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
     "codelyzer": "^6.0.0",
+    "cordova-android": "^9.0.0",
     "cordova-ios": "^6.2.0",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-ionic-keyboard": "^2.2.0",

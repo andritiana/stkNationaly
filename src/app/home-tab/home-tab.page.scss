@@ -5,6 +5,7 @@ ion-spinner {
 }
 
 ion-toolbar {
+    --background: #FFF;
     text-align: center;
     span img {
         height: 5vh;
@@ -60,7 +61,7 @@ ion-content {
       align-items: center;
       margin: 0.5rem 0;
       padding: 2rem;
-      height: 12vh;
+      height: 10vh;
       background-color: white;
       color: #19338F;
       font-size: 16px;

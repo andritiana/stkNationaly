@@ -1,4 +1,4 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="false">
   <ion-toolbar>
     <span>
       <img src='assets/imgs/logo_stk.png' (click)="enableDevMode()"/>
@@ -39,7 +39,7 @@
       <ng-container *ngIf="displayLiveSections; else defaultDisplay">
         <ng-container *ngFor="let liveSection of liveSections">
           
-          <div *ngIf="!liveSection.isDevModeOnly || isDevMode" class="horizontal-button" (click)="goToSection(liveSection)">
+          <div *ngIf="!liveSection.isDevModeOnly || isDevMode" class="horizontal-button" [ngStyle]="{'border-color': getColor(liveSection.themeColor)}" (click)="goToSection(liveSection)">
             <img [attr.src]="liveSection?.themeIcon" />
             <span>{{liveSection?.title}}</span>
           </div>

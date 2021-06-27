@@ -49,7 +49,7 @@ export class HomeTabPage implements OnInit {
     });
   }
 
-  computeDisplayLiveSections (): void {
+  computeDisplayLiveSections(): void {
     if (!this.isDevMode) {
       this.displayLiveSections = this.liveSections.some(ls => !ls.isDevModeOnly);
     } else {
@@ -70,7 +70,7 @@ export class HomeTabPage implements OnInit {
   }
 
   goToSection(section: LiveSection): void {
-    switch(section.type) {
+    switch (section.type) {
       // Section of posts by category
       case 'posts':
         const postNavExtras: NavigationExtras = { state: { title: section.title, fetchCategory: (section as LiveSectionPosts).category } };
@@ -148,6 +148,14 @@ export class HomeTabPage implements OnInit {
     });
 
     await alert.present();
+  }
+
+  getColor(colorHexa) {
+    if (colorHexa && /^#([0-9A-F]{3}){1,2}$/i.test(colorHexa)) {
+      return colorHexa;
+    } else {
+      return '#19338F';
+    }
   }
 
 }

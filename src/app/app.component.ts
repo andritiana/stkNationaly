@@ -8,7 +8,6 @@ import { ContentUpdateService } from './services/content-update.service';
 import { LastVisitTimestamps } from './models/lastVisitTimestamps.interface';
 import { Storage } from '@ionic/storage';
 import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx';
-import { FCM } from '@ionic-native/fcm/ngx';
 
 @Component({
   selector: 'app-root',
@@ -24,8 +23,7 @@ export class AppComponent {
     private storage: Storage,
     private fpmaService: FpmaApiService,
     private contentUpdateService: ContentUpdateService,
-    private firebaseAnalytics: FirebaseAnalytics,
-    private fcm: FCM
+    private firebaseAnalytics: FirebaseAnalytics
   ) {
     this.initializeApp();
   }
@@ -36,9 +34,6 @@ export class AppComponent {
       this.firebaseAnalytics.logEvent('page_view', {page: 'home'})
         .then((res: any) => console.log(res))
         .catch((error: any) => console.error(error));
-
-      this.fcm.clearAllNotifications();
-
       this.storage.get('lastVisitTimestamp').then((val: LastVisitTimestamps) => {
         if (val) {
           this.fpmaService.getContentUpdated(val).subscribe( contentUpdated => {

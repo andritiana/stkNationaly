@@ -10,7 +10,6 @@ import { AppComponent } from './app.component';
 import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 import { IonicStorageModule } from '@ionic/storage';
 import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx';
-import { FCM } from '@ionic-native/fcm/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -27,7 +26,6 @@ import { FCM } from '@ionic-native/fcm/ngx';
     StatusBar,
     SplashScreen,
     FirebaseAnalytics,
-    FCM,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

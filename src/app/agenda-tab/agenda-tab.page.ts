@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FpmaApiService } from '../services/fpma-api.service';
 import { AgendaEvent } from '../models/agenda-event.interface';
 import { DateHelper } from '../utils/date-helper';
 import { Router } from '@angular/router';
 import { ContentUpdateService } from '../services/content-update.service';
+import { CalendarComponent } from 'ionic2-calendar';
+
 
 @Component({
   selector: 'app-agenda-tab',
@@ -16,6 +18,16 @@ export class AgendaTabPage {
   public events: AgendaEvent[];
   public DateHelper = DateHelper;
   public loading = true;
+
+  public currentMonth: string;
+  public calendar = {
+    mode: 'month',
+    currentDate: new Date(),
+  };
+ 
+  public selectedDate: Date;
+
+  @ViewChild(CalendarComponent) myCal: CalendarComponent;
 
   constructor(
     private fpmaApiService: FpmaApiService,
@@ -51,5 +63,22 @@ export class AgendaTabPage {
 
   public goToHome() {
     this.router.navigate(['/tabs/tab0']);
+  }
+
+  public next() {
+    this.myCal.slideNext();
+  }
+ 
+  public back() {
+    this.myCal.slidePrev();
+  }
+
+  // Selected date reange and hence title changed
+  onViewTitleChanged(title) {
+    this.currentMonth = title;
+  }
+
+  async onEventSelected(event: AgendaEvent ) {
+    console.log('Event: ' + JSON.stringify(event));
   }
 }

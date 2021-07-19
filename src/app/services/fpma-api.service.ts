@@ -51,8 +51,8 @@ export class FpmaApiService {
         events.push({
           id: event.id,
           title: event.title,
-          startDate: DateHelper.getDate(event.startdate),
-          endDate: DateHelper.getDate(event.enddate)
+          startTime: DateHelper.getDate(event.startdate),
+          endTime: DateHelper.getDate(event.enddate)
         });
       });
     }

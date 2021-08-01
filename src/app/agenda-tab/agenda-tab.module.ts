@@ -10,6 +10,7 @@ import { NgCalendarModule  } from 'ionic2-calendar';
 
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
+import { AgendaDetailsPage } from './agenda-details-page/agenda-details.page';
 registerLocaleData(localeFr, 'fr-FR');
 
 @NgModule({
@@ -20,6 +21,6 @@ registerLocaleData(localeFr, 'fr-FR');
     AgendaTabPageRoutingModule,
     NgCalendarModule
   ],
-  declarations: [AgendaTabPage]
+  declarations: [AgendaTabPage, AgendaDetailsPage]
 })
 export class AgendaTabPageModule {}

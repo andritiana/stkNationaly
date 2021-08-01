@@ -3,4 +3,6 @@ export interface AgendaEvent {
   title: string;
   startTime: Date;
   endTime: Date;
+  text: string;
+  thumbnail: string;
 }

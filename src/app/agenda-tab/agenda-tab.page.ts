@@ -78,7 +78,9 @@ export class AgendaTabPage {
     this.currentMonth = title;
   }
 
-  async onEventSelected(event: AgendaEvent ) {
+  public onEventSelected(event: AgendaEvent ) {
     console.log('Event: ' + JSON.stringify(event));
+    this.router.navigate(['/tabs/agenda-tab/' + event.id]);
+
   }
 }

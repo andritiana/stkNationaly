@@ -79,7 +79,6 @@ export class AgendaTabPage {
   }
 
   public onEventSelected(event: AgendaEvent ) {
-    console.log('Event: ' + JSON.stringify(event));
     this.router.navigate(['/tabs/agenda-tab/' + event.id]);
 
   }

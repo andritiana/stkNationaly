@@ -20,7 +20,8 @@
 
   <ng-template #eventContent>
     <div class='article-content'>
-      <h3>{{event.title}}</h3>
+      <h3>{{event.title}} </h3>
+      <br>
       <div>
         <span *ngIf="isDateValid(event.endTime); else uniqueDate">
           <span *ngIf="DateHelper.getDateFormat(event.startTime) === DateHelper.getDateFormat(event.endTime); else differentDates">
@@ -36,6 +37,7 @@
           Le  <strong>{{DateHelper.getFrenchWeekDay(event.startTime)}} {{DateHelper.getDateWrittenFr(event.startTime)}} </strong> à {{DateHelper.getHours(event.startTime)}}
         </ng-template>
       </div>
+      <br>
       <img *ngIf='event.thumbnail' [src]="event.thumbnail"/>
       <div [innerHTML]="removeHtmlLink(event.text)"></div>
     </div>

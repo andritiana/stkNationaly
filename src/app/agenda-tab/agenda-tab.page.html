@@ -28,7 +28,7 @@
       </ion-col>
    
       <ion-col size="8" class="ion-text-center">
-        <h2>{{ currentMonth }}</h2>
+        <h2 class="currentMonth">{{ currentMonth }}</h2>
       </ion-col>
    
       <!-- Move forward one screen of the slides -->
@@ -39,17 +39,50 @@
       </ion-col>
     </ion-row>
    
+    <ng-template #monthviewEventDetailSTKTemplate let-showEventDetail="showEventDetail" let-selectedDate="selectedDate" let-noEventsLabel="noEventsLabel"> 
+      <ion-list class="event-detail-container" has-bouncing="false" *ngIf="showEventDetail" overflow-scroll="false">
+         <ion-item *ngFor="let event of selectedDate?.events" (click)="onEventSelected(event)"> 
+           <span *ngIf="!event.allDay && DateHelper.getDateFormat(event.startTime) === DateHelper.getDateFormat(event.endTime); else differentDates" class="monthview-eventdetail-timecolumn">
+            {{DateHelper.getHours(event.startTime)}} - {{DateHelper.getHours(event.endTime)}}
+           </span> 
+           <ng-template #differentDates> 
+            <span *ngIf="!event.allDay" class="monthview-eventdetail-timecolumn">
+              {{DateHelper.getDateFormat(event.startTime)}} - <br> {{DateHelper.getDateFormat(event.endTime)}}
+             </span> 
+           </ng-template>
+           <span *ngIf="event.allDay" class="monthview-eventdetail-timecolumn">Toute la journée</span> 
+           <span class="event-detail"> {{event.title}}</span> 
+          </ion-item> 
+          <ion-item *ngIf="selectedDate?.events.length==0"> 
+            <div class="no-events-label">{{noEventsLabel}}</div> 
+          </ion-item> 
+        </ion-list> 
+      </ng-template>
+
+      <ng-template #monthviewDisplayEventSTKTemplate let-view="view" let-row="row" let-col="col">
+        <div [class.with-event]="view.dates[row*7+col].events.length">
+          {{view.dates[row*7+col].label}}
+          <div class="indicator-container">
+            <div class="event-indicator" *ngFor="let e of view.dates[row*7+col].events"></div>
+          </div>
+        </div>
+      </ng-template>
+      
+      
     <calendar
       locale="fr-FR"
       [eventSource]="events"
       [currentDate]="calendar.currentDate"
       (onTitleChanged)="onViewTitleChanged($event)"
       (onEventSelected)="onEventSelected($event)"
-      startHour="9"
-      endHour="22"
-      step="20"
-      startingDayWeek="1"
-    >
-    </calendar>
+      noEventsLabel="Aucun évènement pour ce jour"
+      [monthviewEventDetailTemplate]="monthviewEventDetailSTKTemplate"
+      [monthviewDisplayEventTemplate]="monthviewDisplayEventSTKTemplate"
+      startingDayMonth="1"
+      >
+      </calendar>
   </ng-template>
 </ion-content>
+
+
+

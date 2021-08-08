@@ -70,3 +70,33 @@ ion-header {
       background-color: white;
   }
 }
+
+/*agenda*/ 
+.monthview-primary-with-event {
+   background-color: transparent !important; 
+}
+.monthview-primary-with-event.monthview-selected > .with-event  {
+  color :  white;
+}
+.monthview-primary-with-event > .with-event {
+  color :  black;
+}
+.monthview-selected  { 
+  background-color: transparent  !important; 
+}
+.monthview-secondary-with-event {
+  background-color: transparent  !important; 
+}
+
+.monthview-selected > div { 
+  background-color: #19338F  !important; 
+  border-radius: 50%;
+}
+
+.monthview-primary-with-event.monthview-selected .event-indicator {
+  background: white;
+  width: 5px;
+  height: 5px;
+  border-radius: 5px;
+  display: table-cell;
+}

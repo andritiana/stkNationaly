@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AgendaEvent } from 'src/app/models/agenda-event.interface';
-import { FpmaApiService } from 'src/app/services/fpma-api.service';
 import { DateHelper } from 'src/app/utils/date-helper';
 
 @Component({
@@ -14,32 +13,29 @@ export class AgendaDetailsPage {
 
   public DateHelper = DateHelper;
 
-  public event: AgendaEvent;
+  public events: AgendaEvent[];
   public eventId: number;
   public loading = true;
+  public slideOpts = {
+    initialSlide: 1,
+    speed: 400,
+    slideShadows: false
+  };
+
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private sanitized: DomSanitizer,
-    private fpmaApiService: FpmaApiService,
-    private actRoute: ActivatedRoute
   ) { 
     this.route.queryParams.subscribe(params => {
-      this.eventId = this.actRoute.snapshot.params.id;
-      this.loadEvent(this.eventId);
+      if (this.router.getCurrentNavigation().extras.state) {
+        this.events = this.router.getCurrentNavigation().extras.state.events;
+        this.eventId = this.router.getCurrentNavigation().extras.state.id;
+        this.slideOpts.initialSlide = this.eventId;
+        this.loading = false;
+      }
      });
-  }
-
-  private loadEvent(id){
-    this.loading = true; 
-    this.fpmaApiService.loadEvent(id).subscribe((event : AgendaEvent | null) => {
-      this.event = event; 
-      this.loading = false;
-    }, () => {
-      this.loading = false;
-    });
-
   }
 
   public removeHtmlLink(textHtml: string) {
@@ -59,4 +55,5 @@ export class AgendaDetailsPage {
       return false;
     }
   }
+  
 }

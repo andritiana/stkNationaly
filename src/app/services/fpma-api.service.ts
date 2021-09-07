@@ -47,50 +47,20 @@ export class FpmaApiService {
   private parseEvent(elem: any): AgendaEvent[] {
     const events: AgendaEvent[] = [];
     if (elem && elem.events && elem.events.data && elem.events.data.length) {
-      elem.events.data.forEach(event => {
-        console.log('Event: ' + JSON.stringify(event));
-        events.push({
-          id: event.id,
-          title: event.title,
-          startTime: DateHelper.getDate(event.startdate),
-          endTime: DateHelper.getDate(event.enddate), 
-          text : event.desc,
-          thumbnail : this.parseThumbnailUrl(event.image)
-        });
+      elem.events.data.forEach( (event, index) => {
+        if (event.startdate) {
+          events.push({
+            id: index,
+            title: event.title,
+            startTime: DateHelper.getDate(event.startdate),
+            endTime: event.enddate ?  DateHelper.getDate(event.enddate) : DateHelper.getDate(event.startdate), 
+            text : event.desc,
+            thumbnail : this.parseThumbnailUrl(event.image)
+          });
+        }
       });
     }
     return events;
-  }
-
-
-  public loadEvent(id: number): Observable<AgendaEvent | null> {
-    const httpOptions =  this.isDevMode ? {
-      headers: new HttpHeaders({
-        'dev-mode':  ''
-      })
-    } : {};
-    return this.http.get(`${this.FPMA_DOMAIN}api/events/${id}`, httpOptions)
-      .pipe(
-        map((res: any) => this.parseOneEvent(res)),
-        catchError((e: any) => {
-          return Observable.throw(e);
-      }));
-  }
-
-  private parseOneEvent(elem: any): AgendaEvent | null {
-    if (elem && elem.events && elem.events.data ) {
-      const event = elem.events.data;
-      return {
-        id: event.id,
-        title: event.title,
-        startTime: DateHelper.getDate(event.startdate),
-        endTime: DateHelper.getDate(event.enddate), 
-        text : event.desc,
-        thumbnail : this.parseThumbnailUrl(event.image)
-      };
-    } else {
-      return null;
-    }
   }
 
   /**
@@ -315,7 +285,11 @@ export class FpmaApiService {
     const thumbnailsArray = [];
     if (thumbnailsUrl && thumbnailsUrl.length) {
       thumbnailsUrl.map((url: string) => {
-        thumbnailsArray.push(`${this.FPMA_DOMAIN}${url}`);
+        if(url.startsWith("http")) { 
+          thumbnailsArray.push(`${url}`);
+        } else {
+          thumbnailsArray.push(`${this.FPMA_DOMAIN}${url}`);
+        }
       });
       return thumbnailsArray;
     } else {
@@ -325,7 +299,11 @@ export class FpmaApiService {
 
   private parseThumbnailUrl(thumbnailUrl: any) : string {
     if (thumbnailUrl) {
-      return `${this.FPMA_DOMAIN}${thumbnailUrl}`;
+      if(thumbnailUrl.startsWith("http")) {
+        return thumbnailUrl;
+      } else {
+        return `${this.FPMA_DOMAIN}${thumbnailUrl}`;
+      }
     } else {
       return null ;
     }

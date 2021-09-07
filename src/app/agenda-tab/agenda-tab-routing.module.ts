@@ -9,7 +9,7 @@ const routes: Routes = [
     component: AgendaTabPage,
   },
   {
-    path : ':id',
+    path : 'details',
     component: AgendaDetailsPage,
   }
 

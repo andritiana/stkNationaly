@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { FpmaApiService } from '../services/fpma-api.service';
 import { AgendaEvent } from '../models/agenda-event.interface';
 import { DateHelper } from '../utils/date-helper';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { ContentUpdateService } from '../services/content-update.service';
 import { CalendarComponent } from 'ionic2-calendar';
 
@@ -78,8 +78,8 @@ export class AgendaTabPage {
     this.currentMonth = title;
   }
 
-  public onEventSelected(event: AgendaEvent ) {
-    this.router.navigate(['/tabs/agenda-tab/' + event.id]);
-
+  public onEventSelected(event: AgendaEvent) {
+    const navigationExtras: NavigationExtras = { state: { events: this.events, id: event.id } };
+    this.router.navigate(['/tabs/agenda-tab/details'], navigationExtras);
   }
 }

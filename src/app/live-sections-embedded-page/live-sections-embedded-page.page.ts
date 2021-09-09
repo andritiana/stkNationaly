@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -10,7 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class LiveSectionsEmbeddedPagePage {
 
   public title: string;
-  public url: string;
+  public url: SafeResourceUrl;
   public loading = true;
 
   constructor(
@@ -21,7 +21,7 @@ export class LiveSectionsEmbeddedPagePage {
     this.route.queryParams.subscribe(params => {
       if (this.router.getCurrentNavigation().extras.state) {
         this.title = this.router.getCurrentNavigation().extras.state.title;
-        this.url = this.router.getCurrentNavigation().extras.state.url;
+        this.url = this.sanitizer.bypassSecurityTrustResourceUrl(this.router.getCurrentNavigation().extras.state.url);
       }
     });
   }
@@ -30,8 +30,8 @@ export class LiveSectionsEmbeddedPagePage {
     this.router.navigate(['/tabs/tab0']);
   }
 
-  getUrlSanitized() {
-    return this.sanitizer.bypassSecurityTrustResourceUrl(this.url);
+  getUrlSanitized(url: string) {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
 }

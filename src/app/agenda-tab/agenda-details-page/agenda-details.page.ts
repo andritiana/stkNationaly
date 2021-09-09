@@ -37,13 +37,7 @@ export class AgendaDetailsPage {
       }
      });
   }
-
-  public removeHtmlLink(textHtml: string) {
-    let htmlWithoutLink = textHtml.replace(/href/g, 'alt');
-    htmlWithoutLink = this.sanitized.bypassSecurityTrustHtml(htmlWithoutLink) as string;
-    return htmlWithoutLink;
-  }
-
+  
   goToHome() {
     this.router.navigate(['/tabs/tab0']);
   }

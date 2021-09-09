@@ -44,7 +44,7 @@
               </div>
               <br>
               <img *ngIf='event.thumbnail' [src]="event.thumbnail"/>
-              <div [innerHTML]="removeHtmlLink(event.text)"></div>
+              <div [innerHTML]="event.text"></div>
             </div>
           </div>
         </div>

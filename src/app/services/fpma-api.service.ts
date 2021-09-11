@@ -82,11 +82,10 @@ export class FpmaApiService {
     if (elem && elem.partages && elem.partages.data && elem.partages.data.length) {
       elem.partages.data.forEach(partage => {
         partages.push({
-          id: partage.id,
           creationDate: DateHelper.getDate(partage.created),
           title: partage.title,
-          text: partage.introtext, // for now full text of partage are sent in introtext
-          thumbnail: this.parseThumbnailUrls(partage.thumbnails)
+          text: partage.fulltext,
+          thumbnail: this.parseThumbnailUrl(partage.thumbnails)
         });
       });
     }
@@ -115,12 +114,11 @@ export class FpmaApiService {
     if (elem && elem.broadcast && elem.broadcast.data && elem.broadcast.data.length) {
       elem.broadcast.data.forEach(atuality => {
         atualities.push({
-          id: atuality.id,
           title: atuality.title,
           created: DateHelper.getDate(atuality.created),
-          text: atuality.introtext,
+          text: atuality.fulltext,
           rawtext: atuality.rawtext,
-          thumbnail: this.parseThumbnailUrls(atuality.thumbnails)
+          thumbnail: this.parseThumbnailUrl(atuality.thumbnails)
         });
       });
     }
@@ -277,6 +275,9 @@ export class FpmaApiService {
     return posts;
   }
 
+  /**
+   * @deprecated depuis l'api v2. Doit etre utilise seulement pour l'api v1 (presentations, stk-news)
+   */
   private parseThumbnailUrls(thumbnailsUrl: any): string[] {
     const thumbnailsArray = [];
     if (thumbnailsUrl && thumbnailsUrl.length) {
@@ -287,6 +288,20 @@ export class FpmaApiService {
     } else {
       return [];
     }
+  }
+
+  // Normalement déjà ajouté dans la branche feature/agenda
+  private parseThumbnailUrl(thumbnailUrl: any): string {
+    if (thumbnailUrl) {
+      if (thumbnailUrl.startsWith("http")) {
+        return thumbnailUrl;
+      } else {
+        return `${this.FPMA_DOMAIN}${thumbnailUrl}`;
+      }
+    } else {
+      return null;
+    }
+
   }
 
   public getContentUpdated(lastVisitTimestamps: LastVisitTimestamps): Observable<LastVisitUpdates> {

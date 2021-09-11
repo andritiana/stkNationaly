@@ -22,7 +22,7 @@
   <ng-template #list>
     <div>
       <ion-card class="actuality-card" *ngFor="let actuality of actualities; let i = index" (click)="goToDetails(i)">
-        <img *ngIf="!!actuality.thumbnail[0]" [src]="actuality.thumbnail[0]"/>
+        <img *ngIf="!!actuality.thumbnail" [src]="actuality.thumbnail"/>
         <div class="titles-container">
             <div class="actuality-title">{{actuality.title}}</div>
             <div>{{actuality.rawtext}}</div>

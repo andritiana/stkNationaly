@@ -6,6 +6,7 @@
   padding: 1rem;
   border-radius: 5px;
   img {
+    min-width: 30%;
     width: 30%;
     height: 100%;
     object-fit: cover;
@@ -22,6 +23,10 @@
       &.actuality-title {
         color: #19338F;
         font-weight: bolder;
+        margin-bottom: 5px;
+      }
+      &.actuality-date {
+        color: darkgray;
         margin-bottom: 5px;
       }
     }

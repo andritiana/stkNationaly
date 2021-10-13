@@ -25,6 +25,7 @@
         <img *ngIf="!!actuality.thumbnail" [src]="actuality.thumbnail"/>
         <div class="titles-container">
             <div class="actuality-title">{{actuality.title}}</div>
+            <div class="actuality-date">{{DateHelper.getDateWrittenFr(actuality.created)}}</div>
             <div>{{actuality.rawtext}}</div>
         </div>
       </ion-card>

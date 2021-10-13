@@ -1,7 +1,8 @@
 export interface GenericPost {
     title:string;
-    text:string;
+    introtext:string;
+    fulltext:string;
     created: Date;
     rawtext:string;
-    thumbnails: string[];
+    thumbnail: string;
 }

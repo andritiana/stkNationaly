@@ -245,7 +245,7 @@ export class FpmaApiService {
   /**
    * Method that retrieve list of generic posts from the stk.fpma api
    */
-  public loadGenericPosts(category: string): Observable<GenericPost[]> {
+  public loadGenericPosts(category: number): Observable<GenericPost[]> {
     const httpOptions = this.isDevMode ? {
       headers: new HttpHeaders({
         'dev-mode': ''
@@ -266,9 +266,10 @@ export class FpmaApiService {
         posts.push({
           title: post.title,
           created: DateHelper.getDate(post.created),
-          text: post.text,
+          introtext: post.introtext,
+          fulltext: post.fulltext,
           rawtext: post.rawtext,
-          thumbnails: this.parseThumbnailUrls(post.thumbnails)
+          thumbnail: this.parseThumbnailUrl(post.thumbnails)
         });
       });
     }

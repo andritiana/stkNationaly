@@ -24,7 +24,7 @@ export class AgendaTabPage {
     mode: 'month',
     currentDate: new Date(),
   };
- 
+
   public selectedDate: Date;
 
   @ViewChild(CalendarComponent) myCal: CalendarComponent;
@@ -68,7 +68,7 @@ export class AgendaTabPage {
   public next() {
     this.myCal.slideNext();
   }
- 
+
   public back() {
     this.myCal.slidePrev();
   }

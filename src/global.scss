@@ -88,9 +88,8 @@ ion-header {
   background-color: transparent  !important; 
 }
 
-.monthview-selected > div { 
+.monthview-selected { 
   background-color: #19338F  !important; 
-  border-radius: 50%;
 }
 
 .monthview-primary-with-event.monthview-selected .event-indicator {
@@ -98,5 +97,4 @@ ion-header {
   width: 5px;
   height: 5px;
   border-radius: 5px;
-  display: table-cell;
 }

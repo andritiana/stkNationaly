@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AgendaEvent } from 'src/app/models/agenda-event.interface';
 import { DateHelper } from 'src/app/utils/date-helper';
@@ -26,8 +25,7 @@ export class AgendaDetailsPage {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private sanitized: DomSanitizer,
-  ) { 
+  ) {
     this.route.queryParams.subscribe(params => {
       if (this.router.getCurrentNavigation().extras.state) {
         this.events = this.router.getCurrentNavigation().extras.state.events;
@@ -37,7 +35,7 @@ export class AgendaDetailsPage {
       }
      });
   }
-  
+
   goToHome() {
     this.router.navigate(['/tabs/tab0']);
   }
@@ -49,5 +47,5 @@ export class AgendaDetailsPage {
       return false;
     }
   }
-  
+
 }

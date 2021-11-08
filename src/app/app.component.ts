@@ -31,9 +31,9 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
-      this.firebaseAnalytics.logEvent('page_view', {page: 'home'})
-        .then((res: any) => console.log(res))
-        .catch((error: any) => console.error(error));
+      // this.firebaseAnalytics.logEvent('page_view', {page: 'home'})
+      //   .then((res: any) => console.log(res))
+      //   .catch((error: any) => console.error(error));
       this.storage.get('lastVisitTimestamp').then((val: LastVisitTimestamps) => {
         if (val) {
           this.fpmaService.getContentUpdated(val).subscribe( contentUpdated => {

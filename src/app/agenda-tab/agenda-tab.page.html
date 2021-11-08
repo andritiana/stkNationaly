@@ -41,7 +41,7 @@
    
     <ng-template #monthviewEventDetailSTKTemplate let-showEventDetail="showEventDetail" let-selectedDate="selectedDate" let-noEventsLabel="noEventsLabel"> 
       <ion-list class="event-detail-container" has-bouncing="false" *ngIf="showEventDetail" overflow-scroll="false">
-         <ion-item *ngFor="let event of selectedDate?.events" (click)="onEventSelected(event)"> 
+         <div class="horizontal-button" *ngFor="let event of selectedDate?.events" (click)="onEventSelected(event)"> 
            <span *ngIf="!event.allDay && DateHelper.getDateFormat(event.startTime) === DateHelper.getDateFormat(event.endTime); else differentDates" class="monthview-eventdetail-timecolumn">
             {{DateHelper.getHours(event.startTime)}} - {{DateHelper.getHours(event.endTime)}}
            </span> 
@@ -52,10 +52,10 @@
            </ng-template>
            <span *ngIf="event.allDay" class="monthview-eventdetail-timecolumn">Toute la journée</span> 
            <span class="event-detail"> {{event.title}}</span> 
-          </ion-item> 
-          <ion-item *ngIf="selectedDate?.events.length==0"> 
-            <div class="no-events-label">{{noEventsLabel}}</div> 
-          </ion-item> 
+          </div> 
+          <div class="no-events-label" *ngIf="selectedDate?.events.length==0"> 
+            <span>{{noEventsLabel}}</span> 
+          </div> 
         </ion-list> 
       </ng-template>
 

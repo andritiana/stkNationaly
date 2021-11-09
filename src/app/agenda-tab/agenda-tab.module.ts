@@ -6,13 +6,21 @@ import { AgendaTabPage } from './agenda-tab.page';
 
 import { AgendaTabPageRoutingModule } from './agenda-tab-routing.module';
 
+import { NgCalendarModule  } from 'ionic2-calendar';
+
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+import { AgendaDetailsPage } from './agenda-details-page/agenda-details.page';
+registerLocaleData(localeFr, 'fr-FR');
+
 @NgModule({
   imports: [
     IonicModule,
     CommonModule,
     FormsModule,
-    AgendaTabPageRoutingModule
+    AgendaTabPageRoutingModule,
+    NgCalendarModule
   ],
-  declarations: [AgendaTabPage]
+  declarations: [AgendaTabPage, AgendaDetailsPage]
 })
 export class AgendaTabPageModule {}

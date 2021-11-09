@@ -47,13 +47,17 @@ export class FpmaApiService {
   private parseEvent(elem: any): AgendaEvent[] {
     const events: AgendaEvent[] = [];
     if (elem && elem.events && elem.events.data && elem.events.data.length) {
-      elem.events.data.forEach(event => {
-        events.push({
-          id: event.id,
-          title: event.title,
-          startDate: DateHelper.getDate(event.startdate),
-          endDate: DateHelper.getDate(event.enddate)
-        });
+      elem.events.data.forEach( (event, index) => {
+        if (event.startdate) {
+          events.push({
+            id: index,
+            title: event.title,
+            startTime: DateHelper.getDate(event.startdate),
+            endTime: event.enddate ?  DateHelper.getDate(event.enddate) : DateHelper.getDate(event.startdate), 
+            text : event.desc,
+            thumbnail : this.parseThumbnailUrl(event.image)
+          });
+        }
       });
     }
     return events;
@@ -281,12 +285,29 @@ export class FpmaApiService {
     const thumbnailsArray = [];
     if (thumbnailsUrl && thumbnailsUrl.length) {
       thumbnailsUrl.map((url: string) => {
-        thumbnailsArray.push(`${this.FPMA_DOMAIN}${url}`);
+        if(url.startsWith("http")) { 
+          thumbnailsArray.push(`${url}`);
+        } else {
+          thumbnailsArray.push(`${this.FPMA_DOMAIN}${url}`);
+        }
       });
       return thumbnailsArray;
     } else {
       return [];
     }
+  }
+
+  private parseThumbnailUrl(thumbnailUrl: any) : string {
+    if (thumbnailUrl) {
+      if(thumbnailUrl.startsWith("http")) {
+        return thumbnailUrl;
+      } else {
+        return `${this.FPMA_DOMAIN}${thumbnailUrl}`;
+      }
+    } else {
+      return null ;
+    }
+
   }
 
   public getContentUpdated(lastVisitTimestamps: LastVisitTimestamps): Observable<LastVisitUpdates> {

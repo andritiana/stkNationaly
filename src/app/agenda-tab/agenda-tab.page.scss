@@ -1,8 +1,15 @@
 ion-item {
   --background: white;
+  --inner-border-width: 0;
 }
+
 ion-grid {
   padding: 1rem 0;
+}
+
+ion-list {
+  padding: 0 1rem;
+  background-color: transparent;
 }
 .col-event {
   padding-left: 1rem;
@@ -34,3 +41,58 @@ h2 {
   font-weight: bold;
   white-space: normal;
 }  
+
+.currentMonth{
+  margin-top: revert;
+  margin-bottom: revert;
+}
+
+.indicator-container {
+  height: 12px;
+}
+ 
+.event-indicator {
+  background: var(--ion-color-primary);
+  width: 5px;
+  height: 5px;
+  border-radius: 5px;
+  display: table-cell;
+}
+.horizontal-button {
+  display: flex;
+  align-items: center;
+  margin: 0.5rem 0;
+  padding: 0 1rem;
+  height: 10vh;
+  background-color: white;
+  color: #19338F;
+  font-size: 16px;
+  font-weight: bold;
+  box-shadow: 1px 1px 1px 0px #656565;
+  border-left: solid 5px #19338F;
+  border-radius: 5px;
+}
+  
+.monthview-eventdetail-timecolumn {
+  border-right: solid var(--ion-color-primary);
+  padding-right: 5px;
+  width: 25%;
+}
+
+.event-detail {
+  padding-left: 5px;
+  width: 75%;
+}
+
+.no-events-label {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.with-event {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+

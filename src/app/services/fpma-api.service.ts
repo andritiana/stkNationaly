@@ -29,14 +29,15 @@ export class FpmaApiService {
   /**
    * Method that retrieve list of events from the stk.fpma api
    */
-  public loadAgenda(): Observable<AgendaEvent[]> {
+  public loadAgenda(): Observable<AgendaEvent[]> { //API-V2 OK
+    const newApi = "https://stk-staging.fpma.church/"
     const httpOptions =  this.isDevMode ? {
       headers: new HttpHeaders({
         'dev-mode':  ''
       })
     } : {};
 
-    return this.http.get(`${this.FPMA_DOMAIN}api/events`, httpOptions)
+    return this.http.get(`${newApi}api/events`, httpOptions)
       .pipe(
         map((res: any) => this.parseEvent(res)),
         catchError((e: any) => {

@@ -62,14 +62,15 @@ export class FpmaApiService {
   /**
    * Method that retrieve list of spi article from the stk.fpma api
    */
-  public loadPartageSpi(): Observable<ArticleSpi[]> {
+  public loadPartageSpi(): Observable<ArticleSpi[]> { //API-V2 OK
+    const newApi = "https://stk-staging.fpma.church/"
     const httpOptions =  this.isDevMode ? {
       headers: new HttpHeaders({
         'dev-mode':  ''
       })
     } : {};
 
-    return this.http.get(`${this.FPMA_DOMAIN}api/partages`, httpOptions)
+    return this.http.get(`${newApi}api/partages`, httpOptions)
       .pipe(
         map((res: any) => this.parsePartage(res)),
         catchError((e: any) => {
@@ -79,13 +80,15 @@ export class FpmaApiService {
 
   private parsePartage(elem: any): ArticleSpi[] {
     const partages: ArticleSpi[] = [];
+    
     if (elem && elem.partages && elem.partages.data && elem.partages.data.length) {
-      elem.partages.data.forEach(partage => {
+      const partagesElem: any[] = elem.partages.data;
+      partagesElem.forEach( partageElem => {
         partages.push({
-          creationDate: DateHelper.getDate(partage.created),
-          title: partage.title,
-          text: partage.fulltext,
-          thumbnail: this.parseThumbnailUrl(partage.thumbnails)
+          title: partageElem.title,
+          creationDate: DateHelper.getDate(partageElem.created),
+          text: partageElem.fulltext,
+          thumbnail:partageElem.thumbnails
         });
       });
     }
@@ -95,13 +98,14 @@ export class FpmaApiService {
   /**
    * Method that retrieve list of actuality from the stk.fpma api
    */
-  public loadActuality(): Observable<Actualities[]> {
+  public loadActuality(): Observable<Actualities[]> {//API-V2 OK
+    const newApi = "https://stk-staging.fpma.church/"
     const httpOptions =  this.isDevMode ? {
       headers: new HttpHeaders({
         'dev-mode':  ''
       })
     } : {};
-    return this.http.get(`${this.FPMA_DOMAIN}api/broadcasts`, httpOptions)
+    return this.http.get(`${newApi}api/broadcasts`, httpOptions)
     .pipe(
       map((res: any) => this.parseActuality(res)),
       catchError((e: any) => {
@@ -118,7 +122,7 @@ export class FpmaApiService {
           created: DateHelper.getDate(atuality.created),
           text: atuality.fulltext,
           rawtext: atuality.rawtext,
-          thumbnail: this.parseThumbnailUrl(atuality.thumbnails)
+          thumbnail: atuality.thumbnails
         });
       });
     }
@@ -190,13 +194,14 @@ export class FpmaApiService {
   }
 
 
-  public loadStkNews(): Observable<StkNews[]> {
+  public loadStkNews(): Observable<StkNews[]> { //API-V2 OK
+    const newApi = "https://stk-staging.fpma.church/"
     const httpOptions =  this.isDevMode ? {
       headers: new HttpHeaders({
         'dev-mode':  ''
       })
     } : {};
-    return this.http.get(`${this.FPMA_DOMAIN}api/news`, httpOptions)
+   return this.http.get(`${newApi}api/stk-news`, httpOptions)
       .pipe(
         map((res: any) => this.parseStkNews(res)),
         catchError((e: any) => {
@@ -204,7 +209,8 @@ export class FpmaApiService {
       }));
   }
 
-  private parseStkNews(elem: any): StkNews[] {
+  private parseStkNews(elem: any): StkNews[] { //API-V2 OK
+    const newApi = "https://stk-staging.fpma.church/"
     const news: StkNews[] = [];
     if (elem && elem.news && elem.news.data && elem.news.data.length > 0) {
       const newsElem: any[] = elem.news.data;
@@ -212,8 +218,8 @@ export class FpmaApiService {
         news.push({
           id: Number(newElem.id),
           title: newElem.title,
-          thumbnails: this.parseThumbnailUrls(newElem.thumbnails),
-          pdf: newElem.files && newElem.files.length > 0 ? `${this.FPMA_DOMAIN}${newElem.files[0]}` : ''
+          thumbnails: newElem.thumbnails,
+          pdf: newElem.files && newElem.files.length > 0 ? `${newElem.files[0]}` : ''
         });
       });
     }

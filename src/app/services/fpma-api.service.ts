@@ -29,8 +29,8 @@ export class FpmaApiService {
   /**
    * Method that retrieve list of events from the stk.fpma api
    */
-  public loadAgenda(): Observable<AgendaEvent[]> { //API-V2 OK
-    const newApi = "https://stk-staging.fpma.church/"
+  public loadAgenda(): Observable<AgendaEvent[]> { // API-V2 OK
+    const newApi = 'https://stk-staging.fpma.church/';
     const httpOptions =  this.isDevMode ? {
       headers: new HttpHeaders({
         'dev-mode':  ''
@@ -48,13 +48,17 @@ export class FpmaApiService {
   private parseEvent(elem: any): AgendaEvent[] {
     const events: AgendaEvent[] = [];
     if (elem && elem.events && elem.events.data && elem.events.data.length) {
-      elem.events.data.forEach(event => {
-        events.push({
-          id: event.id,
-          title: event.title,
-          startDate: DateHelper.getDate(event.startdate),
-          endDate: DateHelper.getDate(event.enddate)
-        });
+      elem.events.data.forEach( (event, index) => {
+        if (event.startdate) {
+          events.push({
+            id: index,
+            title: event.title,
+            startTime: DateHelper.getDate(event.startdate),
+            endTime: event.enddate ?  DateHelper.getDate(event.enddate) : DateHelper.getDate(event.startdate),
+            text : event.desc,
+            thumbnail : this.parseThumbnailUrl(event.image)
+          });
+        }
       });
     }
     return events;
@@ -63,8 +67,8 @@ export class FpmaApiService {
   /**
    * Method that retrieve list of spi article from the stk.fpma api
    */
-  public loadPartageSpi(): Observable<ArticleSpi[]> { //API-V2 OK
-    const newApi = "https://stk-staging.fpma.church/"
+  public loadPartageSpi(): Observable<ArticleSpi[]> { // API-V2 OK
+    const newApi = 'https://stk-staging.fpma.church/';
     const httpOptions =  this.isDevMode ? {
       headers: new HttpHeaders({
         'dev-mode':  ''
@@ -81,7 +85,6 @@ export class FpmaApiService {
 
   private parsePartage(elem: any): ArticleSpi[] {
     const partages: ArticleSpi[] = [];
-    
     if (elem && elem.partages && elem.partages.data && elem.partages.data.length) {
       const partagesElem: any[] = elem.partages.data;
       partagesElem.forEach( partageElem => {
@@ -89,7 +92,7 @@ export class FpmaApiService {
           title: partageElem.title,
           creationDate: DateHelper.getDate(partageElem.created),
           text: partageElem.fulltext,
-          thumbnail:partageElem.thumbnails
+          thumbnail: partageElem.thumbnails
         });
       });
     }
@@ -99,8 +102,8 @@ export class FpmaApiService {
   /**
    * Method that retrieve list of actuality from the stk.fpma api
    */
-  public loadActuality(): Observable<Actualities[]> {//API-V2 OK
-    const newApi = "https://stk-staging.fpma.church/"
+  public loadActuality(): Observable<Actualities[]> {// API-V2 OK
+    const newApi = 'https://stk-staging.fpma.church/';
     const httpOptions =  this.isDevMode ? {
       headers: new HttpHeaders({
         'dev-mode':  ''
@@ -195,14 +198,14 @@ export class FpmaApiService {
   }
 
 
-  public loadStkNews(): Observable<StkNews[]> { //API-V2 OK
-    const newApi = "https://stk-staging.fpma.church/"
+  public loadStkNews(): Observable<StkNews[]> { // API-V2 OK
+    const newApi = 'https://stk-staging.fpma.church/';
     const httpOptions =  this.isDevMode ? {
       headers: new HttpHeaders({
         'dev-mode':  ''
       })
     } : {};
-   return this.http.get(`${newApi}api/stk-news`, httpOptions)
+    return this.http.get(`${newApi}api/stk-news`, httpOptions)
       .pipe(
         map((res: any) => this.parseStkNews(res)),
         catchError((e: any) => {
@@ -210,8 +213,8 @@ export class FpmaApiService {
       }));
   }
 
-  private parseStkNews(elem: any): StkNews[] { //API-V2 OK
-    const newApi = "https://stk-staging.fpma.church/"
+  private parseStkNews(elem: any): StkNews[] { // API-V2 OK
+    const newApi = 'https://stk-staging.fpma.church/';
     const news: StkNews[] = [];
     if (elem && elem.news && elem.news.data && elem.news.data.length > 0) {
       const newsElem: any[] = elem.news.data;
@@ -290,7 +293,11 @@ export class FpmaApiService {
     const thumbnailsArray = [];
     if (thumbnailsUrl && thumbnailsUrl.length) {
       thumbnailsUrl.map((url: string) => {
-        thumbnailsArray.push(`${this.FPMA_DOMAIN}${url}`);
+        if (url.startsWith('http')) {
+          thumbnailsArray.push(`${url}`);
+        } else {
+          thumbnailsArray.push(`${this.FPMA_DOMAIN}${url}`);
+        }
       });
       return thumbnailsArray;
     } else {
@@ -301,7 +308,7 @@ export class FpmaApiService {
   // Normalement déjà ajouté dans la branche feature/agenda
   private parseThumbnailUrl(thumbnailUrl: any): string {
     if (thumbnailUrl) {
-      if (thumbnailUrl.startsWith("http")) {
+      if (thumbnailUrl.startsWith('http')) {
         return thumbnailUrl;
       } else {
         return `${this.FPMA_DOMAIN}${thumbnailUrl}`;
@@ -309,7 +316,6 @@ export class FpmaApiService {
     } else {
       return null;
     }
-
   }
 
   public getContentUpdated(lastVisitTimestamps: LastVisitTimestamps): Observable<LastVisitUpdates> {

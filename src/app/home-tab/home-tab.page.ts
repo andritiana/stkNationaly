@@ -61,9 +61,7 @@ export class HomeTabPage implements OnInit {
     if (page === 'partage') {
       this.router.navigate(['/tabs/spi-tab']);
     } else if (page === 'stk') {
-      this.router.navigate(['/tabs/presentation-tab/' + 27]);
-    } else if (page === 'hymne') {
-      this.router.navigate(['/tabs/presentation-tab/' + 149]);
+      this.router.navigate(['/tabs/presentation-tab']);
     } else if (page === 'actus') {
       this.router.navigate(['/tabs/actualities-tab']);
     }

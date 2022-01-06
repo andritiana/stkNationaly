@@ -31,10 +31,6 @@
         <img src="assets/imgs/presentation_blue.svg"/>
         <span>Qu'est ce que la STK ?</span>
       </div>
-      <div class="horizontal-button" (click)="goToPage('hymne')">
-        <img src="assets/imgs/interface.svg"/>
-        <span>Hymne STK</span>
-      </div>
 
       <ng-container *ngIf="displayLiveSections; else defaultDisplay">
         <ng-container *ngFor="let liveSection of liveSections">

@@ -18,7 +18,7 @@ import { GenericPost } from '../models/generic-post.interface';
 })
 export class FpmaApiService {
 
-  private FPMA_DOMAIN = 'https://stk.fpma.church/';
+  private FPMA_DOMAIN = 'https://stk-staging.fpma.church/';
   private isDevMode = false;
 
   constructor(
@@ -149,48 +149,17 @@ export class FpmaApiService {
     if (elem && elem.presentations && elem.presentations.data && elem.presentations.data.length) {
       elem.presentations.data.forEach(presentation => {
         presentations.push({
-          id: presentation.id,
           title: presentation.title,
           introtext: presentation.introtext,
           created: DateHelper.getDate(presentation.created),
-          text: presentation.rawtext,
-          thumbnail: this.parseThumbnailUrls(presentation.thumbnails)
+          text: presentation.fulltext,
+          rawtext: presentation.rawtext,
+          thumbnail: presentation.thumbnails
         });
       });
     }
     return presentations;
   }
-
-  public loadPresentation(id: number): Observable<Presentation | null> {
-    const httpOptions =  this.isDevMode ? {
-      headers: new HttpHeaders({
-        'dev-mode':  ''
-      })
-    } : {};
-    return this.http.get(`${this.FPMA_DOMAIN}api/presentations/${id}`, httpOptions)
-      .pipe(
-        map((res: any) => this.parsePresentation(res)),
-        catchError((e: any) => {
-          return Observable.throw(e);
-      }));
-  }
-
-  private parsePresentation(elem: any): Presentation | null {
-    if (elem && elem.presentations && elem.presentations.data ) {
-      const presentation = elem.presentations.data;
-      return {
-        id: presentation.id,
-        title: presentation.title,
-        introtext: presentation.introtext,
-        created: DateHelper.getDate(presentation.created),
-        text: presentation.rawtext,
-        thumbnail: this.parseThumbnailUrls(presentation.thumbnails)
-      };
-    } else {
-      return null;
-    }
-  }
-
 
   public loadStkNews(): Observable<StkNews[]> { //API-V2 OK
     const httpOptions =  this.isDevMode ? {

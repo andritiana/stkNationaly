@@ -29,15 +29,14 @@ export class FpmaApiService {
   /**
    * Method that retrieve list of events from the stk.fpma api
    */
-  public loadAgenda(): Observable<AgendaEvent[]> { //API-V2 OK
-    const newApi = "https://stk-staging.fpma.church/"
+  public loadAgenda(): Observable<AgendaEvent[]> {
     const httpOptions =  this.isDevMode ? {
       headers: new HttpHeaders({
         'dev-mode':  ''
       })
     } : {};
 
-    return this.http.get(`${newApi}api/events`, httpOptions)
+    return this.http.get(`${this.FPMA_DOMAIN}api/events`, httpOptions)
       .pipe(
         map((res: any) => this.parseEvent(res)),
         catchError((e: any) => {
@@ -63,15 +62,14 @@ export class FpmaApiService {
   /**
    * Method that retrieve list of spi article from the stk.fpma api
    */
-  public loadPartageSpi(): Observable<ArticleSpi[]> { //API-V2 OK
-    const newApi = "https://stk-staging.fpma.church/"
+  public loadPartageSpi(): Observable<ArticleSpi[]> {
     const httpOptions =  this.isDevMode ? {
       headers: new HttpHeaders({
         'dev-mode':  ''
       })
     } : {};
 
-    return this.http.get(`${newApi}api/partages`, httpOptions)
+    return this.http.get(`${this.FPMA_DOMAIN}api/partages`, httpOptions)
       .pipe(
         map((res: any) => this.parsePartage(res)),
         catchError((e: any) => {
@@ -100,13 +98,12 @@ export class FpmaApiService {
    * Method that retrieve list of actuality from the stk.fpma api
    */
   public loadActuality(): Observable<Actualities[]> {//API-V2 OK
-    const newApi = "https://stk-staging.fpma.church/"
     const httpOptions =  this.isDevMode ? {
       headers: new HttpHeaders({
         'dev-mode':  ''
       })
     } : {};
-    return this.http.get(`${newApi}api/broadcasts`, httpOptions)
+    return this.http.get(`${this.FPMA_DOMAIN}api/broadcasts`, httpOptions)
     .pipe(
       map((res: any) => this.parseActuality(res)),
       catchError((e: any) => {
@@ -196,13 +193,12 @@ export class FpmaApiService {
 
 
   public loadStkNews(): Observable<StkNews[]> { //API-V2 OK
-    const newApi = "https://stk-staging.fpma.church/"
     const httpOptions =  this.isDevMode ? {
       headers: new HttpHeaders({
         'dev-mode':  ''
       })
     } : {};
-   return this.http.get(`${newApi}api/stk-news`, httpOptions)
+    return this.http.get(`${this.FPMA_DOMAIN}api/stk-news`, httpOptions)
       .pipe(
         map((res: any) => this.parseStkNews(res)),
         catchError((e: any) => {
@@ -211,7 +207,6 @@ export class FpmaApiService {
   }
 
   private parseStkNews(elem: any): StkNews[] { //API-V2 OK
-    const newApi = "https://stk-staging.fpma.church/"
     const news: StkNews[] = [];
     if (elem && elem.news && elem.news.data && elem.news.data.length > 0) {
       const newsElem: any[] = elem.news.data;

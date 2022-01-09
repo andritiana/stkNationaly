@@ -53,7 +53,7 @@ export class FpmaApiService {
             id: index,
             title: event.title,
             startTime: DateHelper.getDate(event.startdate),
-            endTime: event.enddate ?  DateHelper.getDate(event.enddate) : DateHelper.getDate(event.startdate), 
+            endTime: event.enddate ?  DateHelper.getDate(event.enddate) : DateHelper.getDate(event.startdate),
             text : event.desc,
             thumbnail : this.parseThumbnailUrl(event.image)
           });
@@ -84,13 +84,13 @@ export class FpmaApiService {
   private parsePartage(elem: any): ArticleSpi[] {
     const partages: ArticleSpi[] = [];
     if (elem && elem.partages && elem.partages.data && elem.partages.data.length) {
-      elem.partages.data.forEach(partage => {
+      const partagesElem: any[] = elem.partages.data;
+      partagesElem.forEach( partageElem => {
         partages.push({
-          id: partage.id,
-          creationDate: DateHelper.getDate(partage.created),
-          title: partage.title,
-          text: partage.introtext, // for now full text of partage are sent in introtext
-          thumbnail: this.parseThumbnailUrls(partage.thumbnails)
+          title: partageElem.title,
+          creationDate: DateHelper.getDate(partageElem.created),
+          text: partageElem.fulltext,
+          thumbnail: partageElem.thumbnails
         });
       });
     }
@@ -100,7 +100,7 @@ export class FpmaApiService {
   /**
    * Method that retrieve list of actuality from the stk.fpma api
    */
-  public loadActuality(): Observable<Actualities[]> {
+  public loadActuality(): Observable<Actualities[]> {// API-V2 OK
     const httpOptions =  this.isDevMode ? {
       headers: new HttpHeaders({
         'dev-mode':  ''
@@ -119,12 +119,11 @@ export class FpmaApiService {
     if (elem && elem.broadcast && elem.broadcast.data && elem.broadcast.data.length) {
       elem.broadcast.data.forEach(atuality => {
         atualities.push({
-          id: atuality.id,
           title: atuality.title,
           created: DateHelper.getDate(atuality.created),
-          text: atuality.introtext,
+          text: atuality.fulltext,
           rawtext: atuality.rawtext,
-          thumbnail: this.parseThumbnailUrls(atuality.thumbnails)
+          thumbnail: atuality.thumbnails
         });
       });
     }
@@ -153,56 +152,25 @@ export class FpmaApiService {
     if (elem && elem.presentations && elem.presentations.data && elem.presentations.data.length) {
       elem.presentations.data.forEach(presentation => {
         presentations.push({
-          id: presentation.id,
           title: presentation.title,
           introtext: presentation.introtext,
           created: DateHelper.getDate(presentation.created),
-          text: presentation.rawtext,
-          thumbnail: this.parseThumbnailUrls(presentation.thumbnails)
+          text: presentation.fulltext,
+          rawtext: presentation.rawtext,
+          thumbnail: presentation.thumbnails
         });
       });
     }
     return presentations;
   }
 
-  public loadPresentation(id: number): Observable<Presentation | null> {
+  public loadStkNews(): Observable<StkNews[]> { // API-V2 OK
     const httpOptions =  this.isDevMode ? {
       headers: new HttpHeaders({
         'dev-mode':  ''
       })
     } : {};
-    return this.http.get(`${this.FPMA_DOMAIN}api/presentations/${id}`, httpOptions)
-      .pipe(
-        map((res: any) => this.parsePresentation(res)),
-        catchError((e: any) => {
-          return Observable.throw(e);
-      }));
-  }
-
-  private parsePresentation(elem: any): Presentation | null {
-    if (elem && elem.presentations && elem.presentations.data ) {
-      const presentation = elem.presentations.data;
-      return {
-        id: presentation.id,
-        title: presentation.title,
-        introtext: presentation.introtext,
-        created: DateHelper.getDate(presentation.created),
-        text: presentation.rawtext,
-        thumbnail: this.parseThumbnailUrls(presentation.thumbnails)
-      };
-    } else {
-      return null;
-    }
-  }
-
-
-  public loadStkNews(): Observable<StkNews[]> {
-    const httpOptions =  this.isDevMode ? {
-      headers: new HttpHeaders({
-        'dev-mode':  ''
-      })
-    } : {};
-    return this.http.get(`${this.FPMA_DOMAIN}api/news`, httpOptions)
+    return this.http.get(`${this.FPMA_DOMAIN}api/stk-news`, httpOptions)
       .pipe(
         map((res: any) => this.parseStkNews(res)),
         catchError((e: any) => {
@@ -210,7 +178,7 @@ export class FpmaApiService {
       }));
   }
 
-  private parseStkNews(elem: any): StkNews[] {
+  private parseStkNews(elem: any): StkNews[] { // API-V2 OK
     const news: StkNews[] = [];
     if (elem && elem.news && elem.news.data && elem.news.data.length > 0) {
       const newsElem: any[] = elem.news.data;
@@ -218,8 +186,8 @@ export class FpmaApiService {
         news.push({
           id: Number(newElem.id),
           title: newElem.title,
-          thumbnails: this.parseThumbnailUrls(newElem.thumbnails),
-          pdf: newElem.files && newElem.files.length > 0 ? `${this.FPMA_DOMAIN}${newElem.files[0]}` : ''
+          thumbnails: newElem.thumbnails,
+          pdf: newElem.files && newElem.files.length > 0 ? `${newElem.files[0]}` : ''
         });
       });
     }
@@ -251,7 +219,7 @@ export class FpmaApiService {
   /**
    * Method that retrieve list of generic posts from the stk.fpma api
    */
-  public loadGenericPosts(category: string): Observable<GenericPost[]> {
+  public loadGenericPosts(category: number): Observable<GenericPost[]> {
     const httpOptions = this.isDevMode ? {
       headers: new HttpHeaders({
         'dev-mode': ''
@@ -272,42 +240,26 @@ export class FpmaApiService {
         posts.push({
           title: post.title,
           created: DateHelper.getDate(post.created),
-          text: post.text,
+          introtext: post.introtext,
+          fulltext: post.fulltext,
           rawtext: post.rawtext,
-          thumbnails: this.parseThumbnailUrls(post.thumbnails)
+          thumbnail: this.parseThumbnailUrl(post.thumbnails)
         });
       });
     }
     return posts;
   }
 
-  private parseThumbnailUrls(thumbnailsUrl: any): string[] {
-    const thumbnailsArray = [];
-    if (thumbnailsUrl && thumbnailsUrl.length) {
-      thumbnailsUrl.map((url: string) => {
-        if(url.startsWith("http")) { 
-          thumbnailsArray.push(`${url}`);
-        } else {
-          thumbnailsArray.push(`${this.FPMA_DOMAIN}${url}`);
-        }
-      });
-      return thumbnailsArray;
-    } else {
-      return [];
-    }
-  }
-
-  private parseThumbnailUrl(thumbnailUrl: any) : string {
+  private parseThumbnailUrl(thumbnailUrl: any): string {
     if (thumbnailUrl) {
-      if(thumbnailUrl.startsWith("http")) {
+      if (thumbnailUrl.startsWith('http')) {
         return thumbnailUrl;
       } else {
         return `${this.FPMA_DOMAIN}${thumbnailUrl}`;
       }
     } else {
-      return null ;
+      return null;
     }
-
   }
 
   public getContentUpdated(lastVisitTimestamps: LastVisitTimestamps): Observable<LastVisitUpdates> {

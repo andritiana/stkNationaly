@@ -9,7 +9,7 @@ const routes: Routes = [
     component: PresentationTabPage
   },
   {
-    path: ':id',
+    path: 'details',
     component: PresentationDetailsPage
   }
 ];

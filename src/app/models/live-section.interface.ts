@@ -8,7 +8,7 @@ export interface LiveSection {
 }
 
 export interface LiveSectionPosts extends LiveSection {
-    category: string;
+    category: number;
 }
 
 export interface LiveSectionEmbeddedContent extends LiveSection {

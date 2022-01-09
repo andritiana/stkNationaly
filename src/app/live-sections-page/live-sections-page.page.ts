@@ -12,7 +12,7 @@ import { FpmaApiService } from '../services/fpma-api.service';
 export class LiveSectionsPagePage {
 
   public title: string;
-  public fetchCategory: string;
+  public fetchCategory: number;
   public posts: GenericPost[];
   public loading = true;
 
@@ -31,7 +31,7 @@ export class LiveSectionsPagePage {
     });
   }
 
-  private loadSectionPosts(fetchCategory: string) {
+  private loadSectionPosts(fetchCategory: number) {
     this.loading = true;
     this.fpmaApiService.loadGenericPosts(fetchCategory).subscribe((posts: GenericPost[]) => {
       this.posts = posts;

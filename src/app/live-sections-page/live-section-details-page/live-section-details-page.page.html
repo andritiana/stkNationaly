@@ -1,0 +1,34 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      {{sectionTitle}}
+    </ion-title>
+    <ion-buttons slot="end">
+      <button ion-button icon-only (click)="goToHome()">
+        <ion-icon class="homeMenu" name="home"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-slides pager="false" [options]="slideOpts">
+    <ion-slide *ngFor="let post of posts; let i = index">
+      <div class="swipe-content">
+        <div class="article-container">
+          <img *ngIf="!!post.thumbnail" [src]="post.thumbnail" onerror="this.style.display='none'" />
+          <div class='article-content'>
+            <h5>{{DateHelper.getDateWrittenFr(post.created)}}</h5>
+            <h3>{{post.title}}</h3>
+            <div [innerHTML]="post.fulltext"></div>
+          </div>
+        </div>
+      </div>
+      <h1></h1>
+      <p></p>
+    </ion-slide>
+  </ion-slides>
+</ion-content>

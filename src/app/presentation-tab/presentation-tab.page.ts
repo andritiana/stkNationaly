@@ -31,8 +31,9 @@ export class PresentationTabPage {
       });
   }
 
-  public goToDetails(index: number) {
-    this.router.navigate(['/tabs/presentation-tab/' + index]);
+  public goToDetails(presentation: Presentation) {
+    const navigationExtras: NavigationExtras = { state: { presentation } };
+    this.router.navigate(['/tabs/presentation-tab/details'], navigationExtras);
   }
 
 

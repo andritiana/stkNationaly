@@ -12,31 +12,18 @@ import { FpmaApiService } from 'src/app/services/fpma-api.service';
 export class PresentationDetailsPage {
 
   public presentation: Presentation;
-  public presentationId: number;
-  public loading = true;
-
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private sanitized: DomSanitizer,
-    private fpmaApiService: FpmaApiService,
     private actRoute: ActivatedRoute
   ) {
     this.route.queryParams.subscribe(params => {
-        this.presentationId = this.actRoute.snapshot.params.id;
-        this.loadPresentation(this.presentationId);
+      if (this.router.getCurrentNavigation().extras.state) {
+        this.presentation = this.router.getCurrentNavigation().extras.state.presentation;
+      }
     });
-  }
-
-  private loadPresentation(id){
-    this.loading = true;
-    this.fpmaApiService.loadPresentation(id).subscribe((presentation: Presentation | null) => {
-      this.presentation = presentation;
-      this.loading = false;
-      }, () => {
-        this.loading = false;
-      });
   }
 
   public removeHtmlLink(textHtml: string) {

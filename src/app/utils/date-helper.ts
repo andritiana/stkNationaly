@@ -29,4 +29,8 @@ export class DateHelper {
   static getDate(str: string): Date {
     return moment(str).toDate();
   }
+
+  static getFrenchWeekDay(date : Date) : string {
+    return moment(date).locale('fr').format('dddd');
+  }
 }

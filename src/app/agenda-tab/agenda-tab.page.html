@@ -18,43 +18,71 @@
 
 <ion-content [fullscreen]="true">
   <ion-spinner *ngIf="loading; else list" name="dots"></ion-spinner>
-  <ng-template #list>
-    <ion-row *ngIf="events && events.length; else noEvents">
-      <ion-col>
-        <div *ngFor="let event of events">
-          <ion-item>
-              <ion-grid>
-                  <ion-row>
-                    <ion-col class="col-date" size="2">
-                      <div *ngIf="isDateValid(event.startDate)" class="date">
-                        <span class="day">{{DateHelper.getDay(event.startDate)}}</span>
-                        <span class="month">{{DateHelper.getMonth(event.startDate)}}</span>
-                      </div>
-                    </ion-col>
-                    <ion-col class="col-event" size="10">
-                        <h2 class="title">{{event.title}}</h2>
-                        <span *ngIf="!isDateValid(event.startDate); else displayDate">No date</span>
-                        <ng-template #displayDate>
-                          <span *ngIf="DateHelper.getDateFormat(event.startDate) === DateHelper.getDateFormat(event.endDate); else differentDates">
-                              {{DateHelper.getHours(event.startDate)}} - {{DateHelper.getHours(event.endDate)}}
-                            </span>
-                            <ng-template #differentDates>
-                              <span *ngIf="isDateValid(event.startDate)">
-                                {{DateHelper.getDateFormat(event.startDate)}} - {{DateHelper.getDateFormat(event.endDate)}}
-                              </span>
-                            </ng-template>
-                        </ng-template>
-                    </ion-col>
-                  </ion-row>
-                </ion-grid>
-          </ion-item>
-        </div>
+  <ng-template #list> 
+    <ion-row>
+      <!-- Move back one screen of the slides -->
+      <ion-col size="2">
+        <ion-button fill="clear" (click)="back()">
+          <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-col>
+   
+      <ion-col size="8" class="ion-text-center">
+        <h2 class="currentMonth">{{ currentMonth }}</h2>
+      </ion-col>
+   
+      <!-- Move forward one screen of the slides -->
+      <ion-col size="2">
+        <ion-button fill="clear" (click)="next()">
+          <ion-icon name="arrow-forward" slot="icon-only"></ion-icon>
+        </ion-button>
       </ion-col>
     </ion-row>
-    <ng-template #noEvents>
-      <div class="error-message-page">
-        Désolé, l'agenda n'a pas pu être récuperé.
-      </div>
-    </ng-template>
+   
+    <ng-template #monthviewEventDetailSTKTemplate let-showEventDetail="showEventDetail" let-selectedDate="selectedDate" let-noEventsLabel="noEventsLabel"> 
+      <ion-list class="event-detail-container" has-bouncing="false" *ngIf="showEventDetail" overflow-scroll="false">
+         <div class="horizontal-button" *ngFor="let event of selectedDate?.events" (click)="onEventSelected(event)"> 
+           <span *ngIf="!event.allDay && DateHelper.getDateFormat(event.startTime) === DateHelper.getDateFormat(event.endTime); else differentDates" class="monthview-eventdetail-timecolumn">
+            {{DateHelper.getHours(event.startTime)}} - {{DateHelper.getHours(event.endTime)}}
+           </span> 
+           <ng-template #differentDates> 
+            <span *ngIf="!event.allDay" class="monthview-eventdetail-timecolumn">
+              {{DateHelper.getDateFormat(event.startTime)}} - <br> {{DateHelper.getDateFormat(event.endTime)}}
+             </span> 
+           </ng-template>
+           <span *ngIf="event.allDay" class="monthview-eventdetail-timecolumn">Toute la journée</span> 
+           <span class="event-detail"> {{event.title}}</span> 
+          </div> 
+          <div class="no-events-label" *ngIf="selectedDate?.events.length==0"> 
+            <span>{{noEventsLabel}}</span> 
+          </div> 
+        </ion-list> 
+      </ng-template>
+
+      <ng-template #monthviewDisplayEventSTKTemplate let-view="view" let-row="row" let-col="col">
+        <div [class.with-event]="view.dates[row*7+col].events.length">
+          {{view.dates[row*7+col].label}}
+          <div class="indicator-container">
+            <div class="event-indicator" *ngFor="let e of view.dates[row*7+col].events"></div>
+          </div>
+        </div>
+      </ng-template>
+      
+      
+    <calendar
+      locale="fr-FR"
+      [eventSource]="events"
+      [currentDate]="calendar.currentDate"
+      (onTitleChanged)="onViewTitleChanged($event)"
+      (onEventSelected)="onEventSelected($event)"
+      noEventsLabel="Aucun évènement pour ce jour"
+      [monthviewEventDetailTemplate]="monthviewEventDetailSTKTemplate"
+      [monthviewDisplayEventTemplate]="monthviewDisplayEventSTKTemplate"
+      startingDayMonth="1"
+      >
+      </calendar>
   </ng-template>
 </ion-content>
+
+
+

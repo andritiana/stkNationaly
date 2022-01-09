@@ -250,26 +250,6 @@ export class FpmaApiService {
     return posts;
   }
 
-  /**
-   * @deprecated depuis l'api v2. Doit etre utilise seulement pour l'api v1 (presentations, stk-news)
-   */
-  private parseThumbnailUrls(thumbnailsUrl: any): string[] {
-    const thumbnailsArray = [];
-    if (thumbnailsUrl && thumbnailsUrl.length) {
-      thumbnailsUrl.map((url: string) => {
-        if (url.startsWith('http')) {
-          thumbnailsArray.push(`${url}`);
-        } else {
-          thumbnailsArray.push(`${this.FPMA_DOMAIN}${url}`);
-        }
-      });
-      return thumbnailsArray;
-    } else {
-      return [];
-    }
-  }
-
-  // Normalement déjà ajouté dans la branche feature/agenda
   private parseThumbnailUrl(thumbnailUrl: any): string {
     if (thumbnailUrl) {
       if (thumbnailUrl.startsWith('http')) {

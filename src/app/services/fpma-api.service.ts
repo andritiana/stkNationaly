@@ -18,7 +18,7 @@ import { GenericPost } from '../models/generic-post.interface';
 })
 export class FpmaApiService {
 
-  private FPMA_DOMAIN = 'https://stk-staging.fpma.church/';
+  private FPMA_DOMAIN = 'https://stk.fpma.church/';
   private isDevMode = false;
 
   constructor(

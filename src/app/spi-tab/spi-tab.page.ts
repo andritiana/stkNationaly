@@ -15,6 +15,7 @@ export class SpiTabPage {
   public partages: ArticleSpi[];
   public DateHelper = DateHelper;
   public loading = true;
+  private start = 0; 
 
   constructor(
     private fpmaApiService: FpmaApiService,
@@ -33,6 +34,21 @@ export class SpiTabPage {
         this.loading = false;
       });
   }
+
+  public loadNewPartages(event){
+
+    setTimeout(() => {
+      this.start += 10; 
+      this.fpmaApiService.loadPartageSpiWithStart(this.start.toString()).subscribe((partages: ArticleSpi[]) =>{ 
+        this.partages = this.partages.concat(partages);
+      }, () => { }
+      );
+      event.target.complete();
+     if (this.partages.length % 10 != 0) {
+      event.target.disabled = true;
+     }
+    }, 500);
+  }    
 
   public refresh() {
     this.loadPartages();

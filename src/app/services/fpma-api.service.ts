@@ -82,6 +82,22 @@ export class FpmaApiService {
         );
   }
 
+  public loadPartageSpiWithStart(start:  string): Observable<ArticleSpi[]> {
+    const httpOptions =  this.isDevMode ? {
+      headers: new HttpHeaders({
+        'dev-mode':  ''
+      }) ,
+      params : new HttpParams().set('start' , start)
+    } : { params : new HttpParams().set('start' , start)};
+
+    return this.http.get(`${this.FPMA_DOMAIN}api/partages`, httpOptions)
+      .pipe(
+        map((res: any) => this.parsePartage(res)),
+        catchError((e: any) => {
+          return Observable.throw(e);
+      }));
+  }
+
   private parsePartage(elem: any): ArticleSpi[] {
     const partages: ArticleSpi[] = [];
     if (elem && elem.partages && elem.partages.data && elem.partages.data.length) {

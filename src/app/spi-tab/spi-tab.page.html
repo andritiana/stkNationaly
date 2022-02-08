@@ -30,6 +30,13 @@
           </div>
         </div>
       </ion-card>
+
+      <ion-infinite-scroll threshold="100px" (ionInfinite)="loadNewPartages($event)">
+        <ion-infinite-scroll-content
+          loadingSpinner="bubbles"
+          loadingText="Chargement d'articles...">
+        </ion-infinite-scroll-content>
+      </ion-infinite-scroll>
     </ng-container>
     <ng-template #noPartage>
       <div class="error-message-page">

@@ -40,13 +40,14 @@ export class SpiTabPage {
     setTimeout(() => {
       this.start += 10; 
       this.fpmaApiService.loadPartageSpiWithStart(this.start.toString()).subscribe((partages: ArticleSpi[]) =>{ 
-        this.partages = this.partages.concat(partages);
+        if (partages.length == 0) {
+          event.target.disabled = true;
+         } else {
+          this.partages = this.partages.concat(partages);
+        } 
       }, () => { }
       );
       event.target.complete();
-     if (this.partages.length % 10 != 0) {
-      event.target.disabled = true;
-     }
     }, 500);
   }    
 

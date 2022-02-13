@@ -30,5 +30,13 @@
         </div>
       </ion-card>
     </div>
+
+    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadNewActuality($event)">
+      <ion-infinite-scroll-content
+        loadingSpinner="bubbles"
+        loadingText="Chargement d'articles...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
   </ng-template>
 </ion-content>

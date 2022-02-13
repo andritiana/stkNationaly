@@ -18,6 +18,7 @@ export class AgendaTabPage {
   public events: AgendaEvent[];
   public DateHelper = DateHelper;
   public loading = true;
+  public start = 0;
 
   public currentMonth: string;
   public calendar = {
@@ -47,6 +48,21 @@ export class AgendaTabPage {
         this.loading = false;
         console.log(err);
       });
+  }
+
+  public loadNewAgenda(event){
+    setTimeout(() => {
+      this.start += 10; 
+      this.fpmaApiService.loadAgendaWithStart(this.start.toString()).subscribe((events: AgendaEvent[]) =>{ 
+        if (events.length == 0) {
+          event.target.disabled = true;
+         } else {
+          this.events = this.events.concat(events);
+        } 
+      }, () => { }
+      );
+      event.target.complete();
+    }, 500);
   }
 
   public isDateValid(date: Date) {

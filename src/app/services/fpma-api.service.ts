@@ -47,6 +47,22 @@ export class FpmaApiService {
         );
   }
 
+  public loadAgendaWithStart(start:  string): Observable<AgendaEvent[]> {
+    const httpOptions =  this.isDevMode ? {
+      headers: new HttpHeaders({
+        'dev-mode':  ''
+      }) ,
+      params : new HttpParams().set('start' , start)
+    } : { params : new HttpParams().set('start' , start)};
+
+    return this.http.get(`${this.FPMA_DOMAIN}api/events`, httpOptions)
+      .pipe(
+        map((res: any) => this.parseEvent(res)),
+        catchError((e: any) => {
+          return Observable.throw(e);
+      }));
+  }
+
   private parseEvent(elem: any): AgendaEvent[] {
     const events: AgendaEvent[] = [];
     if (elem && elem.events && elem.events.data && elem.events.data.length) {
@@ -129,6 +145,22 @@ export class FpmaApiService {
       );
   }
 
+  public loadActualyWithStart(start:  string): Observable<Actualities[]> {
+    const httpOptions =  this.isDevMode ? {
+      headers: new HttpHeaders({
+        'dev-mode':  ''
+      }) ,
+      params : new HttpParams().set('start' , start)
+    } : { params : new HttpParams().set('start' , start)};
+
+    return this.http.get(`${this.FPMA_DOMAIN}api/broadcasts`, httpOptions)
+      .pipe(
+        map((res: any) => this.parseActuality(res)),
+        catchError((e: any) => {
+          return Observable.throw(e);
+      }));
+  }
+
   private parseActuality(elem: any): Actualities[] {
     const atualities: Actualities[] = [];
     if (elem && elem.broadcast && elem.broadcast.data && elem.broadcast.data.length) {
@@ -188,6 +220,22 @@ export class FpmaApiService {
         map((res: any) => this.parseStkNews(res)),
 
     );
+  }
+
+  public loadStkNewsWithStart(start:  string): Observable<StkNews[]> {
+    const httpOptions =  this.isDevMode ? {
+      headers: new HttpHeaders({
+        'dev-mode':  ''
+      }) ,
+      params : new HttpParams().set('start' , start)
+    } : { params : new HttpParams().set('start' , start)};
+
+    return this.http.get(`${this.FPMA_DOMAIN}api/stk-news`, httpOptions)
+      .pipe(
+        map((res: any) => this.parseStkNews(res)),
+        catchError((e: any) => {
+          return Observable.throw(e);
+      }));
   }
 
   private parseStkNews(elem: any): StkNews[] { // API-V2 OK

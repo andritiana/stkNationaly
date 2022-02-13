@@ -20,6 +20,7 @@ export class ActualitiesTabPage {
   public loading = true;
   private actualityRefresher$ = new Subject<true | ActualitiesTabPage['NON_VALUE']>();
   private readonly NON_VALUE = Symbol();
+  private start = 0; 
 
   constructor(
     private fpmaApiService: FpmaApiService,
@@ -27,6 +28,7 @@ export class ActualitiesTabPage {
     private contentUpdateService: ContentUpdateService
     ) {
       this.loadActuality();
+      this
       this.contentUpdateService.resetNbUpdated('broadcasts');
   }
 
@@ -50,6 +52,25 @@ export class ActualitiesTabPage {
     );
   }
 
+  public loadNewActuality(event){
+
+    setTimeout(() => {
+      this.start += 10; 
+      this.fpmaApiService.loadActualyWithStart(this.start.toString()).subscribe((actualities: Actualities[]) =>{ 
+        if (actualities.length == 0) {
+          event.target.disabled = true;
+         } else {
+          this.actualities = this.actualities.concat(actualities);
+        } 
+      }, () => { }
+      );
+      event.target.complete();
+    }, 500);
+  }
+  
+
+  public goToDetails(index: number) {
+    const navigationExtras: NavigationExtras = { state: { actualities: this.actualities, id: index } };
   public goToDetails(index: number, actualities: Actualities[]) {
     const navigationExtras: NavigationExtras = { state: { actualities, id: index } };
     this.router.navigate(['/tabs/actualities-tab/details'], navigationExtras);

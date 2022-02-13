@@ -15,7 +15,7 @@ export class StkNewsTabPage {
 
   public listOfStkNews: StkNews[];
   public pdfToDisplay: string | null = null;
-
+  public start = 0;
 
   constructor(
     private fpmaApiService: FpmaApiService,
@@ -31,6 +31,22 @@ export class StkNewsTabPage {
         this.listOfStkNews = stkNews;
       }),
     );
+  }
+
+  public loadNewStkNews(event){
+
+    setTimeout(() => {
+      this.start += 10; 
+      this.fpmaApiService.loadStkNewsWithStart(this.start.toString()).subscribe((listOfStkNews: StkNews[]) =>{ 
+        if (listOfStkNews.length == 0) {
+          event.target.disabled = true;
+         } else {
+          this.listOfStkNews = this.listOfStkNews.concat(listOfStkNews);
+        } 
+      }, () => { }
+      );
+      event.target.complete();
+    }, 500);
   }
 
 

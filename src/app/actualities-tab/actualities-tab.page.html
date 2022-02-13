@@ -24,4 +24,24 @@
       </div>
     </ion-card>
   </ng-container>
+  <ng-template #list>
+    <div>
+      <ion-card class="actuality-card" *ngFor="let actuality of actualities; let i = index" (click)="goToDetails(i)">
+        <img *ngIf="!!actuality.thumbnail" [src]="actuality.thumbnail"/>
+        <div class="titles-container">
+            <div class="actuality-title">{{actuality.title}}</div>
+            <div class="actuality-date">{{DateHelper.getDateWrittenFr(actuality.created)}}</div>
+            <div>{{actuality.rawtext}}</div>
+        </div>
+      </ion-card>
+    </div>
+
+    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadNewActuality($event)">
+      <ion-infinite-scroll-content
+        loadingSpinner="bubbles"
+        loadingText="Chargement d'articles...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+  </ng-template>
 </ion-content>

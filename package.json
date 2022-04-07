@@ -1,6 +1,6 @@
 {
   "name": "stk-national",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "author": "Eglise Protestante Malgache en France",
   "homepage": "https://stk.fpma.church/",
   "scripts": {
@@ -27,6 +27,7 @@
     "@ionic/angular": "^5.0.0",
     "@ionic/storage": "^2.3.1",
     "cordova-plugin-firebase-analytics": "^5.0.0",
+    "cordova-res": "^0.15.4",
     "cordova-sqlite-storage": "^5.1.0",
     "cordova-support-android-plugin": "^1.0.2",
     "cordova-support-google-services": "^1.4.1",

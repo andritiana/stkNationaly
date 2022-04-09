@@ -47,15 +47,13 @@ export class FpmaApiService {
         );
   }
 
-  public loadAgendaWithStart(start:  string): Observable<AgendaEvent[]> {
+  public loadMonthsEventsAgenda(month: String, year: String): Observable<AgendaEvent[]>{
     const httpOptions =  this.isDevMode ? {
       headers: new HttpHeaders({
         'dev-mode':  ''
-      }) ,
-      params : new HttpParams().set('start' , start)
-    } : { params : new HttpParams().set('start' , start)};
-
-    return this.http.get(`${this.FPMA_DOMAIN}api/events`, httpOptions)
+      })
+    } : {};
+    return this.http.get(`${this.FPMA_DOMAIN}api/events/${year}/${month}`, httpOptions)
       .pipe(
         map((res: any) => this.parseEvent(res)),
         catchError((e: any) => {
@@ -145,7 +143,7 @@ export class FpmaApiService {
       );
   }
 
-  public loadActualyWithStart(start:  string): Observable<Actualities[]> {
+  public loadActualityWithStart(start:  string): Observable<Actualities[]> {
     const httpOptions =  this.isDevMode ? {
       headers: new HttpHeaders({
         'dev-mode':  ''
@@ -162,10 +160,10 @@ export class FpmaApiService {
   }
 
   private parseActuality(elem: any): Actualities[] {
-    const atualities: Actualities[] = [];
+    const actualities: Actualities[] = [];
     if (elem && elem.broadcast && elem.broadcast.data && elem.broadcast.data.length) {
       elem.broadcast.data.forEach(atuality => {
-        atualities.push({
+        actualities.push({
           title: atuality.title,
           created: DateHelper.getDate(atuality.created),
           text: atuality.fulltext,
@@ -174,7 +172,7 @@ export class FpmaApiService {
         });
       });
     }
-    return atualities;
+    return actualities;
   }
 
   /**

@@ -56,7 +56,7 @@ export class ActualitiesTabPage {
 
     setTimeout(() => {
       this.start += 10; 
-      this.fpmaApiService.loadActualyWithStart(this.start.toString()).subscribe((actualities: Actualities[]) =>{ 
+      this.fpmaApiService.loadActualityWithStart(this.start.toString()).subscribe((actualities: Actualities[]) =>{ 
         if (actualities.length == 0) {
           event.target.disabled = true;
          } else {

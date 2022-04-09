@@ -40,6 +40,7 @@ export class AgendaTabPage {
   }
 
   private loadAgenda(){
+   
     this.loading = true;
     this.fpmaApiService.loadAgenda().subscribe((events: AgendaEvent[]) => {
         this.events = events;
@@ -50,19 +51,15 @@ export class AgendaTabPage {
       });
   }
 
-  public loadNewAgenda(event){
-    setTimeout(() => {
-      this.start += 10; 
-      this.fpmaApiService.loadAgendaWithStart(this.start.toString()).subscribe((events: AgendaEvent[]) =>{ 
-        if (events.length == 0) {
-          event.target.disabled = true;
-         } else {
-          this.events = this.events.concat(events);
-        } 
-      }, () => { }
-      );
-      event.target.complete();
-    }, 500);
+  private loadNewAgenda(m: String, y: String){
+      this.fpmaApiService.loadMonthsEventsAgenda(m,y).subscribe((events: AgendaEvent[]) =>{ 
+          this.events = events;
+          this.loading = false;
+        }, err => {
+          this.loading = false;
+          console.log(err);
+        });
+      
   }
 
   public isDateValid(date: Date) {
@@ -92,6 +89,29 @@ export class AgendaTabPage {
   // Selected date reange and hence title changed
   onViewTitleChanged(title) {
     this.currentMonth = title;
+
+    const monthNames = {
+      "janvier":"01", 
+      "février":"02",
+      "mars":"03",
+      "avril":"04",
+      "mai":"05",
+      "juin":"06",
+      "juillet":"07",
+      "août":"08",
+      "septembre":"09",
+      "octobre":"10",
+      "novembre":"11",
+      "décembre":"12"
+    }
+
+    var monthText = title.substr(0,title.length-5);
+    var monthNum = monthNames[monthText]
+    var year = title.substr(title.length-4)
+    console.log(monthText)
+    console.log(year)
+    this.loadNewAgenda(monthNum, year)
+   // https://stk.fpma.church/api/events/2021/05
   }
 
   public onEventSelected(event: AgendaEvent) {

@@ -43,8 +43,6 @@ export class SpiTabPage {
   }
 
   public loadNewPartages(event){
-
-    setTimeout(() => {
       this.start += 10; 
       this.fpmaApiService.loadPartageSpiWithStart(this.start.toString()).subscribe((partages: ArticleSpi[]) =>{ 
         if (partages.length == 0) {
@@ -55,7 +53,6 @@ export class SpiTabPage {
       }, () => { }
       );
       event.target.complete();
-    }, 500);
   }    
 
   public refresh() {

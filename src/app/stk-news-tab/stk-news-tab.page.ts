@@ -34,8 +34,6 @@ export class StkNewsTabPage {
   }
 
   public loadNewStkNews(event){
-
-    setTimeout(() => {
       this.start += 10; 
       this.fpmaApiService.loadStkNewsWithStart(this.start.toString()).subscribe((listOfStkNews: StkNews[]) =>{ 
         if (listOfStkNews.length == 0) {
@@ -46,7 +44,6 @@ export class StkNewsTabPage {
       }, () => { }
       );
       event.target.complete();
-    }, 500);
   }
 
 

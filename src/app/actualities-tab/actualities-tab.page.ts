@@ -53,8 +53,6 @@ export class ActualitiesTabPage {
   }
 
   public loadNewActuality(event){
-
-    setTimeout(() => {
       this.start += 10; 
       this.fpmaApiService.loadActualityWithStart(this.start.toString()).subscribe((actualities: Actualities[]) =>{ 
         if (actualities.length == 0) {
@@ -65,7 +63,6 @@ export class ActualitiesTabPage {
       }, () => { }
       );
       event.target.complete();
-    }, 500);
   }
   
 

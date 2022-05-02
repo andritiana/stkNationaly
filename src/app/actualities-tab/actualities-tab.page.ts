@@ -28,7 +28,6 @@ export class ActualitiesTabPage {
     private contentUpdateService: ContentUpdateService
     ) {
       this.loadActuality();
-      this
       this.contentUpdateService.resetNbUpdated('broadcasts');
   }
 

@@ -47,7 +47,6 @@ export class AgendaTabPage {
         this.loading = false;
       }, err => {
         this.loading = false;
-        console.log(err);
       });
   }
 
@@ -57,7 +56,6 @@ export class AgendaTabPage {
           this.loading = false;
         }, err => {
           this.loading = false;
-          console.log(err);
         });
       
   }
@@ -108,10 +106,7 @@ export class AgendaTabPage {
     var monthText = title.substr(0,title.length-5);
     var monthNum = monthNames[monthText]
     var year = title.substr(title.length-4)
-    console.log(monthText)
-    console.log(year)
     this.loadNewAgenda(monthNum, year)
-   // https://stk.fpma.church/api/events/2021/05
   }
 
   public onEventSelected(event: AgendaEvent) {

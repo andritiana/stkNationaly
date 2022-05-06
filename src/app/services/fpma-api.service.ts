@@ -12,6 +12,7 @@ import { map } from 'rxjs/internal/operators/map';
 import { catchError } from 'rxjs/internal/operators/catchError';
 import { LiveSection } from '../models/live-section.interface';
 import { GenericPost } from '../models/generic-post.interface';
+import { HtmlService } from './html-service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +23,8 @@ export class FpmaApiService {
   private isDevMode = false;
 
   constructor(
-    public http: HttpClient
+    public http: HttpClient,
+    private htmlService: HtmlService
   ) {
   }
 
@@ -89,7 +91,7 @@ export class FpmaApiService {
         partages.push({
           title: partageElem.title,
           creationDate: DateHelper.getDate(partageElem.created),
-          text: partageElem.fulltext,
+          text: this.htmlService.enableEmbededContent(partageElem.fulltext),
           thumbnail: partageElem.thumbnails
         });
       });

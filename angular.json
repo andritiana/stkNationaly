@@ -177,9 +177,18 @@
     }
   },
   "cli": {
-    "defaultCollection": "@ionic/angular-toolkit"
+    "defaultCollection": "@ionic/angular-toolkit",
+    "packageManager": "pnpm"
   },
   "schematics": {
+    "@schematics/angular:component": {
+      "style": "scss",
+      "displayBlock": true,
+      "prefix": "mystk"
+    },
+    "@angular/angular-devkit:component": {
+      "styleext": "scss"
+    },
     "@ionic/angular-toolkit:component": {
       "styleext": "scss"
     },

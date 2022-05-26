@@ -4,10 +4,14 @@
       <img src='assets/imgs/logo_stk.png' (click)="enableDevMode()"/>
       <img src='assets/imgs/stk.jpeg'/>
     </span>
-    <ion-buttons *ngIf="isDevMode" slot="end">
-      <button ion-button icon-only (click)="quitDevModePopup()">
+    <ion-buttons slot="end">
+      <button *ngIf="isDevMode" (click)="quitDevModePopup()">
         <ion-icon class="homeMenu" name="close"></ion-icon>
       </button>
+      <a [routerLink]="['/profile']"
+         class="profile-link">
+        <ion-icon name="person-circle-outline"></ion-icon>
+      </a>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -34,7 +38,7 @@
 
       <ng-container *ngIf="displayLiveSections; else defaultDisplay">
         <ng-container *ngFor="let liveSection of liveSections">
-          
+
           <div *ngIf="!liveSection.isDevModeOnly || isDevMode" class="horizontal-button" [ngStyle]="{'border-color': getColor(liveSection.themeColor)}" (click)="goToSection(liveSection)">
             <img [attr.src]="liveSection?.themeIcon" />
             <span>{{liveSection?.title}}</span>

@@ -17,7 +17,7 @@ import { OneSignal } from '@ionic-native/onesignal/ngx';
   entryComponents: [],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(),
+    IonicModule.forRoot({animated: true}),
     AppRoutingModule,
     HttpClientModule,
     HttpClientJsonpModule,

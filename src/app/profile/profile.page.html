@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Mon profil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+<div class="badge-card">
+  <div class="badge-code"><mystk-qrcode-generator [data]="qrCodeData | json"></mystk-qrcode-generator></div>
+  <div class="badge-person">
+    <h1 class="badge-person-name">{{badge.fullName}}</h1>
+    <h2 class="badge-person-location">{{badge.location.tafo}}</h2>
+    <h2 class="badge-person-position">{{badge.positions | method:join:' - '}}</h2>
+  </div>
+  <ul class="badge-group-list">
+    <ion-chip class="badge-group-list-item"
+              role="listitem"
+              color="warning"
+              *ngFor="let group of badge.groups"><ion-label>{{group}}</ion-label></ion-chip>
+  </ul>
+  <div class="badge-room">Chambre <span class="badge-room-id">{{badge.room.id}}</span> - Bâtiment {{badge.room.bulding}}</div>
+  <div class="badge-meals"><span class="badge-meals-taken">{{badge.meals.total - badge.meals.remaining}}</span> / {{badge.meals.total}}</div>
+</div>
+</ion-content>

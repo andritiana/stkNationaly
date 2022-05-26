@@ -7,9 +7,8 @@ import { Presentation } from '../models/presentation.interface';
 import { Actualities } from '../models/actuality.interface';
 import { StkNews } from '../models/stk-news.interface';
 import { LastVisitTimestamps, LastVisitUpdates } from '../models/lastVisitTimestamps.interface';
-import { Observable } from 'rxjs/internal/Observable';
-import { map } from 'rxjs/internal/operators/map';
-import { catchError } from 'rxjs/internal/operators/catchError';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { LiveSection } from '../models/live-section.interface';
 import { GenericPost } from '../models/generic-post.interface';
 
@@ -39,9 +38,7 @@ export class FpmaApiService {
     return this.http.get(`${this.FPMA_DOMAIN}api/events`, httpOptions)
       .pipe(
         map((res: any) => this.parseEvent(res)),
-        catchError((e: any) => {
-          return Observable.throw(e);
-      }));
+        );
   }
 
   private parseEvent(elem: any): AgendaEvent[] {
@@ -76,9 +73,7 @@ export class FpmaApiService {
     return this.http.get(`${this.FPMA_DOMAIN}api/partages`, httpOptions)
       .pipe(
         map((res: any) => this.parsePartage(res)),
-        catchError((e: any) => {
-          return Observable.throw(e);
-      }));
+        );
   }
 
   private parsePartage(elem: any): ArticleSpi[] {
@@ -109,9 +104,7 @@ export class FpmaApiService {
     return this.http.get(`${this.FPMA_DOMAIN}api/broadcasts`, httpOptions)
     .pipe(
       map((res: any) => this.parseActuality(res)),
-      catchError((e: any) => {
-        return Observable.throw(e);
-    }));
+      );
   }
 
   private parseActuality(elem: any): Actualities[] {
@@ -142,9 +135,7 @@ export class FpmaApiService {
     return this.http.get(`${this.FPMA_DOMAIN}api/presentations`, httpOptions)
       .pipe(
         map((res: any) => this.parsePresentations(res)),
-        catchError((e: any) => {
-          return Observable.throw(e);
-      }));
+        );
   }
 
   private parsePresentations(elem: any): Presentation[] {
@@ -173,9 +164,8 @@ export class FpmaApiService {
     return this.http.get(`${this.FPMA_DOMAIN}api/stk-news`, httpOptions)
       .pipe(
         map((res: any) => this.parseStkNews(res)),
-        catchError((e: any) => {
-          return Observable.throw(e);
-      }));
+
+    );
   }
 
   private parseStkNews(elem: any): StkNews[] { // API-V2 OK
@@ -201,14 +191,12 @@ export class FpmaApiService {
     return this.http.get(`${this.FPMA_DOMAIN}api/live-sections`)
       .pipe(
         map((res: any) => this.parseLiveSections(res)),
-        catchError((e: any) => {
-          return Observable.throw(e);
-        }));
+        );
   }
 
   private parseLiveSections(elem: any): LiveSection[] {
     const liveSections: LiveSection[] = [];
-    if (elem && elem['live-sections'] && elem['live-sections'].data && elem['live-sections'].data.length) {
+    if (elem?.['live-sections']?.data?.length) {
       elem['live-sections'].data.forEach(liveSection => {
         liveSections.push(liveSection);
       });
@@ -228,9 +216,7 @@ export class FpmaApiService {
     return this.http.get(`${this.FPMA_DOMAIN}api/posts/category/${category}`, httpOptions)
       .pipe(
         map((res: any) => this.parseGenericPosts(res)),
-        catchError((e: any) => {
-          return Observable.throw(e);
-        }));
+        );
   }
 
   private parseGenericPosts(elem: any): GenericPost[] {
@@ -271,9 +257,7 @@ export class FpmaApiService {
     return this.http.get(`${this.FPMA_DOMAIN}api/content-updates`, { params })
       .pipe(
         map((res: any) => this.parseContentUpdates(res)),
-        catchError((e: any) => {
-          return Observable.throw(e);
-      }));
+        );
   }
 
   private parseContentUpdates(data: any): LastVisitUpdates {

@@ -1,22 +1,14 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Présentation
-    </ion-title>
-    <ion-buttons slot="end">
-      <button ion-button icon-only (click)="goToHome()">
-        <ion-icon class="homeMenu" name="home"></ion-icon>
-      </button>
-    </ion-buttons>
-  </ion-toolbar>
+  <app-global-header></app-global-header>
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <mystk-page-title>Présentation</mystk-page-title>
   <ion-spinner *ngIf="loading; else list" name="dots"pager="true"></ion-spinner>
 
   <ng-template #list>
     <div>
-      <ion-card class="presentation-section" *ngFor="let presentation of presentations; let i = index" 
+      <ion-card class="presentation-section" *ngFor="let presentation of presentations; let i = index"
       (click)="goToDetails(presentation)">
       <span class="presentation-title">{{presentation.title}}</span>
       <ion-icon name="arrow-forward"></ion-icon>

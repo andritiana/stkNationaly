@@ -1,0 +1,13 @@
+:host {
+  display: flex;
+  justify-content: center;
+  color: var(--ion-color-primary);
+}
+.page-title {
+  font-size: 1rem;
+  font-weight: 300;
+  padding: 0;
+  margin: 1.25rem 0;
+  display: inline-block;
+  text-transform: uppercase;
+}

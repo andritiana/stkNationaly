@@ -1,17 +1,9 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      {{title}}
-    </ion-title>
-    <ion-buttons slot="end">
-      <button ion-button icon-only (click)="goToHome()">
-        <ion-icon class="homeMenu" name="home"></ion-icon>
-      </button>
-    </ion-buttons>
-  </ion-toolbar>
+  <app-global-header></app-global-header>
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <mystk-page-title>{{title}}</mystk-page-title>
   <iframe class='webPage' name= "eventsPage" frameborder="0" [src]="url" allowfullscreen>
   </iframe>
 </ion-content>

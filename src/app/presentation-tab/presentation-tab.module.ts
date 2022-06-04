@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { PresentationTabPageRoutingModule } from './presentation-tab-routing.module';
 import { PresentationTabPage } from './presentation-tab.page';
 import { PresentationDetailsPage } from './presentation-details-page/presentation-details.page';
+import { GlobalHeaderModule } from '../global-header/global-header.module';
 
 
 @NgModule({
@@ -12,7 +13,8 @@ import { PresentationDetailsPage } from './presentation-details-page/presentatio
     IonicModule,
     CommonModule,
     FormsModule,
-    PresentationTabPageRoutingModule
+    PresentationTabPageRoutingModule,
+    GlobalHeaderModule,
   ],
   declarations: [PresentationTabPage, PresentationDetailsPage]
 })

@@ -1,17 +1,11 @@
-<ion-header>
-
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
-    </ion-buttons>
-    <ion-title>{{pdfTitle}}</ion-title>
-  </ion-toolbar>
-
+<ion-header [translucent]="true">
+  <app-global-header></app-global-header>
 </ion-header>
-  
-  
+
+
 <ion-content padding>
-  <pdf-viewer 
+  <mystk-page-title>{{pdfTitle}}</mystk-page-title>
+  <pdf-viewer
     [src]="pdf"
     [render-text]="true"
     [autoresize]="true"
@@ -24,4 +18,3 @@
     <div (click)="zoom('out')">-</div>
   </div>
 </ion-content>
-  

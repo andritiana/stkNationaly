@@ -1,24 +1,11 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Agenda
-    </ion-title>
-    <ion-buttons slot="end">
-      <button ion-button icon-only (click)="refresh()">
-        <ion-icon class="refresh-button" name="refresh"></ion-icon>
-      </button>
-    </ion-buttons>
-    <ion-buttons slot="end">
-      <button ion-button icon-only (click)="goToHome()">
-        <ion-icon class="homeMenu" name="home"></ion-icon>
-      </button>
-    </ion-buttons>
-  </ion-toolbar>
+  <app-global-header></app-global-header>
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <mystk-page-title>Agenda</mystk-page-title>
   <ion-spinner *ngIf="loading; else list" name="dots"></ion-spinner>
-  <ng-template #list> 
+  <ng-template #list>
     <ion-row>
       <!-- Move back one screen of the slides -->
       <ion-col size="2">
@@ -26,11 +13,11 @@
           <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
         </ion-button>
       </ion-col>
-   
+
       <ion-col size="8" class="ion-text-center">
         <h2 class="currentMonth">{{ currentMonth }}</h2>
       </ion-col>
-   
+
       <!-- Move forward one screen of the slides -->
       <ion-col size="2">
         <ion-button fill="clear" (click)="next()">
@@ -38,25 +25,25 @@
         </ion-button>
       </ion-col>
     </ion-row>
-   
-    <ng-template #monthviewEventDetailSTKTemplate let-showEventDetail="showEventDetail" let-selectedDate="selectedDate" let-noEventsLabel="noEventsLabel"> 
+
+    <ng-template #monthviewEventDetailSTKTemplate let-showEventDetail="showEventDetail" let-selectedDate="selectedDate" let-noEventsLabel="noEventsLabel">
       <ion-list class="event-detail-container" has-bouncing="false" *ngIf="showEventDetail" overflow-scroll="false">
-         <div class="horizontal-button" *ngFor="let event of selectedDate?.events" (click)="onEventSelected(event)"> 
+         <div class="horizontal-button" *ngFor="let event of selectedDate?.events" (click)="onEventSelected(event)">
            <span *ngIf="!event.allDay && DateHelper.getDateFormat(event.startTime) === DateHelper.getDateFormat(event.endTime); else differentDates" class="monthview-eventdetail-timecolumn">
             {{DateHelper.getHours(event.startTime)}} - {{DateHelper.getHours(event.endTime)}}
-           </span> 
-           <ng-template #differentDates> 
+           </span>
+           <ng-template #differentDates>
             <span *ngIf="!event.allDay" class="monthview-eventdetail-timecolumn">
               {{DateHelper.getDateFormat(event.startTime)}} - <br> {{DateHelper.getDateFormat(event.endTime)}}
-             </span> 
+             </span>
            </ng-template>
-           <span *ngIf="event.allDay" class="monthview-eventdetail-timecolumn">Toute la journée</span> 
-           <span class="event-detail"> {{event.title}}</span> 
-          </div> 
-          <div class="no-events-label" *ngIf="selectedDate?.events.length==0"> 
-            <span>{{noEventsLabel}}</span> 
-          </div> 
-        </ion-list> 
+           <span *ngIf="event.allDay" class="monthview-eventdetail-timecolumn">Toute la journée</span>
+           <span class="event-detail"> {{event.title}}</span>
+          </div>
+          <div class="no-events-label" *ngIf="selectedDate?.events.length==0">
+            <span>{{noEventsLabel}}</span>
+          </div>
+        </ion-list>
       </ng-template>
 
       <ng-template #monthviewDisplayEventSTKTemplate let-view="view" let-row="row" let-col="col">
@@ -67,8 +54,8 @@
           </div>
         </div>
       </ng-template>
-      
-      
+
+
     <calendar
       locale="fr-FR"
       [eventSource]="events"

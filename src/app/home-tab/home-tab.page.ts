@@ -19,7 +19,7 @@ export class HomeTabPage implements OnInit {
   public loading = true;
   public displayLiveSections = false;
   public liveSections: LiveSection[] = [];
-  public isDevMode = false;
+  isDevMode$ = this.fpmaApiService.isDevMode$;
   private devModeCounter = 0;
   private DEV_MODE_ACTIVATION_NUMBER = 4;
   private previousClickTimestamp: number;
@@ -47,10 +47,13 @@ export class HomeTabPage implements OnInit {
 
       this.loading = false;
     });
+    this.isDevMode$.subscribe(() => {
+      this.computeDisplayLiveSections();
+    })
   }
 
   computeDisplayLiveSections(): void {
-    if (!this.isDevMode) {
+    if (!this.isDevMode$.value) {
       this.displayLiveSections = this.liveSections.some(ls => !ls.isDevModeOnly);
     } else {
       this.displayLiveSections = this.liveSections.length > 0;
@@ -83,70 +86,6 @@ export class HomeTabPage implements OnInit {
     }
   }
 
-  public enableDevMode() {
-    const currentClickTimestamp = Date.now();
-    if (this.previousClickTimestamp && (currentClickTimestamp - this.previousClickTimestamp <= 1000)){
-      this.devModeCounter++;
-    } else {
-      this.devModeCounter = 0;
-    }
-    this.previousClickTimestamp = currentClickTimestamp;
-
-    if (this.devModeCounter === this.DEV_MODE_ACTIVATION_NUMBER){
-      this.presentAlertConfirm();
-      this.devModeCounter = 0;
-    }
-  }
-
-  async presentAlertConfirm() {
-    const alert = await this.alertController.create({
-      cssClass: 'my-pop-up',
-      header: 'Dev Mode',
-      message: 'Activer le mode developper ?',
-      buttons: [
-        {
-          text: 'Annuler',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: () => {}
-        }, {
-          text: 'Confirmer',
-          handler: () => {
-            this.fpmaApiService.activateDevMode();
-            this.isDevMode = true;
-            this.computeDisplayLiveSections();
-          }
-        }
-      ]
-    });
-
-    await alert.present();
-  }
-
-  async quitDevModePopup() {
-    const alert = await this.alertController.create({
-      cssClass: 'my-pop-up',
-      header: 'Dev Mode',
-      message: 'Desactiver le mode developper ?',
-      buttons: [
-        {
-          text: 'Annuler',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: () => {}
-        }, {
-          text: 'Confirmer',
-          handler: () => {
-            this.fpmaApiService.deactivateDevMode();
-            this.isDevMode = false;
-            this.computeDisplayLiveSections();
-          }
-        }
-      ]
-    });
-
-    await alert.present();
-  }
 
   getColor(colorHexa) {
     if (colorHexa && /^#([0-9A-F]{3}){1,2}$/i.test(colorHexa)) {

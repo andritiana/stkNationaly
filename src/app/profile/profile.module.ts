@@ -6,6 +6,7 @@ import { PurifyMethodModule } from '../utils/purify-method/purify-method.module'
 import { ProfilePageRoutingModule } from './profile-routing.module';
 import { ProfilePage } from './profile.page';
 import { QrcodeGeneratorModule } from '../utils/qrcode-generator/qrcode-generator.module';
+import { GlobalHeaderModule } from '../global-header/global-header.module';
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import { QrcodeGeneratorModule } from '../utils/qrcode-generator/qrcode-generato
     ProfilePageRoutingModule,
     PurifyMethodModule,
     QrcodeGeneratorModule,
+    GlobalHeaderModule,
   ],
   declarations: [ProfilePage]
 })

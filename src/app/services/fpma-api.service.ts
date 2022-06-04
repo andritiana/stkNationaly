@@ -7,7 +7,7 @@ import { Presentation } from '../models/presentation.interface';
 import { Actualities } from '../models/actuality.interface';
 import { StkNews } from '../models/stk-news.interface';
 import { LastVisitTimestamps, LastVisitUpdates } from '../models/lastVisitTimestamps.interface';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LiveSection } from '../models/live-section.interface';
 import { GenericPost } from '../models/generic-post.interface';
@@ -18,7 +18,13 @@ import { GenericPost } from '../models/generic-post.interface';
 export class FpmaApiService {
 
   private FPMA_DOMAIN = 'https://stk.fpma.church/';
-  private isDevMode = false;
+  readonly isDevMode$ = new BehaviorSubject(false);
+  get isDevMode(): boolean {
+    return this.isDevMode$.value;
+  }
+  set isDevMode(v: boolean) {
+    this.isDevMode$.next(v);
+  }
 
   constructor(
     public http: HttpClient

@@ -1,22 +1,15 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      STK NEWS
-    </ion-title>
-    <ion-buttons slot="end">
-      <button ion-button icon-only (click)="refresh()">
-        <ion-icon class="refresh-button" name="refresh"></ion-icon>
-      </button>
-    </ion-buttons>
-    <ion-buttons slot="end">
-      <button ion-button icon-only (click)="goToHome()">
-        <ion-icon class="homeMenu" name="home"></ion-icon>
-      </button>
-    </ion-buttons>
-  </ion-toolbar>
+  <app-global-header></app-global-header>
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <mystk-page-title>STK News</mystk-page-title>
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content
+      refreshingSpinner="crescent"
+      refreshingText="Mise à jour...">
+    </ion-refresher-content>
+  </ion-refresher>
   <ion-grid>
     <ion-row>
       <ion-col class="stk-news-grid" *ngFor="let stkNews of listOfStkNews" size="6">

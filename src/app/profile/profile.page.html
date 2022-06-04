@@ -1,13 +1,9 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
-    </ion-buttons>
-    <ion-title>Mon profil</ion-title>
-  </ion-toolbar>
+<ion-header [translucent]="true">
+  <app-global-header></app-global-header>
 </ion-header>
 
 <ion-content>
+  <mystk-page-title>Mon profil</mystk-page-title>
 <div class="badge-card">
   <div class="badge-code"><mystk-qrcode-generator [data]="qrCodeData | json"></mystk-qrcode-generator></div>
   <div class="badge-person">

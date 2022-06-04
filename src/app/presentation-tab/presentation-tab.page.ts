@@ -13,6 +13,7 @@ export class PresentationTabPage {
 
   public presentations: Presentation[];
   public loading = true;
+  public title = 'Présentation';
 
   constructor(
     public navCtrl: NavController,
@@ -38,7 +39,7 @@ export class PresentationTabPage {
 
 
   goToHome() {
-    this.router.navigate(['/tabs/tab0']);
+    this.router.navigate(['/tabs/home']);
   }
 
 }

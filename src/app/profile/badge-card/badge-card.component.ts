@@ -27,7 +27,7 @@ export class BadgeCardComponent implements OnInit {
       event: this.badge.eventName,
       fullName: profile.firstname.trim()
         .replace(/^(.)(.*)/, (substr, firstLetter: string, otherLetters: string) => firstLetter + otherLetters) + ` ${profile.lastname.toUpperCase()}`,
-      groups: profile.tagValue?.split('-') ?? [],
+      groups: this.badge.remarks?.split('|') ?? [],
       location: {
         district: profile.entityRegion,
         tafo: profile.entityName,

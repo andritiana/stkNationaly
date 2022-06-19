@@ -1,10 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { EMPTY } from 'rxjs';
+import { EMPTY, throwError } from 'rxjs';
 import type { Observable } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, take } from 'rxjs/operators';
 import { AuthService } from './auth.service';
-import type { Profile, Badge } from './profile.model';
+import type { Profile, Badge, EditProfileBodyRequest } from './profile.model';
 import { CacheBuffer } from '../utils/cache/cache';
 
 @Injectable({
@@ -18,11 +18,27 @@ export class ProfileService {
     private authService: AuthService,
     private http: HttpClient,
   ) {
-    this.authService.isAccesTokenExpired$().pipe(
-      filter(isExpired => isExpired),
+    this.authService.isLoggedIn$().pipe(
+      filter(isLoggedIn => !isLoggedIn),
     ).subscribe(() => {
       this.profileCache.expireNow();
     })
+  }
+
+  editMyProfile(body: EditProfileBodyRequest) {
+    return this.authService.getMyId().pipe(
+      switchMap(id => this.http.patch(`${this.baseAPI}/profile/${id}`, body)),
+      catchError((error: HttpErrorResponse) => {
+        switch (error.status) {
+          case 401:
+            return throwError(new Error('Mot de passe invalide'));
+          case 403:
+            return throwError(new Error('Tu n\' as pas accès à cette fonctionnalité'));
+          default:
+            return throwError(new MySTKUnexpectedError('Une erreur est survenue, merci de réessayer', error));
+        }
+      }),
+    );
   }
 
   getMyProfile(): Observable<Profile> {
@@ -58,4 +74,17 @@ function correctNulls(o: object) {
       ? null
       : v,
   ));
+}
+
+class MySTKUnexpectedError extends Error {
+  constructor(message: string, private context: unknown) {
+    super(message);
+  }
+
+  toString() {
+    return `${this.name} : ${this.message}
+    ${this.context}
+
+    ${this.stack}`
+  }
 }

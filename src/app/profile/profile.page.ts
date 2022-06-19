@@ -8,7 +8,6 @@ import { ProfileService } from './profile.service';
   selector: 'app-profile',
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfilePage implements OnInit {
   myProfile$: Observable<Profile>;
@@ -19,6 +18,9 @@ export class ProfilePage implements OnInit {
   ) { }
 
   ngOnInit(): void {
+
+  }
+  ionViewDidEnter(): void {
     this.myProfile$ = this.profileService.getMyProfile();
   }
 

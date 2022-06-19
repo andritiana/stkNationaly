@@ -12,11 +12,12 @@
 }
 
 :host {
-  $_card-padding: 3rem;
+  --card-padding: 1.5rem;
   @include card.shadow;
   border-radius: 15px;
-  padding: $_card-padding;
-  margin: 1rem;
+  margin: 0.5rem;
+  padding: var(--card-padding);
+
   color: var(--ion-color-primary);
   display: grid;
   justify-content: stretch;
@@ -24,11 +25,10 @@
   text-align: center;
   font-size: 0.75rem;
   overflow: hidden;
-  gap: 1rem;
+  gap: 1.5rem;
   .badge {
     &-event {
-      margin: -1 * $_card-padding;
-      margin-bottom: 1rem;
+      margin: calc(-1 * var(--card-padding));
       font-size: 1rem;
       font-weight: 700;
       background: var(--badge-event-time-color);
@@ -49,7 +49,7 @@
     &-person {
       display: grid;
       grid-auto-flow: row;
-      margin: 1rem 0;
+      margin: 0;
       // grid-template:
       //   'top top'
       //   'bl br' auto / auto auto;
@@ -87,6 +87,7 @@
         &-item {
           font-size: 0.75rem;
           display: inline;
+          line-height: 1;
           &:nth-of-type(n + 2)::before {
             content: '-';
             display: inline-block;
@@ -99,6 +100,7 @@
     &-group {
       &-list {
         @include chip-list;
+        margin: 1rem 0;
 
         &-item {
           @include chip-item;
@@ -162,5 +164,10 @@
         }
       }
     }
+  }
+
+  @media screen and (min-width: 375px) {
+    --card-padding: 3rem;
+    margin: 1rem;
   }
 }

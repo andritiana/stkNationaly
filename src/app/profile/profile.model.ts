@@ -28,3 +28,9 @@ export interface Badge {
   /** @type ISO date only */
   eventEndAt: string;
 }
+
+export interface EditProfileBodyRequest {
+  email: string;
+  oldPassword: string;
+  newPassword?: string;
+}

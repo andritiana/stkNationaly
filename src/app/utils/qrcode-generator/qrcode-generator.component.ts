@@ -5,7 +5,7 @@ import { WINDOW } from '../browser.service';
 @Component({
   selector: 'mystk-qrcode-generator',
   templateUrl: './qrcode-generator.component.html',
-  styleUrls: [],
+  styles: [':host { display: block; }'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QrcodeGeneratorComponent {
@@ -40,6 +40,6 @@ export class QrcodeGeneratorComponent {
 
   private drawQrCode(canvas: HTMLCanvasElement) {
     this.ctx.clearRect(0, 0, canvas.width, canvas.height);
-    toCanvas(canvas, this.data, { color: { dark: this.color, light: this.bgColor }, errorCorrectionLevel: 'H' });
+    toCanvas(canvas, this.data, { color: { dark: this.color, light: this.bgColor }, errorCorrectionLevel: 'H', scale: 6 });
   }
 }

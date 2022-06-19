@@ -20,9 +20,6 @@ export class HomeTabPage implements OnInit {
   public displayLiveSections = false;
   public liveSections: LiveSection[] = [];
   isDevMode$ = this.fpmaApiService.isDevMode$;
-  private devModeCounter = 0;
-  private DEV_MODE_ACTIVATION_NUMBER = 4;
-  private previousClickTimestamp: number;
 
   constructor(
     private verseService: VerseService,

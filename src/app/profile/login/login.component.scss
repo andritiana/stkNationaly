@@ -1,14 +1,9 @@
+@use "theme/page";
 :host {
-  --ion-text-color: var(--primary-darker);
+  @include page.host;
   .login {
     &-wrapper {
-      display: grid;
-      grid-template-columns: 1fr;
-      grid-auto-flow: row;
-      gap: 3.125rem;
-      padding: 1.875rem;
-      height: 100%;
-      align-content: center;
+      @include page.content-wrapper
     }
     &-h1 {
       font-size: 1.25rem;

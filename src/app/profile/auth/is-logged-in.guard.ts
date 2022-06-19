@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { Observable, of } from 'rxjs';
-import { isEmpty, map, switchMap, take } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, isEmpty, map, switchMap, take } from 'rxjs/operators';
 import { AuthService } from '../auth.service';
 
 @Injectable({
@@ -19,21 +19,22 @@ export class IsLoggedInGuard implements CanActivate {
     return this.authService.isLoggedIn$().pipe(
       take(1),
       switchMap(isLoggedIn => {
-        if (route.url[0].path === 'login') {
+        if (route.url[0]?.path === 'login') {
           if (isLoggedIn) {
-            return of(this.router.parseUrl('/profile'));
+            return this.allowUnlessTemporaryPassword('/profile');
           } else {
-            return of(true)
+            return of(true);
           }
         }
         else {
           if (isLoggedIn) {
-            return of(true);
+            return this.allowUnlessTemporaryPassword();
           } else {
             return this.authService.refresh().pipe(
               isEmpty(),
+              catchError(error => error.status === 401 ? of(true) : throwError(error)),
               map(wontRefresh => {
-                if (wontRefresh && route.url[0].path !== 'login') {
+                if (wontRefresh && route.url[0]?.path !== 'login') {
                   return this.router.parseUrl('/login')
                 } else {
                   return true;
@@ -46,4 +47,15 @@ export class IsLoggedInGuard implements CanActivate {
     );
   }
 
+
+  private allowUnlessTemporaryPassword(redirect?: string): Observable<boolean> | Observable<true | UrlTree> {
+    return this.authService
+      .isPasswordTemporary$()
+      .pipe(
+        take(1),
+        map((isTemporary) => isTemporary ? this.router.parseUrl('/profile/edit')
+          : (redirect ? this.router.parseUrl(redirect) : true)
+        )
+      );
+  }
 }

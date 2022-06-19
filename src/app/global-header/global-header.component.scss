@@ -1,8 +1,13 @@
-ion-toolbar {
-  --background: #FFF;
-  text-align: center;
-  padding: 0 1.75rem 0 1rem;
-}
-.header-home-link-icon {
-    height: 5vh;
+:host {
+  ion-toolbar {
+    --background: #FFF;
+    &:last-of-type {
+      --border-width: 0;
+    }
+    text-align: center;
+    padding: 0 1.75rem 0 1rem;
+  }
+  .header-home-link-icon {
+      height: 5vh;
+  }
 }

@@ -1,61 +1,29 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import type { Observable } from 'rxjs';
+import { AuthService } from './auth.service';
+import type { Profile } from './profile.model';
+import { ProfileService } from './profile.service';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfilePage implements OnInit {
+  myProfile$: Observable<Profile>;
 
-  badge: EventBadge = {
-    fullName: 'Tianasoa DIMBIHARIMANANA',
-    positions: ['Président(e) local(e)'],
-    location: {
-      tafo: 'STK Orléans',
-      district: 'FAfAts',
-    },
-    groups: ['Groupe 2'],
-    meals: {
-      total: 6,
-      remaining: 3,
-    },
-    room: {
-      id: '512',
-      bulding: '1',
-    }
-  };
+  constructor(
+    private profileService: ProfileService,
+    private authService: AuthService,
+  ) { }
 
-  qrCodeData = {
-    name: this.badge.fullName,
-    groups: this.badge.groups,
-    id: '12345RNSTK2022'
+  ngOnInit(): void {
+    this.myProfile$ = this.profileService.getMyProfile();
   }
 
-  constructor() { }
-
-  ngOnInit() {
+  logOut() {
+    this.authService.logOut();
   }
 
-  join(arr: unknown[], separator = ' ') {
-    return arr.join(separator);
-  }
-}
-
-interface EventBadge {
-  fullName: string;
-  positions: string[];
-  location: {
-    tafo: string;
-    district: string;
-  }
-  groups: string[];
-  room: {
-    id: string;
-    bulding: string;
-  }
-  meals: {
-    total: number;
-    remaining: number;
-  }
 }

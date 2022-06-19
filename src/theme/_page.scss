@@ -1,0 +1,21 @@
+
+@mixin host {
+  --ion-text-color: var(--primary-darker);
+
+  mystk-page-title {
+    margin-top: calc(-1 * var(--content-padding));
+    margin-bottom: calc(-1 * var(--page-title-margin-v));
+  }
+}
+
+@mixin content-wrapper() {
+  --content-padding: 1.875rem;
+  display: grid;
+  grid-auto-flow: row;
+  gap: 3.125rem;
+  padding: var(--content-padding);
+  height: 100%;
+  align-content: center;
+  @content;
+
+}

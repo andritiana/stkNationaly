@@ -13,12 +13,13 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/common": "~10.0.0",
-    "@angular/core": "~10.0.0",
-    "@angular/forms": "~10.0.0",
-    "@angular/platform-browser": "~10.0.0",
-    "@angular/platform-browser-dynamic": "~10.0.0",
-    "@angular/router": "~10.0.0",
+    "@angular/common": "~10.2.5",
+    "@angular/core": "~10.2.5",
+    "@angular/forms": "~10.2.5",
+    "@angular/platform-browser": "~10.2.5",
+    "@angular/platform-browser-dynamic": "~10.2.5",
+    "@angular/router": "~10.2.5",
+    "@auth0/angular-jwt": "^5.0.2",
     "@ionic-native/core": "^5.0.0",
     "@ionic-native/firebase-analytics": "^5.29.0",
     "@ionic-native/onesignal": "^5.34.0",
@@ -31,6 +32,7 @@
     "cordova-sqlite-storage": "^5.1.0",
     "cordova-support-android-plugin": "^1.0.2",
     "cordova-support-google-services": "^1.4.1",
+    "date-fns": "^2.28.0",
     "ionic2-calendar": "^0.6.9",
     "moment": "^2.28.0",
     "ng2-pdf-viewer": "^6.3.2",
@@ -46,6 +48,7 @@
     "@angular/compiler-cli": "~10.0.0",
     "@angular/language-service": "~10.0.0",
     "@ionic/angular-toolkit": "^2.3.0",
+    "@schematics/angular": "~10.0.0",
     "@types/jasmine": "~3.5.0",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
@@ -92,5 +95,8 @@
       "ios",
       "android"
     ]
+  },
+  "optionalDependencies": {
+    "@ionic/cli": "^6.19.1"
   }
 }

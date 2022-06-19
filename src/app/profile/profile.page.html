@@ -1,23 +1,34 @@
-<ion-header [translucent]="true">
-  <app-global-header></app-global-header>
+<ion-header>
+  <ion-toolbar>
+    <app-global-header></app-global-header>
+  </ion-toolbar>
 </ion-header>
-
-<ion-content>
-  <mystk-page-title>Mon profil</mystk-page-title>
-<div class="badge-card">
-  <div class="badge-code"><mystk-qrcode-generator [data]="qrCodeData | json"></mystk-qrcode-generator></div>
-  <div class="badge-person">
-    <h1 class="badge-person-name">{{badge.fullName}}</h1>
-    <h2 class="badge-person-location">{{badge.location.tafo}}</h2>
-    <h2 class="badge-person-position">{{badge.positions | method:join:' - '}}</h2>
-  </div>
-  <ul class="badge-group-list">
-    <ion-chip class="badge-group-list-item"
-              role="listitem"
-              color="warning"
-              *ngFor="let group of badge.groups"><ion-label>{{group}}</ion-label></ion-chip>
-  </ul>
-  <div class="badge-room">Chambre <span class="badge-room-id">{{badge.room.id}}</span> - Bâtiment {{badge.room.bulding}}</div>
-  <div class="badge-meals"><span class="badge-meals-taken">{{badge.meals.total - badge.meals.remaining}}</span> / {{badge.meals.total}}</div>
-</div>
+<ion-content fullscreen>
+  <main class="profile-outer"
+        *ngIf="myProfile$ | async as profile">
+    <mystk-page-title>Mon profil</mystk-page-title>
+    <div class="profile-identity">
+      <div class="profile-identity-last-name">{{profile.lastname}}</div>
+      <div class="profile-identity-first-name">{{profile.firstname}}</div>
+    </div>
+    <div class="profile-entity">
+      <div class="profile-entity-name">{{profile.entityName}}</div>
+      <div class="profile-entity-region">{{profile.entityRegion || ''}}</div>
+      <div class="profile-responsability-list"
+           role="list">
+        <ion-chip class="profile-responsability-chip"
+                  role="listitem"
+                  *ngFor="let resp of profile.responsabilities">
+          <ion-label>{{resp.name}}</ion-label>
+        </ion-chip>
+      </div>
+    </div>
+    <section class="profile-route-list">
+      <button class="profile-route-anchor ion-activatable"
+              (click)="logOut()"><ion-ripple-effect></ion-ripple-effect><ion-icon class="profile-route-anchor-icon" name="log-out"></ion-icon> Se déconnecter</button>
+      <a class="profile-route-anchor ion-activatable" [routerLink]="['badge-list']"><ion-ripple-effect></ion-ripple-effect><ion-icon class="profile-route-anchor-icon" src="/assets/icon/icon-ticket.svg"></ion-icon> Mes badges</a>
+      <a class="profile-route-anchor ion-activatable" [routerLink]="['edit']"><ion-ripple-effect></ion-ripple-effect><ion-icon class="profile-route-anchor-icon" src="/assets/icon/icon-profile-edit.svg"></ion-icon>Modifier mon profil</a>
+      <a class="profile-route-anchor ion-activatable" [routerLink]="['events']"><ion-ripple-effect></ion-ripple-effect><ion-icon class="profile-route-anchor-icon" src="/assets/icon/icon-event.svg"></ion-icon>Mes évènements</a>
+    </section>
+  </main>
 </ion-content>

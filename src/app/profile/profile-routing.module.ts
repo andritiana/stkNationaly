@@ -6,8 +6,13 @@ import { ProfilePage } from './profile.page';
 const routes: Routes = [
   {
     path: '',
-    component: ProfilePage
-  }
+    component: ProfilePage,
+    pathMatch: 'full',
+  },
+  {
+    path: 'badge-list',
+    loadChildren: () => import('./badge-list/badge-list.module').then(m => m.BadgeListModule)
+  },
 ];
 
 @NgModule({

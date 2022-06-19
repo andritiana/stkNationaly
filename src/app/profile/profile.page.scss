@@ -1,85 +1,71 @@
-.badge {
-  &-card {
-    border-radius: 15px;
-    padding: 3rem;
-    margin: 1rem;
-    box-shadow: 0px 0px 10px 3px rgba(10, 29, 96, 0.08);
-    color: var(--ion-color-primary);
-    display: grid;
-    justify-content: center;
-    grid-auto-flow: row;
-    text-align: center;
-    font-size: 0.75rem;
-  }
+@use "theme/components";
+@use "theme/components/card";
+@use "theme/page";
 
-  &-person {
-    display: grid;
-    grid-template:
-      "top top"
-      "bl br" auto / auto auto;
-    gap: 0.5rem 0;
-
-    &-name {
-      font-weight: 600;
-      font-size: 1.125rem;
-      grid-area: top;
-      margin: 0;
-    }
-
-    &-location,
-    &-position {
-      font-size: 0.75rem;
-      margin: 0;
-      color:#1A33BF;
-      font-weight: 300;
-    }
-  }
-
-  &-group {
-    &-list {
-      margin: 1rem 0;
-      padding: 0;
-
-      &-item {
-        height: 1.25rem;
-        font-weight: 600;
+%_two-rows {
+  display: grid;
+  grid-template-rows: repeat(2, auto);
+}
+:host {
+  @include page.host;
+  .profile {
+    &-outer {
+      @include page.content-wrapper {
+        align-content: start;
       }
     }
-  }
-
-  &-room {
-    margin-top: 1rem;
-
-    &-id {
-      font-weight: 600;
+    &-identity {
+      @extend %_two-rows;
+      font-size: 1.25rem;
+      &-last-name {
+        font-weight: 900;
+      }
     }
-  }
+    &-entity {
+      @extend %_two-rows;
+      &-name {
+        font-weight: 900;
+      }
+      font-size: 1rem;
+    }
+    &-responsability {
+      &-list {
+        display: flex;
+        flex-flow: row wrap;
+        margin-inline: -4px; /* compensate ion-chip' margin */
+      }
+      &-chip {
+        @include components.chip;
+        --color: var(--primary-darker);
+        background: rgba(var(--primary-darker-tuple) / .15);
+      }
+    }
+    &-route {
+      &-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, calc(50% - 1ch)));
+        grid-auto-flow: row;
+        grid-auto-rows: 6.25rem;
+        gap: 1ch;
+      }
+      &-anchor {
+        display: grid;
+        place-items: center;
+        place-content: center;
+        @include card.shadow;
+        border-radius: 10px;
+        text-decoration: none;
+        font-size: 0.75rem;
+        font-weight: 800;
+        position: relative; /* for the ion-ripple-effect */
+        overflow: hidden; /* so that ion-ripple-effect respects border-radius */
+        gap: 0.625rem;
+        background: transparent;
+        color: var(--primary-darker);
 
-  &-meals {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &-taken {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      font-weight: 600;
-      width: 1.4em;
-      height: 1.4em;
-      z-index: 0;
-
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        border-radius: 50%;
-        background: #DDE1EE;
-        z-index: -1;
+        &-icon {
+          font-size: 1.5rem;
+        }
       }
     }
   }

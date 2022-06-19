@@ -1,0 +1,29 @@
+:host {
+  --ion-text-color: var(--primary-darker);
+  .login {
+    &-wrapper {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-auto-flow: row;
+      gap: 3.125rem;
+      padding: 1.875rem;
+      height: 100%;
+      align-content: center;
+    }
+    &-h1 {
+      font-size: 1.25rem;
+      font-weight: 900;
+      margin: 0;
+    }
+    &-h2 {
+      font-size: .875rem;
+      font-weight: 300;
+      margin: 0;
+    }
+    &-actions {
+      display: flex;
+      flex-flow: column nowrap;
+    }
+
+  }
+}

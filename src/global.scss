@@ -27,6 +27,20 @@
 
 $color-blue-primary: #19338F;
 
+:root,
+ion-content { /* needed to pierce through ion-content's containment, otherwise light DOM doesn't inherit from :root */
+  --primary-darker-tuple: 26 51 143; //#1A338F
+  --primary-darker: rgb(var(--primary-darker-tuple)); //#1A338F
+  --mystk-warning-tuple: 245 221 144; // #F5DD90
+  --mystk-warning-color: rgb(var(--mystk-warning-tuple)); // #F5DD90
+  --mystk-success-tuple: 217 235 222; // #D9EBDE
+  --mystk-success-color: rgb(var(--mystk-success-tuple)); // #F5DD90
+}
+ion-content {
+  --background: #F7F7F7;
+  --ion-background-color: var(--background);
+  background: var(--background);
+}
 ion-header {
   ion-toolbar {
     --background: white;
@@ -38,6 +52,14 @@ ion-header {
   button {
     background-color: transparent;
   }
+}
+
+ion-back-button.hydrated {
+  display: block;
+  visibility: hidden;
+}
+.can-go-back > ion-header ion-back-button {
+  visibility: visible;
 }
 
 
@@ -71,9 +93,9 @@ ion-header {
   }
 }
 
-/*agenda*/ 
+/*agenda*/
 .monthview-primary-with-event {
-   background-color: transparent !important; 
+   background-color: transparent !important;
 }
 .monthview-primary-with-event.monthview-selected > .with-event  {
   color :  white;
@@ -81,15 +103,15 @@ ion-header {
 .monthview-primary-with-event > .with-event {
   color :  black;
 }
-.monthview-selected  { 
-  background-color: transparent  !important; 
+.monthview-selected  {
+  background-color: transparent  !important;
 }
 .monthview-secondary-with-event {
-  background-color: transparent  !important; 
+  background-color: transparent  !important;
 }
 
-.monthview-selected { 
-  background-color: #19338F  !important; 
+.monthview-selected {
+  background-color: #19338F  !important;
 }
 
 .monthview-primary-with-event.monthview-selected .event-indicator {
@@ -97,4 +119,9 @@ ion-header {
   width: 5px;
   height: 5px;
   border-radius: 5px;
+}
+
+/* Inputs */
+.item.sc-ion-label-md-h, .item .sc-ion-label-md-h {
+  --color: rgba(26, 51, 143, 0.5);
 }

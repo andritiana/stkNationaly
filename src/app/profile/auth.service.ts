@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { JwtConfig, JwtHelperService } from '@auth0/angular-jwt';
 import { Storage } from '@ionic/storage';
-import { BehaviorSubject, combineLatest, EMPTY, forkJoin, from, Observable, of } from 'rxjs';
+import { differenceInMinutes } from 'date-fns/esm';
+import { BehaviorSubject, combineLatest, EMPTY, forkJoin, Observable, of } from 'rxjs';
 import { map, shareReplay, switchMap, take, tap } from 'rxjs/operators';
 
 const AUTH_STORAGE_KEY = 'auth_token';
@@ -16,7 +17,7 @@ interface AuthPairResponse {
 
 export interface MyStkJwtPayload {
   features: string[];
-  /** @type dd-MM-YYYY HH:mm:ss */
+  /** @type dd-MM-yyyy HH:mm:ss */
   recoveryPasswordExpiration?: string;
 }
 // standard claims https://datatracker.ietf.org/doc/html/rfc7519#section-4.1
@@ -30,14 +31,26 @@ export interface JwtPayload {
   jti?: string | undefined;
 }
 
+export function initializeTokensFromStorage() {
+  const storage = inject(Storage);
+  return () => Promise.all([
+    storage.get(REFRESH_STORAGE_KEY).then(refreshToken => refreshToken && refreshToken$.next(refreshToken)),
+    storage.get(AUTH_STORAGE_KEY).then(jwtString => jwtString && accessToken$.next(jwtString)),
+  ]);
+}
+
 export function jwtOptionsFactory(): JwtConfig {
   return {
     allowedDomains: ['stk.fpma.church'],
+    disallowedRoutes: [
+      new RegExp(String.raw`/api/mystk/auth/.*`),
+    ],
     tokenGetter: () => accessToken$.pipe(take(1)).toPromise(),
   };
 }
 
 const accessToken$ = new BehaviorSubject<string|null>(null);
+const refreshToken$ = new BehaviorSubject<string|null>(null);
 
 @Injectable({
   providedIn: 'root'
@@ -45,18 +58,19 @@ const accessToken$ = new BehaviorSubject<string|null>(null);
 export class AuthService {
 
   private readonly baseAPI = 'https://stk.fpma.church/api/mystk';
-  private readonly refreshToken$ = new BehaviorSubject<string|null>(null);
   private readonly accessTokenPayload$: Observable<JwtPayload & MyStkJwtPayload | null>  = this.getAccessTokenPayload();
   private readonly userId$ = this.accessTokenPayload$.pipe(
     map(jwt => jwt?.sub),
   );
+  private isRefreshing$ = new BehaviorSubject(false);
 
   constructor(
     private storage: Storage,
     private http: HttpClient,
     private jwtHelper: JwtHelperService,
     private router: Router,
-  ) { }
+  ) {
+  }
 
 
   getMyId() {
@@ -74,7 +88,7 @@ export class AuthService {
     )
   }
 
-  async logOut() {
+  async logOut(redirect = true) {
     await this.setAccesToken(null);
     await this.setRefreshToken(null);
     this.isPasswordTemporary$().pipe(
@@ -84,11 +98,11 @@ export class AuthService {
       )
     )
       .subscribe();
-    return this.router.navigateByUrl('/');
+    return redirect ? this.router.navigateByUrl('/') : Promise.resolve(null);
   }
 
   private invalidateRefreshToken() {
-    const refreshToken = this.refreshToken$.value;
+    const refreshToken = refreshToken$.value;
     return refreshToken
       ? this.http.post(`${this.baseAPI}/auth/token/invalidate`, { refreshToken })
       : of();
@@ -109,6 +123,14 @@ export class AuthService {
     )
   }
 
+  shouldRefresh$() {
+    return accessToken$.pipe(
+      map(token => token
+          ? differenceInMinutes(this.jwtHelper.getTokenExpirationDate(token), new Date()) < 15
+          : true
+        ),
+    )
+  }
   isAccesTokenExpired$() {
     return accessToken$.pipe(
       map(token => token
@@ -122,14 +144,37 @@ export class AuthService {
    * Uses the refresh token to refresh the access token. If no refresh token is available, complete immediately.
    */
   refresh() {
-    return combineLatest([this.refreshToken$, this.userId$]).pipe(
+    return combineLatest([refreshToken$, this.userId$]).pipe(
       take(1),
-      switchMap(([refreshToken, userId]) => (!!refreshToken && userId)
-          ? this.http.post<AuthPairResponse>(`${this.baseAPI}/auth/token/refresh`, { refreshToken, userId })
-          : EMPTY,
-      ),
-      tap(({accessToken}) => this.setAccesToken(accessToken)),
-      tap(({refreshToken}) => this.setRefreshToken(refreshToken)),
+      switchMap(([refreshToken, userId]) => {
+        if (this.isRefreshing$.value) {
+          return of(false);
+          // return this.isRefreshing$.pipe(
+          //   distinctUntilChanged(),
+          //   filter(isRefreshing => !isRefreshing),
+          //   take(1),
+          // );
+        }
+        if (!!refreshToken && userId) {
+          this.isRefreshing$.next(true);
+          return this.http.post<AuthPairResponse>(`${this.baseAPI}/auth/token/refresh`, { refreshToken, userId });
+        } else {
+          return EMPTY;
+        }
+      }),
+      switchMap((tokensOrRefresh) => typeof tokensOrRefresh === 'boolean'
+        ? of(null)
+        : forkJoin([
+          this.setAccesToken(tokensOrRefresh.accessToken),
+          this.setRefreshToken(tokensOrRefresh.refreshToken)
+        ])),
+      tap({
+        next: () => this.isRefreshing$.next(false),
+        error: () => {
+          this.isRefreshing$.next(false);
+          this.setRefreshToken(null);
+        },
+      }),
     )
   }
 
@@ -141,13 +186,7 @@ export class AuthService {
     if (this.accessTokenPayload$) {
       return this.accessTokenPayload$;
     } else {
-      return from(this.storage.get(AUTH_STORAGE_KEY)).pipe(
-        tap(jwtString => {
-          if (jwtString) {
-            accessToken$.next(jwtString);
-          }
-        }),
-          switchMap(() => accessToken$),
+      return accessToken$.pipe(
         map(jwtString => jwtString
           ? this.jwtHelper.decodeToken<JwtPayload & MyStkJwtPayload>(jwtString)
           : null,
@@ -158,7 +197,7 @@ export class AuthService {
   }
 
   private setRefreshToken(refreshToken: string | null): Promise<unknown> {
-    this.refreshToken$.next(refreshToken);
+    refreshToken$.next(refreshToken);
     return this.storage.set(REFRESH_STORAGE_KEY, refreshToken);
   }
 

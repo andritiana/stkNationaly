@@ -8,70 +8,73 @@
     <mystk-page-title>Modifier mon profil</mystk-page-title>
     <form [formGroup]="editForm"
           *ngIf="editForm">
-      <fieldset>
-        <ion-item>
-          <ion-label position="floating">Nom</ion-label>
-          <ion-input formControlName="firstName" type="text"></ion-input>
+      <fieldset class="edit-profile-form-group">
+        <ion-item class="edit-profile-form-field">
+          <ion-label class="edit-profile-form-field-label" position="floating">Nom</ion-label>
+          <ion-input class="edit-profile-form-field-input" formControlName="firstName" type="text"></ion-input>
         </ion-item>
-        <ion-item>
-          <ion-label position="floating">Prénom</ion-label>
-          <ion-input formControlName="lastName" type="text"></ion-input>
+        <ion-item class="edit-profile-form-field">
+          <ion-label class="edit-profile-form-field-label" position="floating">Prénom</ion-label>
+          <ion-input class="edit-profile-form-field-input" formControlName="lastName" type="text"></ion-input>
         </ion-item>
-        <ion-item>
-          <ion-label position="floating">Tafo</ion-label>
-          <ion-input formControlName="entityName" type="text"></ion-input>
+        <ion-item class="edit-profile-form-field">
+          <ion-label class="edit-profile-form-field-label" position="floating">Tafo</ion-label>
+          <ion-input class="edit-profile-form-field-input" formControlName="entityName" type="text"></ion-input>
         </ion-item>
-        <ion-item>
-          <ion-label position="floating">E-Mail <ion-text color="danger">*</ion-text></ion-label>
-          <ion-input required formControlName="email" type="email"></ion-input>
+        <ion-item class="edit-profile-form-field">
+          <ion-label class="edit-profile-form-field-label" position="floating">E-Mail <ion-text color="danger">*</ion-text></ion-label>
+          <ion-input class="edit-profile-form-field-input" required formControlName="email" type="email"></ion-input>
         </ion-item>
-        <ion-item *ngIf="editForm.controls.email.errors?.required && editForm.controls.email.touched" lines="none">
+        <ion-item [ngClass]="{'edit-profile-form-field-error': true, 'edit-profile-form-field-error-visible': editForm.controls.email.errors?.required && editForm.controls.email.touched}" lines="none">
           <ion-text color="danger" class="edit-profile-form-error">
             Adresse e-mail requise
           </ion-text>
         </ion-item>
-      </fieldset>
-      <fieldset>
-        <ion-item>
-          <ion-label position="floating">Mot de passe actuel<ion-text color="danger">*</ion-text></ion-label>
-          <ion-input required formControlName="passwordCurrent" type="password"></ion-input>
+        <ion-item class="edit-profile-form-field">
+          <ion-label class="edit-profile-form-field-label" position="floating">Mot de passe actuel<ion-text color="danger">*</ion-text></ion-label>
+          <ion-input class="edit-profile-form-field-input" required formControlName="passwordCurrent" type="password"></ion-input>
         </ion-item>
-        <ion-item *ngIf="editForm.controls.passwordCurrent.errors?.required && editForm.controls.passwordCurrent.touched" lines="none">
+        <ion-item [ngClass]="{'edit-profile-form-field-error': true, 'edit-profile-form-field-error-visible': editForm.controls.passwordCurrent.errors?.required && editForm.controls.passwordCurrent.touched}" lines="none">
           <ion-text color="danger" class="edit-profile-form-error">
             Merci de confirmer ton mot de passe actuel
           </ion-text>
         </ion-item>
+      </fieldset>
+      <fieldset class="edit-profile-form-group">
 
         <ng-container formGroupName="changePassword">
-          <ion-item>
-            <ion-label position="floating">Nouveau mot de passe</ion-label>
-            <ion-input formControlName="passwordNew" type="password"></ion-input>
+          <ion-item class="edit-profile-form-field">
+            <ion-label class="edit-profile-form-field-label" position="floating">Nouveau mot de passe</ion-label>
+            <ion-input class="edit-profile-form-field-input" formControlName="passwordNew" type="password"></ion-input>
           </ion-item>
-          <ion-item *ngIf="$any(editForm.controls.changePassword).controls.passwordNew.errors?.minlength && $any(editForm.controls.changePassword).controls.passwordNew.touched" lines="none">
+          <ion-item [ngClass]="{'edit-profile-form-field-error': true, 'edit-profile-form-field-error-visible': $any(editForm.controls.changePassword).controls.passwordNew.invalid && $any(editForm.controls.changePassword).controls.passwordNew.touched}" lines="none">
             <ion-text color="danger" class="edit-profile-form-error">
-              8 caractères minimum
+              {{$any(editForm.controls.changePassword).controls.passwordNew.errors?.minlength ? '8 caractères minimum' : ''}}
+              {{$any(editForm.controls.changePassword).controls.passwordNew.errors?.required ? 'Mot de passe requis' : ''}}
             </ion-text>
           </ion-item>
-          <ion-item>
-            <ion-label position="floating">Confirmation du nouveau mot de passe</ion-label>
-            <ion-input formControlName="passwordNewConfirmation" type="password"></ion-input>
+          <ion-item class="edit-profile-form-field">
+            <ion-label class="edit-profile-form-field-label" position="floating">Confirmation du nouveau mot de passe</ion-label>
+            <ion-input class="edit-profile-form-field-input" formControlName="passwordNewConfirmation" type="password"></ion-input>
           </ion-item>
-          <ion-item *ngIf="$any(editForm.controls.changePassword).errors?.same && $any(editForm.controls.changePassword).controls.passwordNewConfirmation.touched" lines="none">
+          <ion-item [ngClass]="{'edit-profile-form-field-error': true, 'edit-profile-form-field-error-visible': $any(editForm.controls.changePassword).errors?.same && $any(editForm.controls.changePassword).controls.passwordNewConfirmation.touched}" lines="none">
             <ion-text color="danger" class="edit-profile-form-error">
               Les mots de passe ne correspondent pas
             </ion-text>
           </ion-item>
         </ng-container>
       </fieldset>
-      <ion-button (click)="submit()"
-                  expand="block">
-        Enregistrer
-      </ion-button>
-      <ion-button (click)="cancel()"
-                  expand="block"
-                  fill="clear">
-        {{(canCancel$ | async) ? 'Annuler' : 'Se déconnecter'}}
-      </ion-button>
+      <div class="edit-profile-buttons">
+        <ion-button (click)="submit()"
+                    expand="block">
+          Enregistrer
+        </ion-button>
+        <ion-button (click)="cancel()"
+                    expand="block"
+                    fill="outline">
+          {{(canCancel$ | async) ? 'Annuler' : 'Se déconnecter'}}
+        </ion-button>
+      </div>
     </form>
   </main>
 </ion-content>

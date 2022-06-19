@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 
@@ -7,12 +7,13 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { IonicStorageModule } from '@ionic/storage';
 import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx';
 import { OneSignal } from '@ionic-native/onesignal/ngx';
 import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
-import { jwtOptionsFactory } from './profile/auth.service';
+import { initializeTokensFromStorage, jwtOptionsFactory } from './profile/auth.service';
+import { AuthExpirationInterceptor } from './profile/auth/auth-expiration.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -37,7 +38,9 @@ import { jwtOptionsFactory } from './profile/auth.service';
     SplashScreen,
     FirebaseAnalytics,
     OneSignal,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    { provide: HTTP_INTERCEPTORS, multi: true, useClass: AuthExpirationInterceptor },
+    { provide: APP_INITIALIZER, multi: true, useFactory: initializeTokensFromStorage}
   ],
   bootstrap: [AppComponent]
 })

@@ -1,3 +1,57 @@
+@use "theme/page";
 :host {
+  @include page.host;
   display: block;
+  .edit-profile {
+    &-outer {
+      @include page.content-wrapper {
+        align-content: flex-start;
+      }
+    }
+    &-form {
+      &-group {
+        border: none;
+      }
+      &-field {
+        --min-height: 50px;
+        margin-top: 0.25rem;
+        &-label {
+          font-size: 0.8125rem;
+          margin: 0;
+        }
+        &-input {
+          font-size: 0.875rem;
+          --padding-top: 0;
+          --padding-bottom: 0;
+        }
+        &-error {
+          --min-height: 1rem;
+          font-size: 0.75rem;
+          ion-text {
+            opacity: 0;
+            visibility: hidden;
+            transform: perspective(1500px) translateY(-50%) rotateX(45deg);
+            transition: transform .1s ease-out, opacity .1s ease-out, visibility .1s ease-out;
+          }
+          &-visible {
+            ion-text {
+              opacity: 1;
+              visibility: visible;
+              transform: perspective(1500px) translateY(0%) rotateX(0deg);
+            }
+          }
+        }
+      }
+    }
+    &-buttons {
+      margin-top: 2rem;
+    }
+  }
+}
+:host(.temporary-password) {
+  .edit-profile {
+    &-outer {
+      margin-bottom: calc(2 * var(--content-padding) + 5rem); // 5rem ~ the toast's height
+    }
+  }
 }

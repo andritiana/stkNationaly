@@ -4,7 +4,7 @@ import { DateHelper } from '../utils/date-helper';
 import { FpmaApiService } from '../services/fpma-api.service';
 import { Router, NavigationExtras } from '@angular/router';
 import { ContentUpdateService } from '../services/content-update.service';
-import { RefresherCustomEvent } from '@ionic/core';
+import { RefresherEventDetail } from '@ionic/core';
 import { filter, shareReplay, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { Observable, of, Subject } from 'rxjs';
 
@@ -55,7 +55,7 @@ export class ActualitiesTabPage {
     this.router.navigate(['/tabs/actualities-tab/details'], navigationExtras);
   }
 
-  public refresh(evt: RefresherCustomEvent) {
+  public refresh(evt: CustomEvent<RefresherEventDetail>) {
     this.actualityRefresher$.next(this.NON_VALUE);
     this.actualities$.pipe(take(1)).subscribe(() => evt.detail.complete());
     this.actualityRefresher$.next(true);

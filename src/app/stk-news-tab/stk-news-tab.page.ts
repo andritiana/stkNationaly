@@ -4,7 +4,7 @@ import { FpmaApiService } from '../services/fpma-api.service';
 import { Router, NavigationExtras } from '@angular/router';
 import { ContentUpdateService } from '../services/content-update.service';
 import { finalize, tap } from 'rxjs/operators';
-import { RefresherCustomEvent } from '@ionic/core';
+import { RefresherEventDetail } from '@ionic/core';
 
 @Component({
   selector: 'app-stk-news',
@@ -34,7 +34,7 @@ export class StkNewsTabPage {
   }
 
 
-  public refresh(evt: RefresherCustomEvent) {
+  public refresh(evt: CustomEvent<RefresherEventDetail>) {
     this.loadStkNews().pipe(finalize(() => evt.detail.complete()))
     .subscribe();
   }

@@ -5,7 +5,7 @@ import { ArticleSpi } from '../models/article-spi.interface';
 import { DateHelper } from '../utils/date-helper';
 import { ContentUpdateService } from '../services/content-update.service';
 import { finalize, tap } from 'rxjs/operators';
-import { RefresherCustomEvent } from '@ionic/core';
+import { RefresherEventDetail } from '@ionic/core';
 
 @Component({
   selector: 'app-spi-tab',
@@ -41,7 +41,7 @@ export class SpiTabPage {
     );
   }
 
-  public refresh(evt: RefresherCustomEvent) {
+  public refresh(evt: CustomEvent<RefresherEventDetail>) {
     this.loadPartages()
       .pipe(finalize(() => evt.detail.complete()))
       .subscribe();

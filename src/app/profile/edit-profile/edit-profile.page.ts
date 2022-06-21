@@ -159,6 +159,7 @@ export class EditProfilePage {
                       message:
                         'Tu peux te reconnecter avec tes nouveaux identifiants',
                       color: 'success',
+                      duration: 4000,
                     })
                   )
                   .then((toast) => toast.present())

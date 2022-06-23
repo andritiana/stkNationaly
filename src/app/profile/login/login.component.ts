@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
     this.authService
       .logIn(login, password)
       .pipe(
-        switchMap(() => this.router.navigate(['/profile'])),
+        switchMap(() => this.router.navigate(['/profile'], { replaceUrl: true })),
         tap({
           error: (e) => {
             this.loginForm.setErrors({ response: e });

@@ -126,7 +126,7 @@ export class AuthService {
   shouldRefresh$() {
     return accessToken$.pipe(
       map(token => token
-          ? differenceInMinutes(this.jwtHelper.getTokenExpirationDate(token), new Date()) < 15
+          ? differenceInMinutes(this.jwtHelper.getTokenExpirationDate(token), new Date()) < 5
           : true
         ),
     )

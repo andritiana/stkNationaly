@@ -3,6 +3,8 @@ import { StkNews } from '../models/stk-news.interface';
 import { FpmaApiService } from '../services/fpma-api.service';
 import { Router, NavigationExtras } from '@angular/router';
 import { ContentUpdateService } from '../services/content-update.service';
+import { finalize, tap } from 'rxjs/operators';
+import { RefresherEventDetail } from '@ionic/core';
 
 @Component({
   selector: 'app-stk-news',
@@ -19,19 +21,22 @@ export class StkNewsTabPage {
     private fpmaApiService: FpmaApiService,
     private router: Router,
     private contentUpdateService: ContentUpdateService) {
-    this.loadStkNews();
+    this.loadStkNews().subscribe();
     this.contentUpdateService.resetNbUpdated('news');
   }
 
   loadStkNews() {
-    this.fpmaApiService.loadStkNews().subscribe((stkNews: StkNews[]) => {
-      this.listOfStkNews = stkNews;
-    });
+    return this.fpmaApiService.loadStkNews().pipe(
+      tap((stkNews: StkNews[]) => {
+        this.listOfStkNews = stkNews;
+      }),
+    );
   }
 
 
-  public refresh() {
-    this.loadStkNews();
+  public refresh(evt: CustomEvent<RefresherEventDetail>) {
+    this.loadStkNews().pipe(finalize(() => evt.detail.complete()))
+    .subscribe();
   }
 
   public openPdf(stkNews: StkNews) {
@@ -40,7 +45,7 @@ export class StkNewsTabPage {
   }
 
   goToHome() {
-    this.router.navigate(['/tabs/tab0']);
+    this.router.navigate(['/tabs/home']);
   }
 
 }

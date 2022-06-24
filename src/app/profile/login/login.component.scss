@@ -1,0 +1,24 @@
+@use "theme/page";
+:host {
+  @include page.host;
+  .login {
+    &-wrapper {
+      @include page.content-wrapper
+    }
+    &-h1 {
+      font-size: 1.25rem;
+      font-weight: 900;
+      margin: 0;
+    }
+    &-h2 {
+      font-size: .875rem;
+      font-weight: 300;
+      margin: 0;
+    }
+    &-actions {
+      display: flex;
+      flex-flow: column nowrap;
+    }
+
+  }
+}

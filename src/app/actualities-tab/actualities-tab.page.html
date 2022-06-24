@@ -1,34 +1,27 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Actualités
-    </ion-title>
-    <ion-buttons slot="end">
-      <button ion-button icon-only (click)="refresh()">
-        <ion-icon class="refresh-button" name="refresh"></ion-icon>
-      </button>
-    </ion-buttons>
-    <ion-buttons slot="end">
-      <button ion-button icon-only (click)="goToHome()">
-        <ion-icon class="homeMenu" name="home"></ion-icon>
-      </button>
-    </ion-buttons>
+    <app-global-header></app-global-header>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-spinner *ngIf="loading; else list" name="dots"pager="true"></ion-spinner>
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content
+      refreshingSpinner="crescent"
+      refreshingText="Mise à jour...">
+    </ion-refresher-content>
+  </ion-refresher>
+  <mystk-page-title>Actualités</mystk-page-title>
+  <ion-spinner *ngIf="loading" name="dots"pager="true"></ion-spinner>
 
-  <ng-template #list>
-    <div>
-      <ion-card class="actuality-card" *ngFor="let actuality of actualities; let i = index" (click)="goToDetails(i)">
-        <img *ngIf="!!actuality.thumbnail" [src]="actuality.thumbnail"/>
-        <div class="titles-container">
-            <div class="actuality-title">{{actuality.title}}</div>
-            <div class="actuality-date">{{DateHelper.getDateWrittenFr(actuality.created)}}</div>
-            <div>{{actuality.rawtext}}</div>
-        </div>
-      </ion-card>
-    </div>
-  </ng-template>
+  <ng-container *ngIf="actualities$ | async as actualities">
+    <ion-card class="actuality-card" *ngFor="let actuality of actualities; let i = index" (click)="goToDetails(i, actualities)">
+      <img *ngIf="!!actuality.thumbnail" [src]="actuality.thumbnail"/>
+      <div class="titles-container">
+          <div class="actuality-title">{{actuality.title}}</div>
+          <div class="actuality-date">{{DateHelper.getDateWrittenFr(actuality.created)}}</div>
+          <div>{{actuality.rawtext}}</div>
+      </div>
+    </ion-card>
+  </ng-container>
 </ion-content>

@@ -8,7 +8,7 @@ import { Actualities } from '../models/actuality.interface';
 import { StkNews } from '../models/stk-news.interface';
 import { LastVisitTimestamps, LastVisitUpdates } from '../models/lastVisitTimestamps.interface';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 import { LiveSection } from '../models/live-section.interface';
 import { GenericPost } from '../models/generic-post.interface';
 

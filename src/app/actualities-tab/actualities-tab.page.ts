@@ -5,8 +5,8 @@ import { FpmaApiService } from '../services/fpma-api.service';
 import { Router, NavigationExtras } from '@angular/router';
 import { ContentUpdateService } from '../services/content-update.service';
 import { RefresherEventDetail } from '@ionic/core';
-import { filter, shareReplay, startWith, switchMap, take, tap } from 'rxjs/operators';
-import { Observable, of, Subject } from 'rxjs';
+import { filter, shareReplay, startWith, switchMap, take, tap, multicast } from 'rxjs/operators';
+import { Observable, of, BehaviorSubject, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-actualities-tab',
@@ -20,7 +20,8 @@ export class ActualitiesTabPage {
   public loading = true;
   private actualityRefresher$ = new Subject<true | ActualitiesTabPage['NON_VALUE']>();
   private readonly NON_VALUE = Symbol();
-  private start = 0; 
+  private start = 0;
+  private cachedActualities$: BehaviorSubject<Actualities[] | symbol>;
 
   constructor(
     private fpmaApiService: FpmaApiService,
@@ -46,7 +47,7 @@ export class ActualitiesTabPage {
         })
       )
         : of(this.NON_VALUE)),
-      shareReplay({ refCount: true, bufferSize: 1 }),
+      multicast(() => this.cachedActualities$ = new BehaviorSubject<Actualities[] | symbol>([]), shared => shared),
       filter(((e): e is Actualities[] => e !== this.NON_VALUE)),
     );
   }
@@ -56,17 +57,17 @@ export class ActualitiesTabPage {
       this.fpmaApiService.loadActualityWithStart(this.start.toString()).subscribe((actualities: Actualities[]) =>{ 
         if (actualities.length == 0) {
           event.target.disabled = true;
-         } else {
-          this.actualities = this.actualities.concat(actualities);
-        } 
+         } else if (this.cachedActualities$.value instanceof Array) {
+           this.cachedActualities$.next(this.cachedActualities$.value.concat(actualities));
+        } else {
+          this.cachedActualities$.next(actualities);
+        }
+        event.target.complete();
       }, () => { }
       );
-      event.target.complete();
   }
   
 
-  public goToDetails(index: number) {
-    const navigationExtras: NavigationExtras = { state: { actualities: this.actualities, id: index } };
   public goToDetails(index: number, actualities: Actualities[]) {
     const navigationExtras: NavigationExtras = { state: { actualities, id: index } };
     this.router.navigate(['/tabs/actualities-tab/details'], navigationExtras);

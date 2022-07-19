@@ -13,7 +13,6 @@
   </ion-refresher>
   <mystk-page-title>Actualités</mystk-page-title>
   <ion-spinner *ngIf="loading" name="dots"pager="true"></ion-spinner>
-
   <ng-container *ngIf="actualities$ | async as actualities">
     <ion-card class="actuality-card" *ngFor="let actuality of actualities; let i = index" (click)="goToDetails(i, actualities)">
       <img *ngIf="!!actuality.thumbnail" [src]="actuality.thumbnail"/>
@@ -24,24 +23,13 @@
       </div>
     </ion-card>
   </ng-container>
-  <ng-template #list>
-    <div>
-      <ion-card class="actuality-card" *ngFor="let actuality of actualities; let i = index" (click)="goToDetails(i)">
-        <img *ngIf="!!actuality.thumbnail" [src]="actuality.thumbnail"/>
-        <div class="titles-container">
-            <div class="actuality-title">{{actuality.title}}</div>
-            <div class="actuality-date">{{DateHelper.getDateWrittenFr(actuality.created)}}</div>
-            <div>{{actuality.rawtext}}</div>
-        </div>
-      </ion-card>
-    </div>
 
-    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadNewActuality($event)">
-      <ion-infinite-scroll-content
-        loadingSpinner="bubbles"
-        loadingText="Chargement d'articles...">
-      </ion-infinite-scroll-content>
-    </ion-infinite-scroll>
 
-  </ng-template>
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadNewActuality($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Chargement d'articles...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
 </ion-content>

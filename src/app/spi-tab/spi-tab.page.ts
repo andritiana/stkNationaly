@@ -50,13 +50,11 @@ export class SpiTabPage {
          } else {
           this.partages = this.partages.concat(partages);
         } 
+        event.target.complete();
       }, () => { }
       );
-      event.target.complete();
   }    
 
-  public refresh() {
-    this.loadPartages();
   public refresh(evt: CustomEvent<RefresherEventDetail>) {
     this.loadPartages()
       .pipe(finalize(() => evt.detail.complete()))

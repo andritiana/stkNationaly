@@ -41,9 +41,9 @@ export class StkNewsTabPage {
          } else {
           this.listOfStkNews = this.listOfStkNews.concat(listOfStkNews);
         } 
+        event.target.complete();
       }, () => { }
       );
-      event.target.complete();
   }
 
 

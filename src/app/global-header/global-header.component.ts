@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { FpmaApiService } from '../services/fpma-api.service';
 
@@ -13,6 +13,7 @@ export class GlobalHeaderComponent implements OnInit {
   devModeCounter = 0;
   private DEV_MODE_ACTIVATION_NUMBER = 4;
   previousClickTimestamp: number;
+  @Input() defaultHref:string;
   constructor(
     private fpmaApiService: FpmaApiService,
     public alertController: AlertController

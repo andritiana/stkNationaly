@@ -1,5 +1,5 @@
 <ion-toolbar (click)="enableDevMode()">
-  <ion-back-button slot="start"></ion-back-button>
+  <ion-back-button [defaultHref]="defaultHref" slot="start"></ion-back-button>
   <a [routerLink]="['/tabs/home']"
      class="header-home-link-icon">
     <img src='assets/imgs/logo_stk.png'

@@ -123,7 +123,7 @@ export class FpmaApiService {
         atualities.push({
           title: atuality.title,
           created: DateHelper.getDate(atuality.created),
-          text: atuality.fulltext,
+          text: this.htmlService.enableEmbededContent(atuality.fulltext),
           rawtext: atuality.rawtext,
           thumbnail: atuality.thumbnails
         });

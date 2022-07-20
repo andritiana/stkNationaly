@@ -243,7 +243,7 @@ export class FpmaApiService {
     return {
           title: elem.title,
           created: DateHelper.getDate(elem.created),
-          text: elem.fulltext,
+          text: this.htmlService.enableEmbededContent(elem.fulltext),
           rawtext: elem.rawtext,
           thumbnail: elem.thumbnails
     };

@@ -78,7 +78,7 @@ export class AppComponent {
   setupPushNotifications() {
     this.oneSignal.startInit('e9e7ad63-5400-451d-8ab9-e2ea5d814fe5', '974013671728');
 
-    this.oneSignal.inFocusDisplaying(this.oneSignal.OSInFocusDisplayOption.None);
+    this.oneSignal.inFocusDisplaying(this.oneSignal.OSInFocusDisplayOption.Notification);
 
     this.oneSignal.handleNotificationReceived().subscribe(data => {
       // Si l'application est deja ouverte

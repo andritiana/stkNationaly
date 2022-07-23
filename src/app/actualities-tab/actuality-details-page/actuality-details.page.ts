@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Actualities } from 'src/app/models/actuality.interface';
 import { DateHelper } from 'src/app/utils/date-helper';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PlayerService } from 'src/app/services/player-service';
+import { IonSlides } from '@ionic/angular';
 
 @Component({
   selector: 'app-actuality-details',
@@ -9,6 +11,8 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['actuality-details.page.scss']
 })
 export class ActualityDetailsPage {
+
+  @ViewChild(IonSlides, { static: false }) slides: IonSlides;
 
   public actualities: Actualities[];
   public DateHelper = DateHelper;
@@ -22,7 +26,9 @@ export class ActualityDetailsPage {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private playerService: PlayerService,
+    private elem: ElementRef
   ) {
     this.route.queryParams.subscribe(params => {
       if (this.router.getCurrentNavigation().extras.state) {
@@ -33,6 +39,13 @@ export class ActualityDetailsPage {
     });
   }
 
+  async ionSlideDidChange() {
+    const previousSlideIndex = await this.slides.getPreviousIndex();
+
+    const embeddedIframes: NodeList = this.elem.nativeElement.querySelectorAll(`.article-pos-${previousSlideIndex} .media-container iframe`);
+
+    this.playerService.pauseIframePlayers(embeddedIframes);
+  }
 
   goToHome() {
     this.router.navigate(['/tabs/home']);

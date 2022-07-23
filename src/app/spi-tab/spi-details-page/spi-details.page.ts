@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { IonSlides } from '@ionic/angular';
 import { ArticleSpi } from 'src/app/models/article-spi.interface';
+import { PlayerService } from 'src/app/services/player-service';
 import { DateHelper } from 'src/app/utils/date-helper';
 
 @Component({
@@ -9,6 +11,8 @@ import { DateHelper } from 'src/app/utils/date-helper';
   styleUrls: ['spi-details.page.scss']
 })
 export class SpiDetailsPage {
+
+  @ViewChild(IonSlides, { static: false }) slides: IonSlides;
 
   public partages: ArticleSpi[];
   public articleIndex: number;
@@ -22,7 +26,9 @@ export class SpiDetailsPage {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private actRoute: ActivatedRoute
+    private actRoute: ActivatedRoute,
+    private playerService: PlayerService,
+    private elem: ElementRef
   ) {
     this.route.queryParams.subscribe(params => {
         this.articleIndex = this.actRoute.snapshot.params.id;
@@ -31,6 +37,14 @@ export class SpiDetailsPage {
           this.slideOpts.initialSlide = this.articleIndex;
         }
     });
+  }
+
+  async ionSlideDidChange() {
+    const previousSlideIndex = await this.slides.getPreviousIndex();
+
+    const embeddedIframes: NodeList = this.elem.nativeElement.querySelectorAll(`.article-pos-${previousSlideIndex} .media-container iframe`);
+
+    this.playerService.pauseIframePlayers(embeddedIframes);
   }
 
   goToHome() {

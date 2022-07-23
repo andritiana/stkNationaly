@@ -42,10 +42,6 @@ export class PlayerService {
                     mediaUrl.searchParams.set('enablejsapi', '1');
                     iframe.setAttribute('src', mediaUrl.href);
                 }
-            } 
-            // Soundcloud
-            else if (/soundcloud.com/.test(mediaUrl.hostname)) {
-
             }
 
             iframe.outerHTML = '<div class="media-container">' + iframe.outerHTML + '</div>';

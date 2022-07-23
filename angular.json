@@ -42,7 +42,7 @@
                 "input": "src/global.scss"
               }
             ],
-            "scripts": []
+            "scripts": ["src/assets/js/soundcloud-api.js"]
           },
           "configurations": {
             "production": {

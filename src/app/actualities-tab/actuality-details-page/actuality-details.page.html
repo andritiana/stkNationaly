@@ -6,12 +6,12 @@
 
 <ion-content [fullscreen]="true">
   <mystk-page-title>Actualités</mystk-page-title>
-  <ion-slides pager="false" [options]="slideOpts">
+  <ion-slides pager="false" [options]="slideOpts" (ionSlideDidChange)="ionSlideDidChange()">
     <ion-slide *ngFor="let actuality of actualities; let i = index">
       <div class="swipe-content">
           <div class="article-container">
             <img *ngIf="!!actuality.thumbnail" [src]="actuality.thumbnail"/>
-            <div class='article-content'>
+            <div class='article-content article-pos-{{i}}'>
               <h5>{{DateHelper.getDateWrittenFr(actuality.created)}}</h5>
               <h3>{{actuality.title}}</h3>
               <div [innerHTML]="actuality.text"></div>

@@ -5,13 +5,15 @@ import { FormsModule } from '@angular/forms';
 import { HomeTabPage } from './home-tab.page';
 
 import { HomeTabPageRoutingModule } from './home-tab-routing.module';
+import { GlobalHeaderModule } from '../global-header/global-header.module';
 
 @NgModule({
   imports: [
     IonicModule,
     CommonModule,
     FormsModule,
-    HomeTabPageRoutingModule
+    HomeTabPageRoutingModule,
+    GlobalHeaderModule,
   ],
   declarations: [HomeTabPage]
 })

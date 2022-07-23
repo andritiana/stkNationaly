@@ -5,6 +5,9 @@
   background-color: white;
   padding: 1rem;
   border-radius: 5px;
+  &:first-of-type {
+    margin-top: 0;
+  }
   img {
     min-width: 30%;
     width: 30%;

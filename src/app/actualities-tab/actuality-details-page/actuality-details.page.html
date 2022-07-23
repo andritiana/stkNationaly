@@ -1,20 +1,11 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
-    </ion-buttons>
-    <ion-title>
-      Actualités
-    </ion-title>
-    <ion-buttons slot="end">
-      <button ion-button icon-only (click)="goToHome()">
-        <ion-icon class="homeMenu" name="home"></ion-icon>
-      </button>
-    </ion-buttons>
+    <app-global-header></app-global-header>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <mystk-page-title>Actualités</mystk-page-title>
   <ion-slides pager="false" [options]="slideOpts">
     <ion-slide *ngFor="let actuality of actualities; let i = index">
       <div class="swipe-content">

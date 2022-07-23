@@ -1,0 +1,26 @@
+
+@mixin host {
+  --ion-text-color: var(--primary-darker);
+
+  mystk-page-title {
+    margin-top: calc(-1 * var(--content-padding));
+    margin-bottom: calc(-1 * var(--page-title-margin-v));
+  }
+}
+
+@mixin content-wrapper() {
+  --content-padding: 1rem;
+  display: grid;
+  grid-auto-flow: row;
+  gap: 2.125rem;
+  padding: var(--content-padding);
+  min-height: 100%;
+  align-content: center;
+  margin-bottom: calc(2 * var(--content-padding)); // compensate mystk-page-title's negative margin
+  @content;
+
+  @media screen and (min-width: 380px) {
+    --content-padding: 1.875rem;
+    gap: 3.125rem;
+  }
+}

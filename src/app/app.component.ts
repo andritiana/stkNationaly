@@ -37,9 +37,8 @@ export class AppComponent {
       this.statusBar.styleDefault();
       
       this.firebaseAnalytics.logEvent('page_view', {page: 'home'})
-        .then((res: any) => console.log(res))
+        .then?.((res: any) => console.log(res))
         .catch((error: any) => console.error(error));
-
       if (this.platform.is('cordova')) {
         this.setupPushNotifications();
       }
@@ -50,10 +49,13 @@ export class AppComponent {
       this.handleAndroidBackButton();
 
       this.splashScreen.hide();
-      
+      if (typeof ngDevMode === 'undefined') {
       setTimeout(() => {
         this.showSplash = false;
       }, 3000);
+      } else {
+        this.showSplash = false;
+      }
     });
   }
 

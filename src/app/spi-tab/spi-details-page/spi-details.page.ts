@@ -34,7 +34,7 @@ export class SpiDetailsPage {
   }
 
   goToHome() {
-    this.router.navigate(['/tabs/tab0']);
+    this.router.navigate(['/tabs/home']);
   }
 
 }

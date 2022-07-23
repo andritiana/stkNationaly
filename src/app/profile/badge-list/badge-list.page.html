@@ -1,0 +1,16 @@
+<ion-header>
+  <ion-toolbar>
+    <app-global-header></app-global-header>
+  </ion-toolbar>
+</ion-header>
+<ion-content fullscreen>
+  <main class="badges-outer"
+        *ngIf="profile$ | async as profile">
+    <mystk-page-title>Mes badges</mystk-page-title>
+    <div class="badges-preview-list">
+      <mystk-badge-card *ngFor="let badge of (badgeList$ | async)"
+                        [badge]="badge"
+                        [profile]="profile"></mystk-badge-card>
+    </div>
+  </main>
+</ion-content>

@@ -27,7 +27,7 @@ export class LiveSectionsEmbeddedPagePage {
   }
 
   goToHome() {
-    this.router.navigate(['/tabs/tab0']);
+    this.router.navigate(['/tabs/home']);
   }
 
   getUrlSanitized(url: string) {

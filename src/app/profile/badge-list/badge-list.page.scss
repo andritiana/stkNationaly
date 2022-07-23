@@ -1,0 +1,13 @@
+@use "theme/components/card";
+@use "theme/page";
+
+:host {
+  @include page.host;
+  .badges {
+    &-outer {
+      @include page.content-wrapper {
+        align-content: flex-start;
+      };
+    }
+  }
+}

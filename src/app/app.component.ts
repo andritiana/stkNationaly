@@ -1,5 +1,4 @@
-import { Component, NgZone } from '@angular/core';
-
+import { ChangeDetectorRef, Component, HostBinding, NgZone } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -17,6 +16,7 @@ import { Router, NavigationExtras } from '@angular/router';
   styleUrls: ['app.component.scss']
 })
 export class AppComponent {
+  @HostBinding('class.splash-showing')
   public showSplash = true;
   constructor(
     private platform: Platform,
@@ -28,11 +28,15 @@ export class AppComponent {
     private firebaseAnalytics: FirebaseAnalytics,
     private oneSignal: OneSignal,
     private router: Router,
-    private zone: NgZone
+    private zone: NgZone,
+    private cdRef: ChangeDetectorRef,
   ) {
     this.initializeApp();
   }
 
+  ngAfterContentInit() {
+    this.splashScreen.hide();
+  }
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
@@ -45,14 +49,16 @@ export class AppComponent {
 
       this.checkNbUpdatedContent();
       this.splashScreen.hide();
-      if (typeof ngDevMode === 'undefined') {
-      setTimeout(() => {
+      if (typeof ngDevMode !== 'undefined' && !!ngDevMode) {
         this.showSplash = false;
-      }, 3000);
-      } else {
-        this.showSplash = false;
+        this.cdRef.detectChanges();
       }
     });
+  }
+
+  onAnimationEnd() {
+    this.showSplash = false;
+    this.cdRef.detectChanges();
   }
 
   checkNbUpdatedContent() {

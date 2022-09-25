@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -9,6 +9,7 @@ import { LastVisitTimestamps } from './models/lastVisitTimestamps.interface';
 import { Storage } from '@ionic/storage';
 import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx';
 import { OneSignal } from '@ionic-native/onesignal/ngx';
+import { Router, NavigationExtras } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +26,9 @@ export class AppComponent {
     private fpmaService: FpmaApiService,
     private contentUpdateService: ContentUpdateService,
     private firebaseAnalytics: FirebaseAnalytics,
-    private oneSignal: OneSignal
+    private oneSignal: OneSignal,
+    private router: Router,
+    private zone: NgZone
   ) {
     this.initializeApp();
   }
@@ -75,7 +78,7 @@ export class AppComponent {
   setupPushNotifications() {
     this.oneSignal.startInit('e9e7ad63-5400-451d-8ab9-e2ea5d814fe5', '974013671728');
 
-    this.oneSignal.inFocusDisplaying(this.oneSignal.OSInFocusDisplayOption.None);
+    this.oneSignal.inFocusDisplaying(this.oneSignal.OSInFocusDisplayOption.Notification);
 
     this.oneSignal.handleNotificationReceived().subscribe(data => {
       // Si l'application est deja ouverte
@@ -83,6 +86,49 @@ export class AppComponent {
       if (data.isAppInFocus) {
         this.checkNbUpdatedContent();
       }
+    });
+
+    this.oneSignal.handleNotificationOpened().subscribe(data => {
+      // Redirige vers le détail de l'article selon sa catégorie
+      // On reutilise les tabs de details de chaque catégorie, en passant comme seul element l'article pour le slider
+
+      const { section, id } = data.notification.payload.additionalData;
+
+      if (section && id && !isNaN(parseInt(id))) {
+        switch (section) {
+          case 'spirituel':
+            this.fpmaService.loadPartageSpiById(id).subscribe(post => {
+              if (post) {
+                const navigationExtras: NavigationExtras = { state: { articles: [post], id: 0 } };
+                this.zone.run(() => {
+                  this.router.navigate(['/tabs/spi-tab/' + 0], navigationExtras);
+                });
+              }
+            });
+            break;
+          case 'actualites':
+            this.fpmaService.loadActualityById(id).subscribe(post => {
+              if (post) {
+                const navigationExtras: NavigationExtras = { state: { actualities: [post], id: 0 } };
+                this.zone.run(() => {
+                  this.router.navigate(['/tabs/actualities-tab/details'], navigationExtras);
+                });
+              }
+            });
+            break;
+          case 'evenements':
+            this.fpmaService.loadAgendaById(id).subscribe(post => {
+              if (post) {
+                const navigationExtras: NavigationExtras = { state: { events: [post], id: 0 } };
+                this.zone.run(() => {
+                  this.router.navigate(['/tabs/agenda-tab/details'], navigationExtras);
+                });
+              }
+            });
+            break;
+        }
+      }
+
     });
 
     this.oneSignal.endInit();

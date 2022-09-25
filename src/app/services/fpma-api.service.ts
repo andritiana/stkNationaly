@@ -43,8 +43,20 @@ export class FpmaApiService {
 
     return this.http.get(`${this.FPMA_DOMAIN}api/events`, httpOptions)
       .pipe(
-        map((res: any) => this.parseEvent(res)),
-        );
+        map((res: any) => {
+          const events: AgendaEvent[] = [];
+          if (res && res.events && res.events.data && res.events.data.length) {
+            res.events.data.forEach((event, index) => {
+              if (event.startdate) {
+                let e: AgendaEvent = this.parseEvent(event);
+                e.id = index;
+                events.push(e);
+              }
+            });
+          }
+          return events;
+        }),
+      );
   }
 
   public loadMonthsEventsAgenda(month: String, year: String): Observable<AgendaEvent[]>{
@@ -55,30 +67,46 @@ export class FpmaApiService {
     } : {};
     return this.http.get(`${this.FPMA_DOMAIN}api/events/${year}/${month}`, httpOptions)
       .pipe(
-        map((res: any) => this.parseEvent(res)),
-        catchError((e: any) => {
-          return Observable.throw(e);
-      }));
+        map((res: any) => {
+          const events: AgendaEvent[] = [];
+          if (res && res.events && res.events.data && res.events.data.length) {
+            res.events.data.forEach((event, index) => {
+              if (event.startdate) {
+                let e: AgendaEvent = this.parseEvent(event);
+                e.id = index;
+                events.push(e);
+              }
+            });
+          }
+          return events;
+        }),
+      );
   }
 
-  private parseEvent(elem: any): AgendaEvent[] {
-    const events: AgendaEvent[] = [];
-    if (elem && elem.events && elem.events.data && elem.events.data.length) {
-      elem.events.data.forEach( (event, index) => {
-        if (event.startdate) {
-          events.push({
-            id: index,
-            title: event.title,
-            startTime: DateHelper.getDate(event.startdate),
-            endTime: event.enddate ?  DateHelper.getDate(event.enddate) : DateHelper.getDate(event.startdate),
-            text : event.desc,
-            thumbnail : this.parseThumbnailUrl(event.image)
-          });
-        }
-      });
-    }
-    return events;
+  public loadAgendaById(id: number): Observable<AgendaEvent> {
+    return this.http.get(`${this.FPMA_DOMAIN}api/events/${id}`)
+      .pipe(
+        map((res: any) => {
+          if (res && res.events && res.events.data) {
+            return this.parseEvent(res.events.data);
+          }
+          return null;
+        }),
+        catchError((e: any) => {
+          return Observable.throw(e);
+        }));
   }
+
+  private parseEvent(elem: any): AgendaEvent {
+    return {
+        id: -1,
+        title: elem.title,
+        startTime: DateHelper.getDate(elem.startdate),
+        endTime: elem.enddate ?  DateHelper.getDate(elem.enddate) : DateHelper.getDate(elem.startdate),
+        text : elem.desc,
+        thumbnail : this.parseThumbnailUrl(elem.image)
+    };
+}
 
   /**
    * Method that retrieve list of spi article from the stk.fpma api
@@ -92,8 +120,17 @@ export class FpmaApiService {
 
     return this.http.get(`${this.FPMA_DOMAIN}api/partages`, httpOptions)
       .pipe(
-        map((res: any) => this.parsePartage(res)),
-        );
+        map((res: any) => {
+          let partages: ArticleSpi[] = [];
+          if (res && res.partages && res.partages.data && res.partages.data.length) {
+            const partagesElem: any[] = res.partages.data;
+            partagesElem.forEach(partage => {
+              partages.push(this.parsePartage(partage));
+            });
+          }
+          return partages;
+        }),
+      );
   }
 
   public loadPartageSpiWithStart(start:  string): Observable<ArticleSpi[]> {
@@ -106,26 +143,40 @@ export class FpmaApiService {
 
     return this.http.get(`${this.FPMA_DOMAIN}api/partages`, httpOptions)
       .pipe(
-        map((res: any) => this.parsePartage(res)),
-        catchError((e: any) => {
-          return Observable.throw(e);
-      }));
+        map((res: any) => {
+          let partages: ArticleSpi[] = [];
+          if (res && res.partages && res.partages.data && res.partages.data.length) {
+            const partagesElem: any[] = res.partages.data;
+            partagesElem.forEach(partage => {
+              partages.push(this.parsePartage(partage));
+            });
+          }
+          return partages;
+        }),
+      );
   }
 
-  private parsePartage(elem: any): ArticleSpi[] {
-    const partages: ArticleSpi[] = [];
-    if (elem && elem.partages && elem.partages.data && elem.partages.data.length) {
-      const partagesElem: any[] = elem.partages.data;
-      partagesElem.forEach( partageElem => {
-        partages.push({
-          title: partageElem.title,
-          creationDate: DateHelper.getDate(partageElem.created),
-          text: partageElem.fulltext,
-          thumbnail: partageElem.thumbnails
-        });
-      });
+  public loadPartageSpiById(id: number): Observable<ArticleSpi> {
+    return this.http.get(`${this.FPMA_DOMAIN}api/partages/${id}`)
+      .pipe(
+        map((res: any) => {
+          if (res && res.partages && res.partages.data) {
+            return this.parsePartage(res.partages.data);
+          }
+          return null;
+        }),
+        catchError((e: any) => {
+          return Observable.throw(e);
+        }));
+  }
+
+  private parsePartage(elem: any): ArticleSpi {
+    return {
+      title: elem.title,
+      creationDate: DateHelper.getDate(elem.created),
+      text: elem.fulltext,
+      thumbnail: elem.thumbnails
     }
-    return partages;
   }
 
   /**
@@ -138,9 +189,17 @@ export class FpmaApiService {
       })
     } : {};
     return this.http.get(`${this.FPMA_DOMAIN}api/broadcasts`, httpOptions)
-    .pipe(
-      map((res: any) => this.parseActuality(res)),
-      );
+      .pipe(
+        map((res: any) => {
+          const actualities: Actualities[] = [];
+          if (res && res.broadcast && res.broadcast.data && res.broadcast.data.length) {
+            res.broadcast.data.forEach(actuality => {
+              actualities.push(this.parseActuality(actuality));
+            });
+          }
+          return actualities;
+        }),
+    );
   }
 
   public loadActualityWithStart(start:  string): Observable<Actualities[]> {
@@ -153,26 +212,39 @@ export class FpmaApiService {
 
     return this.http.get(`${this.FPMA_DOMAIN}api/broadcasts`, httpOptions)
       .pipe(
-        map((res: any) => this.parseActuality(res)),
-        catchError((e: any) => {
-          return Observable.throw(e);
-      }));
+        map((res: any) => {
+          const actualities: Actualities[] = [];
+          if (res && res.broadcast && res.broadcast.data && res.broadcast.data.length) {
+            res.broadcast.data.forEach(actuality => {
+              actualities.push(this.parseActuality(actuality));
+            });
+          }
+          return actualities;
+        }),);
   }
 
-  private parseActuality(elem: any): Actualities[] {
-    const actualities: Actualities[] = [];
-    if (elem && elem.broadcast && elem.broadcast.data && elem.broadcast.data.length) {
-      elem.broadcast.data.forEach(atuality => {
-        actualities.push({
-          title: atuality.title,
-          created: DateHelper.getDate(atuality.created),
-          text: atuality.fulltext,
-          rawtext: atuality.rawtext,
-          thumbnail: atuality.thumbnails
-        });
-      });
-    }
-    return actualities;
+  public loadActualityById(id: number): Observable<Actualities> {
+    return this.http.get(`${this.FPMA_DOMAIN}api/broadcasts/${id}`)
+      .pipe(
+        map((res: any) => {
+          if (res && res.broadcast && res.broadcast.data) {
+            return this.parseActuality(res.broadcast.data);
+          }
+          return null;
+        }),
+        catchError((e: any) => {
+          return Observable.throw(e);
+        }));
+  }
+
+  private parseActuality(elem: any): Actualities {
+    return {
+          title: elem.title,
+          created: DateHelper.getDate(elem.created),
+          text: elem.fulltext,
+          rawtext: elem.rawtext,
+          thumbnail: elem.thumbnails
+    };
   }
 
   /**

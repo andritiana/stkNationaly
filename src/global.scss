@@ -58,10 +58,18 @@ ion-back-button.hydrated {
   display: block;
   visibility: hidden;
 }
-.can-go-back > ion-header ion-back-button {
+.can-go-back > ion-header ion-back-button,
+/* 
+On force l'affichage du back-button sur les pages de detail (en particulier pour les articles qui sont ouverts depuis une push notif).
+Dans le detail d'un article, le back button doit toujours etre affiche pour revenir vers la liste
+https: //github.com/ionic-team/ionic-framework/issues/17039#issuecomment-454311600
+*/
+app-actuality-details ion-header ion-back-button.hydrated, 
+app-spi-details ion-header ion-back-button.hydrated,
+app-stk-news-pdf-page ion-header ion-back-button.hydrated,
+app-agenda-details ion-header ion-back-button.hydrated {
   visibility: visible;
 }
-
 
 .homeMenu,
 .refresh-button {

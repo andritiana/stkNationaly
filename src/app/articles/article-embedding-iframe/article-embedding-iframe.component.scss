@@ -1,0 +1,26 @@
+mystk-article-embedding-iframe {
+  display: block;
+  .wp-block-embed {
+    margin: 0;
+  }
+
+  iframe {
+    display: block;
+    visibility: hidden;
+    clip-path: ellipse(20% 30% at 10% 10%);
+    opacity: 0;
+    transition-property: visibility, clip-path, opacity;
+    transition: .3s ease-in-out;
+    width: min(100%, 800px);
+    aspect-ratio: 16 / 9;
+    height: auto;
+    margin: 0 auto;
+  }
+  &.article-is-visible {
+    iframe {
+      visibility: visible;
+      clip-path: ellipse(100% 100% at center);
+      opacity: 1;
+    }
+  }
+}

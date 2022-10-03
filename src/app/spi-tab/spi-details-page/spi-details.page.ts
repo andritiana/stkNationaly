@@ -1,8 +1,8 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonSlides } from '@ionic/angular';
+import { BehaviorSubject } from 'rxjs';
 import { ArticleSpi } from 'src/app/models/article-spi.interface';
-import { PlayerService } from 'src/app/services/player-service';
 import { DateHelper } from 'src/app/utils/date-helper';
 
 @Component({
@@ -17,6 +17,7 @@ export class SpiDetailsPage {
   public partages: ArticleSpi[];
   public articleIndex: number;
   public DateHelper = DateHelper;
+  currentIndex$ = new BehaviorSubject(0);
   public slideOpts = {
     initialSlide: 1,
     speed: 400,
@@ -27,8 +28,6 @@ export class SpiDetailsPage {
     private route: ActivatedRoute,
     private router: Router,
     private actRoute: ActivatedRoute,
-    private playerService: PlayerService,
-    private elem: ElementRef
   ) {
     this.route.queryParams.subscribe(params => {
         this.articleIndex = this.actRoute.snapshot.params.id;
@@ -40,11 +39,7 @@ export class SpiDetailsPage {
   }
 
   async ionSlideDidChange() {
-    const previousSlideIndex = await this.slides.getPreviousIndex();
-
-    const embeddedIframes: NodeList = this.elem.nativeElement.querySelectorAll(`.article-pos-${previousSlideIndex} .media-container iframe`);
-
-    this.playerService.pauseIframePlayers(embeddedIframes);
+    this.currentIndex$.next(await this.slides.getActiveIndex());
   }
 
   goToHome() {

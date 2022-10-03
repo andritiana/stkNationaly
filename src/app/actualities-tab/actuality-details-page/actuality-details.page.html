@@ -11,10 +11,11 @@
       <div class="swipe-content">
           <div class="article-container">
             <img *ngIf="!!actuality.thumbnail" [src]="actuality.thumbnail"/>
-            <div class='article-content article-pos-{{i}}'>
+            <div [ngClass]="['article-content', 'article-pos-' + i]">
               <h5>{{DateHelper.getDateWrittenFr(actuality.created)}}</h5>
               <h3>{{actuality.title}}</h3>
-              <div [innerHTML]="actuality.text"></div>
+              <mystk-article-embedding-iframe [article]="actuality.text"
+                                              [isVisible]="(currentIndex$ | async) === i"></mystk-article-embedding-iframe>
             </div>
           </div>
         </div>

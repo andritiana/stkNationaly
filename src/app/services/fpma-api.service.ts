@@ -11,7 +11,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { LiveSection } from '../models/live-section.interface';
 import { GenericPost } from '../models/generic-post.interface';
-import { PlayerService } from './player-service';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +28,6 @@ export class FpmaApiService {
 
   constructor(
     public http: HttpClient,
-    private playerService: PlayerService
   ) {
   }
 
@@ -176,7 +174,7 @@ export class FpmaApiService {
     return {
       title: elem.title,
       creationDate: DateHelper.getDate(elem.created),
-      text: this.playerService.enablePlayableEmbededContent(elem.fulltext),
+      text: elem.fulltext,
       thumbnail: elem.thumbnails
     }
   }
@@ -243,7 +241,7 @@ export class FpmaApiService {
     return {
           title: elem.title,
           created: DateHelper.getDate(elem.created),
-          text: this.playerService.enablePlayableEmbededContent(elem.fulltext),
+          text: elem.fulltext,
           rawtext: elem.rawtext,
           thumbnail: elem.thumbnails
     };

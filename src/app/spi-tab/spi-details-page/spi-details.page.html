@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <app-global-header></app-global-header>
+    <app-global-header defaultHref="/tabs/spi-tab"></app-global-header>
   </ion-toolbar>
 </ion-header>
 
@@ -11,10 +11,11 @@
         <div class="swipe-content">
             <div class="article-container">
               <img [src]="partage.thumbnail"/>
-              <div class='article-content article-pos-{{index}}'>
+              <div [ngClass]="['article-content', 'article-pos-' + index]">
                 <h5>{{DateHelper.getDateWrittenFr(partage.creationDate)}}</h5>
                 <h3>{{partage.title}}</h3>
-                <p [innerHTML]="partage.text"></p>
+                <mystk-article-embedding-iframe [article]="partage.text"
+                                                [isVisible]="(currentIndex$ | async) === index"></mystk-article-embedding-iframe>
               </div>
             </div>
           </div>

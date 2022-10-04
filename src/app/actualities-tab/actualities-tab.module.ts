@@ -6,6 +6,7 @@ import { ActualitiesTabPage } from './actualities-tab.page';
 import { ActualitiesTabPageRoutingModule } from './actualities-tab-routing.module';
 import { ActualityDetailsPage } from './actuality-details-page/actuality-details.page';
 import { GlobalHeaderModule } from '../global-header/global-header.module';
+import { ArticleEmbeddingIframeComponentModule } from '../articles/article-embedding-iframe/article-embedding-iframe.module';
 
 @NgModule({
   imports: [
@@ -13,6 +14,7 @@ import { GlobalHeaderModule } from '../global-header/global-header.module';
     CommonModule,
     FormsModule,
     ActualitiesTabPageRoutingModule,
+    ArticleEmbeddingIframeComponentModule,
     GlobalHeaderModule,
   ],
   declarations: [ActualitiesTabPage, ActualityDetailsPage]

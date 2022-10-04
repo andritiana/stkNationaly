@@ -6,6 +6,7 @@ import { SpiTabPageRoutingModule } from './spi-tab-routing.module';
 import { SpiTabPage } from './spi-tab.page';
 import { SpiDetailsPage } from './spi-details-page/spi-details.page';
 import { GlobalHeaderModule } from '../global-header/global-header.module';
+import { ArticleEmbeddingIframeComponentModule } from '../articles/article-embedding-iframe/article-embedding-iframe.module';
 
 
 @NgModule({
@@ -13,6 +14,7 @@ import { GlobalHeaderModule } from '../global-header/global-header.module';
     IonicModule,
     CommonModule,
     FormsModule,
+    ArticleEmbeddingIframeComponentModule,
     SpiTabPageRoutingModule,
     GlobalHeaderModule,
   ],

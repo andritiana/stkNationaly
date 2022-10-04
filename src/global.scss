@@ -129,30 +129,6 @@ app-agenda-details ion-header ion-back-button.hydrated {
   border-radius: 5px;
 }
 
-
-.article-content figure.wp-block-embed {
-  margin-left: 0px;
-  margin-right: 0px;
-}
-
-.media-container {
-  position: relative;
-  padding-bottom: 56.25%;
-  padding-top: 30px;
-  height: 0;
-  overflow: hidden;
-}
-
-.media-container iframe,
-.media-container object,
-.media-container embed {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
 /* Inputs */
 .item.sc-ion-label-md-h, .item .sc-ion-label-md-h {
   --color: rgba(26, 51, 143, 0.5);

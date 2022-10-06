@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostBinding, NgZone } from '@angular/core';
+import { Component, HostBinding, NgZone } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -29,14 +29,10 @@ export class AppComponent {
     private oneSignal: OneSignal,
     private router: Router,
     private zone: NgZone,
-    private cdRef: ChangeDetectorRef,
   ) {
     this.initializeApp();
   }
 
-  ngAfterContentInit() {
-    this.splashScreen.hide();
-  }
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
@@ -48,17 +44,10 @@ export class AppComponent {
       }
 
       this.checkNbUpdatedContent();
-      this.splashScreen.hide();
       if (typeof ngDevMode !== 'undefined' && !!ngDevMode) {
-        this.showSplash = false;
-        this.cdRef.detectChanges();
+        this.splashScreen.hide();
       }
     });
-  }
-
-  onAnimationEnd() {
-    this.showSplash = false;
-    this.cdRef.detectChanges();
   }
 
   checkNbUpdatedContent() {

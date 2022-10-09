@@ -144,13 +144,13 @@ export class AppComponent {
       const url = this.router.url;
 
       // Si on clique sur le back button depuis la page d'accueil, on ferme l'application
-      if (url === '/tabs/tab0') {
+      if (url === '/tabs/home') {
         navigator['app'].exitApp();
       } 
       // Si on clique sur la back button depuis une page de catégorie située au même niveau
-      // que la page d'accueil, on revient sur la page d'accueil (ex : /tabs/{rootCategory})
-      else if (/^\/tabs\/[^\/]+$/.test(url)) {
-        this.router.navigateByUrl('/tabs/tab0');
+      // que la page d'accueil, on revient sur la page d'accueil (ex : /tabs/{rootCategory}, /(profile|profile))
+      else if (/^\/tabs\/[^\/]+$/.test(url) || /^\/profile\/[^\/]+$/.test(url) || /^\/login\/[^\/]+$/.test(url)) {
+        this.router.navigateByUrl('/tabs/home');
       }
       // Sinon, comportement par défaut d'Ionic
     });

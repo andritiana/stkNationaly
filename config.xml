@@ -12,6 +12,9 @@
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
     <allow-navigation href="https://stk.fpma.church/embeded/*" />
+    <allow-navigation href="https://stk.fpma.church/*" />
+    <allow-navigation href="https://*youtube.com/*" />
+    <allow-navigation href="https://*soundcloud.com/*"/>
     <preference name="ScrollEnabled" value="false" />
     <preference name="BackupWebStorage" value="none" />
     <preference name="SplashMaintainAspectRatio" value="true" />

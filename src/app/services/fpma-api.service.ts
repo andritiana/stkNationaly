@@ -27,7 +27,7 @@ export class FpmaApiService {
   }
 
   constructor(
-    public http: HttpClient
+    public http: HttpClient,
   ) {
   }
 

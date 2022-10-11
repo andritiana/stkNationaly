@@ -1,5 +1,4 @@
-import { Component, NgZone } from '@angular/core';
-
+import { Component, HostBinding, NgZone } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -17,6 +16,7 @@ import { Router, NavigationExtras } from '@angular/router';
   styleUrls: ['app.component.scss']
 })
 export class AppComponent {
+  @HostBinding('class.splash-showing')
   public showSplash = true;
   constructor(
     private platform: Platform,
@@ -28,7 +28,7 @@ export class AppComponent {
     private firebaseAnalytics: FirebaseAnalytics,
     private oneSignal: OneSignal,
     private router: Router,
-    private zone: NgZone
+    private zone: NgZone,
   ) {
     this.initializeApp();
   }
@@ -49,13 +49,8 @@ export class AppComponent {
       // Spécifique à Android : ferme l'application lorsque l'on clique sur le back button
       this.handleAndroidBackButton();
 
-      this.splashScreen.hide();
-      if (typeof ngDevMode === 'undefined') {
-      setTimeout(() => {
-        this.showSplash = false;
-      }, 3000);
-      } else {
-        this.showSplash = false;
+      if (typeof ngDevMode !== 'undefined' && !!ngDevMode) {
+        this.splashScreen.hide();
       }
     });
   }

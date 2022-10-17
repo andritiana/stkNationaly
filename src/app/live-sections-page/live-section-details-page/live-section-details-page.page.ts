@@ -24,7 +24,7 @@ export class LiveSectionDetailsPagePage {
   constructor(
     private route: ActivatedRoute,
     private router: Router
-  ) { 
+  ) {
     this.route.queryParams.subscribe(params => {
       if (this.router.getCurrentNavigation().extras.state) {
         this.sectionTitle = this.router.getCurrentNavigation().extras.state.sectionTitle;
@@ -36,7 +36,7 @@ export class LiveSectionDetailsPagePage {
   }
 
   goToHome() {
-    this.router.navigate(['/tabs/tab0']);
+    this.router.navigate(['/tabs/home']);
   }
 
 }

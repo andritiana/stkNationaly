@@ -4,14 +4,6 @@ ion-spinner {
   }
 }
 
-ion-toolbar {
-    --background: #FFF;
-    text-align: center;
-    span img {
-        height: 5vh;
-    }
-}
-
 ion-content {
     --background: #f8f8f8;
 }
@@ -107,4 +99,7 @@ ion-content {
           }
       }
   }
+}
+.profile-link {
+  font-size: 2rem;
 }

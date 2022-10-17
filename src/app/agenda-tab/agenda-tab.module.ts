@@ -3,14 +3,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AgendaTabPage } from './agenda-tab.page';
-
 import { AgendaTabPageRoutingModule } from './agenda-tab-routing.module';
-
 import { NgCalendarModule  } from 'ionic2-calendar';
-
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import { AgendaDetailsPage } from './agenda-details-page/agenda-details.page';
+import { GlobalHeaderModule } from '../global-header/global-header.module';
 registerLocaleData(localeFr, 'fr-FR');
 
 @NgModule({
@@ -19,7 +17,8 @@ registerLocaleData(localeFr, 'fr-FR');
     CommonModule,
     FormsModule,
     AgendaTabPageRoutingModule,
-    NgCalendarModule
+    NgCalendarModule,
+    GlobalHeaderModule,
   ],
   declarations: [AgendaTabPage, AgendaDetailsPage]
 })

@@ -1,19 +1,27 @@
-import { Component } from '@angular/core';
+import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { IonSlides } from '@ionic/angular';
+import { BehaviorSubject } from 'rxjs';
+import { ArticleEmbeddingIframeComponent } from 'src/app/articles/article-embedding-iframe/article-embedding-iframe.component';
 import { Actualities } from 'src/app/models/actuality.interface';
 import { DateHelper } from 'src/app/utils/date-helper';
-import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-actuality-details',
   templateUrl: 'actuality-details.page.html',
-  styleUrls: ['actuality-details.page.scss']
+  styleUrls: ['actuality-details.page.scss'],
 })
 export class ActualityDetailsPage {
+
+  @ViewChild(IonSlides, { static: false }) slides: IonSlides;
+  @ViewChildren(ArticleEmbeddingIframeComponent) articlesWithPlayer: QueryList<ArticleEmbeddingIframeComponent>;
 
   public actualities: Actualities[];
   public DateHelper = DateHelper;
   public actualityId: number;
   public loading = true;
+  currentIndex$ = new BehaviorSubject(0);
+
   public slideOpts = {
     initialSlide: 1,
     speed: 400,
@@ -22,7 +30,7 @@ export class ActualityDetailsPage {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {
     this.route.queryParams.subscribe(params => {
       if (this.router.getCurrentNavigation().extras.state) {
@@ -33,9 +41,12 @@ export class ActualityDetailsPage {
     });
   }
 
+  async ionSlideDidChange() {
+    this.currentIndex$.next(await this.slides.getActiveIndex());
+  }
 
   goToHome() {
-    this.router.navigate(['/tabs/tab0']);
+    this.router.navigate(['/tabs/home']);
   }
 
 }

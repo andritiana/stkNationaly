@@ -8,7 +8,8 @@ const routes: Routes = [
     component: TabsPage,
     children: [
       {
-        path: 'tab0',
+        // Route par defaut. Lors de l'utilisation du back button depuis la home, on quitte l'application
+        path: 'home',
         loadChildren: () => import('../home-tab/home-tab.module').then(m => m.HomeTabPageModule)
       },
       {
@@ -41,14 +42,14 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: '/tabs/tab0',
+        redirectTo: '/tabs/home',
         pathMatch: 'full'
       }
     ]
   },
   {
     path: '',
-    redirectTo: '/tabs/tab0',
+    redirectTo: '/tabs/home',
     pathMatch: 'full'
   }
 ];

@@ -3,8 +3,10 @@ import { Actualities } from '../models/actuality.interface';
 import { DateHelper } from '../utils/date-helper';
 import { FpmaApiService } from '../services/fpma-api.service';
 import { Router, NavigationExtras } from '@angular/router';
-import { NavController } from '@ionic/angular';
 import { ContentUpdateService } from '../services/content-update.service';
+import { RefresherEventDetail } from '@ionic/core';
+import { filter, shareReplay, startWith, switchMap, take, tap, multicast } from 'rxjs/operators';
+import { Observable, of, BehaviorSubject, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-actualities-tab',
@@ -13,9 +15,13 @@ import { ContentUpdateService } from '../services/content-update.service';
 })
 export class ActualitiesTabPage {
 
-  public actualities: Actualities[];
+  actualities$: Observable<Actualities[]>;
   public DateHelper = DateHelper;
   public loading = true;
+  private actualityRefresher$ = new Subject<true | ActualitiesTabPage['NON_VALUE']>();
+  private readonly NON_VALUE = Symbol();
+  private start = 0;
+  private cachedActualities$: BehaviorSubject<Actualities[] | symbol>;
 
   constructor(
     private fpmaApiService: FpmaApiService,
@@ -27,26 +33,54 @@ export class ActualitiesTabPage {
   }
 
   loadActuality(){
-    this.loading = true;
-    this.fpmaApiService.loadActuality().subscribe((actuality: Actualities[]) => {
-        this.actualities = actuality;
-        this.loading = false;
-      }, () => {
-        this.loading = false;
-      });
+    this.actualities$ = this.actualityRefresher$.pipe(
+      startWith(true),
+      tap(refreshEvent => (refreshEvent === true) ? this.loading = true : void 0),
+      switchMap((refreshEvent) => (refreshEvent === true) ? this.fpmaApiService.loadActuality().pipe(
+        tap({
+          next: () => {
+            this.loading = false;
+          },
+          error: () => {
+            this.loading = false;
+          },
+        })
+      )
+        : of(this.NON_VALUE)),
+      multicast(() => this.cachedActualities$ = new BehaviorSubject<Actualities[] | symbol>([]), shared => shared),
+      filter(((e): e is Actualities[] => e !== this.NON_VALUE)),
+    );
   }
 
-  public goToDetails(index: number) {
-    const navigationExtras: NavigationExtras = { state: { actualities: this.actualities, id: index } };
+  public loadNewActuality(event){
+      this.start += 10; 
+      this.fpmaApiService.loadActualityWithStart(this.start.toString()).subscribe((actualities: Actualities[]) =>{ 
+        if (actualities.length == 0) {
+          event.target.disabled = true;
+         } else if (this.cachedActualities$.value instanceof Array) {
+           this.cachedActualities$.next(this.cachedActualities$.value.concat(actualities));
+        } else {
+          this.cachedActualities$.next(actualities);
+        }
+        event.target.complete();
+      }, () => { }
+      );
+  }
+  
+
+  public goToDetails(index: number, actualities: Actualities[]) {
+    const navigationExtras: NavigationExtras = { state: { actualities, id: index } };
     this.router.navigate(['/tabs/actualities-tab/details'], navigationExtras);
   }
 
-  public refresh() {
-    this.loadActuality();
+  public refresh(evt: CustomEvent<RefresherEventDetail>) {
+    this.actualityRefresher$.next(this.NON_VALUE);
+    this.actualities$.pipe(take(1)).subscribe(() => evt.detail.complete());
+    this.actualityRefresher$.next(true);
   }
 
   goToHome() {
-    this.router.navigate(['/tabs/tab0']);
+    this.router.navigate(['/tabs/home']);
   }
 
 }

@@ -1,21 +1,11 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
-    </ion-buttons>
-    <ion-title>
-      Evènement
-    </ion-title>
-    <ion-buttons slot="end">
-      <button ion-button icon-only (click)="goToHome()">
-        <ion-icon class="homeMenu" name="home"></ion-icon>
-      </button>
-    </ion-buttons>
+    <app-global-header defaultHref="/tabs/agenda-tab"></app-global-header>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-
+  <mystk-page-title>Évènement</mystk-page-title>
   <ion-spinner *ngIf="loading; else eventContent" name="dots"pager="true"></ion-spinner>
 
 
@@ -33,10 +23,10 @@
                     Le  <strong>{{DateHelper.getFrenchWeekDay(event.startTime)}} {{DateHelper.getDateWrittenFr(event.startTime)}} </strong> de {{DateHelper.getHours(event.startTime)}} à {{DateHelper.getHours(event.endTime)}}
                   </span>
                   <ng-template #differentDates>
-                    Du <strong>{{DateHelper.getFrenchWeekDay(event.startTime)}} {{DateHelper.getDateWrittenFr(event.startTime)}} </strong>  à {{DateHelper.getHours(event.startTime)}} 
+                    Du <strong>{{DateHelper.getFrenchWeekDay(event.startTime)}} {{DateHelper.getDateWrittenFr(event.startTime)}} </strong>  à {{DateHelper.getHours(event.startTime)}}
                     au  <strong>{{DateHelper.getFrenchWeekDay(event.endTime)}} {{DateHelper.getDateWrittenFr(event.endTime)}}</strong>  à {{DateHelper.getHours(event.endTime)}}
                   </ng-template>
-        
+
                 </span>
                 <ng-template #uniqueDate>
                   Le  <strong>{{DateHelper.getFrenchWeekDay(event.startTime)}} {{DateHelper.getDateWrittenFr(event.startTime)}} </strong> à {{DateHelper.getHours(event.startTime)}}

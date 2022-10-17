@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { IonSlides } from '@ionic/angular';
+import { BehaviorSubject } from 'rxjs';
 import { ArticleSpi } from 'src/app/models/article-spi.interface';
 import { DateHelper } from 'src/app/utils/date-helper';
 
@@ -10,9 +12,12 @@ import { DateHelper } from 'src/app/utils/date-helper';
 })
 export class SpiDetailsPage {
 
+  @ViewChild(IonSlides, { static: false }) slides: IonSlides;
+
   public partages: ArticleSpi[];
   public articleIndex: number;
   public DateHelper = DateHelper;
+  currentIndex$ = new BehaviorSubject(0);
   public slideOpts = {
     initialSlide: 1,
     speed: 400,
@@ -22,7 +27,7 @@ export class SpiDetailsPage {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private actRoute: ActivatedRoute
+    private actRoute: ActivatedRoute,
   ) {
     this.route.queryParams.subscribe(params => {
         this.articleIndex = this.actRoute.snapshot.params.id;
@@ -33,8 +38,12 @@ export class SpiDetailsPage {
     });
   }
 
+  async ionSlideDidChange() {
+    this.currentIndex$.next(await this.slides.getActiveIndex());
+  }
+
   goToHome() {
-    this.router.navigate(['/tabs/tab0']);
+    this.router.navigate(['/tabs/home']);
   }
 
 }

@@ -7,6 +7,7 @@ import { StkNewsTabPage } from './stk-news-tab.page';
 import { StkNewsTabPageRoutingModule } from './stk-news-tab-routing.module';
 import { StkNewsPdfPage } from './stk-news-pdf/stk-news-pdf';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { GlobalHeaderModule } from '../global-header/global-header.module';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
     CommonModule,
     FormsModule,
     StkNewsTabPageRoutingModule,
-    PdfViewerModule
+    PdfViewerModule,
+    GlobalHeaderModule,
   ],
   declarations: [StkNewsTabPage, StkNewsPdfPage]
 })

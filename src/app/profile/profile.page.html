@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar>
+    <app-global-header></app-global-header>
+  </ion-toolbar>
+</ion-header>
+<ion-content fullscreen>
+  <main class="profile-outer"
+        *ngIf="myProfile$ | async as profile">
+    <mystk-page-title>Mon profil</mystk-page-title>
+    <div class="profile-identity">
+      <div class="profile-identity-last-name">{{profile.lastname}}</div>
+      <div class="profile-identity-first-name">{{profile.firstname}}</div>
+    </div>
+    <div class="profile-entity">
+      <div class="profile-entity-name">{{profile.entityName}}</div>
+      <div class="profile-entity-region">{{profile.entityRegion || ''}}</div>
+      <div class="profile-responsability-list"
+           role="list">
+        <ion-chip class="profile-responsability-chip"
+                  role="listitem"
+                  *ngFor="let resp of profile.responsabilities">
+          <ion-label>{{resp.name}}</ion-label>
+        </ion-chip>
+      </div>
+    </div>
+    <section class="profile-route-list">
+      <button class="profile-route-anchor ion-activatable"
+              (click)="logOut()"><ion-ripple-effect></ion-ripple-effect><ion-icon class="profile-route-anchor-icon" name="log-out"></ion-icon> Se déconnecter</button>
+      <a class="profile-route-anchor ion-activatable" [routerLink]="['badge-list']"><ion-ripple-effect></ion-ripple-effect><ion-icon class="profile-route-anchor-icon" src="/assets/icon/icon-ticket.svg"></ion-icon> Mes badges</a>
+      <a class="profile-route-anchor ion-activatable" [routerLink]="['edit']"><ion-ripple-effect></ion-ripple-effect><ion-icon class="profile-route-anchor-icon" src="/assets/icon/icon-profile-edit.svg"></ion-icon>Modifier mon profil</a>
+      <a class="profile-route-anchor ion-activatable" [routerLink]="['events']" *ngIf="false"><ion-ripple-effect></ion-ripple-effect><ion-icon class="profile-route-anchor-icon" src="/assets/icon/icon-event.svg"></ion-icon>Mes évènements</a>
+    </section>
+  </main>
+</ion-content>

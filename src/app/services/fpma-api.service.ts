@@ -7,9 +7,8 @@ import { Presentation } from '../models/presentation.interface';
 import { Actualities } from '../models/actuality.interface';
 import { StkNews } from '../models/stk-news.interface';
 import { LastVisitTimestamps, LastVisitUpdates } from '../models/lastVisitTimestamps.interface';
-import { Observable } from 'rxjs/internal/Observable';
-import { map } from 'rxjs/internal/operators/map';
-import { catchError } from 'rxjs/internal/operators/catchError';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import { LiveSection } from '../models/live-section.interface';
 import { GenericPost } from '../models/generic-post.interface';
 
@@ -19,10 +18,16 @@ import { GenericPost } from '../models/generic-post.interface';
 export class FpmaApiService {
 
   private FPMA_DOMAIN = 'https://stk.fpma.church/';
-  private isDevMode = false;
+  readonly isDevMode$ = new BehaviorSubject(false);
+  get isDevMode(): boolean {
+    return this.isDevMode$.value;
+  }
+  set isDevMode(v: boolean) {
+    this.isDevMode$.next(v);
+  }
 
   constructor(
-    public http: HttpClient
+    public http: HttpClient,
   ) {
   }
 
@@ -38,30 +43,70 @@ export class FpmaApiService {
 
     return this.http.get(`${this.FPMA_DOMAIN}api/events`, httpOptions)
       .pipe(
-        map((res: any) => this.parseEvent(res)),
-        catchError((e: any) => {
-          return Observable.throw(e);
-      }));
+        map((res: any) => {
+          const events: AgendaEvent[] = [];
+          if (res && res.events && res.events.data && res.events.data.length) {
+            res.events.data.forEach((event, index) => {
+              if (event.startdate) {
+                let e: AgendaEvent = this.parseEvent(event);
+                e.id = index;
+                events.push(e);
+              }
+            });
+          }
+          return events;
+        }),
+      );
   }
 
-  private parseEvent(elem: any): AgendaEvent[] {
-    const events: AgendaEvent[] = [];
-    if (elem && elem.events && elem.events.data && elem.events.data.length) {
-      elem.events.data.forEach( (event, index) => {
-        if (event.startdate) {
-          events.push({
-            id: index,
-            title: event.title,
-            startTime: DateHelper.getDate(event.startdate),
-            endTime: event.enddate ?  DateHelper.getDate(event.enddate) : DateHelper.getDate(event.startdate),
-            text : event.desc,
-            thumbnail : this.parseThumbnailUrl(event.image)
-          });
-        }
-      });
-    }
-    return events;
+  public loadMonthsEventsAgenda(month: String, year: String): Observable<AgendaEvent[]>{
+    const httpOptions =  this.isDevMode ? {
+      headers: new HttpHeaders({
+        'dev-mode':  ''
+      })
+    } : {};
+    return this.http.get(`${this.FPMA_DOMAIN}api/events/${year}/${month}`, httpOptions)
+      .pipe(
+        map((res: any) => {
+          const events: AgendaEvent[] = [];
+          if (res && res.events && res.events.data && res.events.data.length) {
+            res.events.data.forEach((event, index) => {
+              if (event.startdate) {
+                let e: AgendaEvent = this.parseEvent(event);
+                e.id = index;
+                events.push(e);
+              }
+            });
+          }
+          return events;
+        }),
+      );
   }
+
+  public loadAgendaById(id: number): Observable<AgendaEvent> {
+    return this.http.get(`${this.FPMA_DOMAIN}api/events/${id}`)
+      .pipe(
+        map((res: any) => {
+          if (res && res.events && res.events.data) {
+            return this.parseEvent(res.events.data);
+          }
+          return null;
+        }),
+        catchError((e: any) => {
+          return Observable.throw(e);
+        }));
+  }
+
+  private parseEvent(elem: any): AgendaEvent {
+    return {
+        id: -1,
+        title: elem.title,
+        startTime: DateHelper.getDate(elem.startdate),
+        endTime: elem.enddate ?  DateHelper.getDate(elem.enddate) : DateHelper.getDate(elem.startdate),
+        text : elem.desc,
+        thumbnail : this.parseThumbnailUrl(elem.image)
+    };
+}
 
   /**
    * Method that retrieve list of spi article from the stk.fpma api
@@ -75,26 +120,63 @@ export class FpmaApiService {
 
     return this.http.get(`${this.FPMA_DOMAIN}api/partages`, httpOptions)
       .pipe(
-        map((res: any) => this.parsePartage(res)),
-        catchError((e: any) => {
-          return Observable.throw(e);
-      }));
+        map((res: any) => {
+          let partages: ArticleSpi[] = [];
+          if (res && res.partages && res.partages.data && res.partages.data.length) {
+            const partagesElem: any[] = res.partages.data;
+            partagesElem.forEach(partage => {
+              partages.push(this.parsePartage(partage));
+            });
+          }
+          return partages;
+        }),
+      );
   }
 
-  private parsePartage(elem: any): ArticleSpi[] {
-    const partages: ArticleSpi[] = [];
-    if (elem && elem.partages && elem.partages.data && elem.partages.data.length) {
-      const partagesElem: any[] = elem.partages.data;
-      partagesElem.forEach( partageElem => {
-        partages.push({
-          title: partageElem.title,
-          creationDate: DateHelper.getDate(partageElem.created),
-          text: partageElem.fulltext,
-          thumbnail: partageElem.thumbnails
-        });
-      });
+  public loadPartageSpiWithStart(start:  string): Observable<ArticleSpi[]> {
+    const httpOptions =  this.isDevMode ? {
+      headers: new HttpHeaders({
+        'dev-mode':  ''
+      }) ,
+      params : new HttpParams().set('start' , start)
+    } : { params : new HttpParams().set('start' , start)};
+
+    return this.http.get(`${this.FPMA_DOMAIN}api/partages`, httpOptions)
+      .pipe(
+        map((res: any) => {
+          let partages: ArticleSpi[] = [];
+          if (res && res.partages && res.partages.data && res.partages.data.length) {
+            const partagesElem: any[] = res.partages.data;
+            partagesElem.forEach(partage => {
+              partages.push(this.parsePartage(partage));
+            });
+          }
+          return partages;
+        }),
+      );
+  }
+
+  public loadPartageSpiById(id: number): Observable<ArticleSpi> {
+    return this.http.get(`${this.FPMA_DOMAIN}api/partages/${id}`)
+      .pipe(
+        map((res: any) => {
+          if (res && res.partages && res.partages.data) {
+            return this.parsePartage(res.partages.data);
+          }
+          return null;
+        }),
+        catchError((e: any) => {
+          return Observable.throw(e);
+        }));
+  }
+
+  private parsePartage(elem: any): ArticleSpi {
+    return {
+      title: elem.title,
+      creationDate: DateHelper.getDate(elem.created),
+      text: elem.fulltext,
+      thumbnail: elem.thumbnails
     }
-    return partages;
   }
 
   /**
@@ -107,27 +189,62 @@ export class FpmaApiService {
       })
     } : {};
     return this.http.get(`${this.FPMA_DOMAIN}api/broadcasts`, httpOptions)
-    .pipe(
-      map((res: any) => this.parseActuality(res)),
-      catchError((e: any) => {
-        return Observable.throw(e);
-    }));
+      .pipe(
+        map((res: any) => {
+          const actualities: Actualities[] = [];
+          if (res && res.broadcast && res.broadcast.data && res.broadcast.data.length) {
+            res.broadcast.data.forEach(actuality => {
+              actualities.push(this.parseActuality(actuality));
+            });
+          }
+          return actualities;
+        }),
+    );
   }
 
-  private parseActuality(elem: any): Actualities[] {
-    const atualities: Actualities[] = [];
-    if (elem && elem.broadcast && elem.broadcast.data && elem.broadcast.data.length) {
-      elem.broadcast.data.forEach(atuality => {
-        atualities.push({
-          title: atuality.title,
-          created: DateHelper.getDate(atuality.created),
-          text: atuality.fulltext,
-          rawtext: atuality.rawtext,
-          thumbnail: atuality.thumbnails
-        });
-      });
-    }
-    return atualities;
+  public loadActualityWithStart(start:  string): Observable<Actualities[]> {
+    const httpOptions =  this.isDevMode ? {
+      headers: new HttpHeaders({
+        'dev-mode':  ''
+      }) ,
+      params : new HttpParams().set('start' , start)
+    } : { params : new HttpParams().set('start' , start)};
+
+    return this.http.get(`${this.FPMA_DOMAIN}api/broadcasts`, httpOptions)
+      .pipe(
+        map((res: any) => {
+          const actualities: Actualities[] = [];
+          if (res && res.broadcast && res.broadcast.data && res.broadcast.data.length) {
+            res.broadcast.data.forEach(actuality => {
+              actualities.push(this.parseActuality(actuality));
+            });
+          }
+          return actualities;
+        }),);
+  }
+
+  public loadActualityById(id: number): Observable<Actualities> {
+    return this.http.get(`${this.FPMA_DOMAIN}api/broadcasts/${id}`)
+      .pipe(
+        map((res: any) => {
+          if (res && res.broadcast && res.broadcast.data) {
+            return this.parseActuality(res.broadcast.data);
+          }
+          return null;
+        }),
+        catchError((e: any) => {
+          return Observable.throw(e);
+        }));
+  }
+
+  private parseActuality(elem: any): Actualities {
+    return {
+          title: elem.title,
+          created: DateHelper.getDate(elem.created),
+          text: elem.fulltext,
+          rawtext: elem.rawtext,
+          thumbnail: elem.thumbnails
+    };
   }
 
   /**
@@ -142,9 +259,7 @@ export class FpmaApiService {
     return this.http.get(`${this.FPMA_DOMAIN}api/presentations`, httpOptions)
       .pipe(
         map((res: any) => this.parsePresentations(res)),
-        catchError((e: any) => {
-          return Observable.throw(e);
-      }));
+        );
   }
 
   private parsePresentations(elem: any): Presentation[] {
@@ -170,6 +285,21 @@ export class FpmaApiService {
         'dev-mode':  ''
       })
     } : {};
+    return this.http.get(`${this.FPMA_DOMAIN}api/stk-news`, httpOptions)
+      .pipe(
+        map((res: any) => this.parseStkNews(res)),
+
+    );
+  }
+
+  public loadStkNewsWithStart(start:  string): Observable<StkNews[]> {
+    const httpOptions =  this.isDevMode ? {
+      headers: new HttpHeaders({
+        'dev-mode':  ''
+      }) ,
+      params : new HttpParams().set('start' , start)
+    } : { params : new HttpParams().set('start' , start)};
+
     return this.http.get(`${this.FPMA_DOMAIN}api/stk-news`, httpOptions)
       .pipe(
         map((res: any) => this.parseStkNews(res)),
@@ -201,14 +331,12 @@ export class FpmaApiService {
     return this.http.get(`${this.FPMA_DOMAIN}api/live-sections`)
       .pipe(
         map((res: any) => this.parseLiveSections(res)),
-        catchError((e: any) => {
-          return Observable.throw(e);
-        }));
+        );
   }
 
   private parseLiveSections(elem: any): LiveSection[] {
     const liveSections: LiveSection[] = [];
-    if (elem && elem['live-sections'] && elem['live-sections'].data && elem['live-sections'].data.length) {
+    if (elem?.['live-sections']?.data?.length) {
       elem['live-sections'].data.forEach(liveSection => {
         liveSections.push(liveSection);
       });
@@ -228,9 +356,7 @@ export class FpmaApiService {
     return this.http.get(`${this.FPMA_DOMAIN}api/posts/category/${category}`, httpOptions)
       .pipe(
         map((res: any) => this.parseGenericPosts(res)),
-        catchError((e: any) => {
-          return Observable.throw(e);
-        }));
+        );
   }
 
   private parseGenericPosts(elem: any): GenericPost[] {
@@ -271,9 +397,7 @@ export class FpmaApiService {
     return this.http.get(`${this.FPMA_DOMAIN}api/content-updates`, { params })
       .pipe(
         map((res: any) => this.parseContentUpdates(res)),
-        catchError((e: any) => {
-          return Observable.throw(e);
-      }));
+        );
   }
 
   private parseContentUpdates(data: any): LastVisitUpdates {

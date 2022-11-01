@@ -7,7 +7,7 @@ import { SpiTabPage } from './spi-tab.page';
 import { SpiDetailsPage } from './spi-details-page/spi-details.page';
 import { GlobalHeaderModule } from '../global-header/global-header.module';
 import { ArticleEmbeddingIframeComponentModule } from '../articles/article-embedding-iframe/article-embedding-iframe.module';
-
+import { DecodeHtmlEntitiesModule } from '../utils/html-entities/decode-html-entities.module';
 
 @NgModule({
   imports: [
@@ -17,6 +17,7 @@ import { ArticleEmbeddingIframeComponentModule } from '../articles/article-embed
     ArticleEmbeddingIframeComponentModule,
     SpiTabPageRoutingModule,
     GlobalHeaderModule,
+    DecodeHtmlEntitiesModule
   ],
   declarations: [ SpiTabPage, SpiDetailsPage ]
 })

@@ -19,7 +19,7 @@
           <div class="news-img">
               <img [src]="stkNews.thumbnails"/>
           </div>
-          <div class="news-title">{{stkNews.title}}</div>
+          <div class="news-title">{{stkNews.title | decodeHtmlEntities}}</div>
         </ion-card>
       </ion-col>
     </ion-row>

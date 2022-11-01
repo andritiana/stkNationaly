@@ -6,7 +6,7 @@
 
 
 <ion-content padding>
-  <mystk-page-title>{{pdfTitle}}</mystk-page-title>
+  <mystk-page-title>{{pdfTitle | decodeHtmlEntities}}</mystk-page-title>
   <pdf-viewer
     [src]="pdf"
     [render-text]="true"

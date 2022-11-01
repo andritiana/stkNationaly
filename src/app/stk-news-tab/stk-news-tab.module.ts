@@ -8,6 +8,7 @@ import { StkNewsTabPageRoutingModule } from './stk-news-tab-routing.module';
 import { StkNewsPdfPage } from './stk-news-pdf/stk-news-pdf';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { GlobalHeaderModule } from '../global-header/global-header.module';
+import { DecodeHtmlEntitiesModule } from '../utils/html-entities/decode-html-entities.module';
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import { GlobalHeaderModule } from '../global-header/global-header.module';
     StkNewsTabPageRoutingModule,
     PdfViewerModule,
     GlobalHeaderModule,
+    DecodeHtmlEntitiesModule
   ],
   declarations: [StkNewsTabPage, StkNewsPdfPage]
 })

@@ -15,8 +15,9 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
   },
+  "exclude": ["e2e/**/*"],
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true

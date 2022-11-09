@@ -1,13 +1,14 @@
 {
-  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "outDir": "../out-tsc/app",
-    "module": "commonjs",
-    "target": "es5",
+    "moduleResolution": "node",
     "types": [
-      "jasmine",
-      "jasminewd2",
-      "node"
-    ]
+      "node",
+      "webdriverio/async",
+      "@wdio/mocha-framework",
+      "expect-webdriverio",
+      "@wdio/devtools-service",
+      "@wdio/appium-service"
+    ],
+    "target": "es2019"
   }
 }

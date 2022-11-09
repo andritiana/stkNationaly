@@ -4,11 +4,11 @@
   "author": "Eglise Protestante Malgache en France",
   "homepage": "https://stk.fpma.church/",
   "scripts": {
-    "start": "ng serve",
-    "build": "ng build",
+    "serve": "ionic serve",
+    "build": "ionic build -c production",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "pnpm -C e2e serve"
   },
   "private": true,
   "dependencies": {
@@ -58,6 +58,7 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
     "@types/qrcode": "^1.4.2",
+    "@wdio/schematics": "1.2.1",
     "codelyzer": "^6.0.0",
     "cordova-android": "^10.1.2",
     "cordova-ios": "^6.2.0",

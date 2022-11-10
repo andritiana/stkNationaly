@@ -36,7 +36,7 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
-      
+
       this.firebaseAnalytics.logEvent('page_view', {page: 'home'})
         .then?.((res: any) => console.log(res))
         .catch((error: any) => console.error(error));
@@ -141,7 +141,7 @@ export class AppComponent {
       // Si on clique sur le back button depuis la page d'accueil, on ferme l'application
       if (url === '/tabs/home') {
         navigator['app'].exitApp();
-      } 
+      }
       // Si on clique sur la back button depuis une page de catégorie située au même niveau
       // que la page d'accueil, on revient sur la page d'accueil (ex : /tabs/{rootCategory}, /(profile|profile))
       else if (/^\/tabs\/[^\/]+$/.test(url) || /^\/profile\/[^\/]+$/.test(url) || /^\/login\/[^\/]+$/.test(url)) {

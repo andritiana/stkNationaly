@@ -34,13 +34,13 @@ export class StkNewsTabPage {
   }
 
   public loadNewStkNews(event){
-      this.start += 10; 
-      this.fpmaApiService.loadStkNewsWithStart(this.start.toString()).subscribe((listOfStkNews: StkNews[]) =>{ 
+      this.start += 10;
+      this.fpmaApiService.loadStkNewsWithStart(this.start.toString()).subscribe((listOfStkNews: StkNews[]) =>{
         if (listOfStkNews.length == 0) {
           event.target.disabled = true;
          } else {
           this.listOfStkNews = this.listOfStkNews.concat(listOfStkNews);
-        } 
+        }
         event.target.complete();
       }, () => { }
       );

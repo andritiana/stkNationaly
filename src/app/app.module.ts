@@ -16,32 +16,31 @@ import { initializeTokensFromStorage, jwtOptionsFactory } from './profile/auth.s
 import { AuthExpirationInterceptor } from './profile/auth/auth-expiration.interceptor';
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
-  imports: [
-    BrowserModule,
-    IonicModule.forRoot({
-      animated: true,
-    }),
-    AppRoutingModule,
-    HttpClientModule,
-    JwtModule.forRoot({
-      jwtOptionsProvider: {
-        provide: JWT_OPTIONS,
-        useFactory: jwtOptionsFactory,
-      }
-    }),
-    IonicStorageModule.forRoot(),
-  ],
-  providers: [
-    StatusBar,
-    SplashScreen,
-    FirebaseAnalytics,
-    OneSignal,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    { provide: HTTP_INTERCEPTORS, multi: true, useClass: AuthExpirationInterceptor },
-    { provide: APP_INITIALIZER, multi: true, useFactory: initializeTokensFromStorage}
-  ],
-  bootstrap: [AppComponent]
+    declarations: [AppComponent],
+    imports: [
+        BrowserModule,
+        IonicModule.forRoot({
+            animated: true,
+        }),
+        AppRoutingModule,
+        HttpClientModule,
+        JwtModule.forRoot({
+            jwtOptionsProvider: {
+                provide: JWT_OPTIONS,
+                useFactory: jwtOptionsFactory,
+            }
+        }),
+        IonicStorageModule.forRoot(),
+    ],
+    providers: [
+        StatusBar,
+        SplashScreen,
+        FirebaseAnalytics,
+        OneSignal,
+        { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+        { provide: HTTP_INTERCEPTORS, multi: true, useClass: AuthExpirationInterceptor },
+        { provide: APP_INITIALIZER, multi: true, useFactory: initializeTokensFromStorage }
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule {}

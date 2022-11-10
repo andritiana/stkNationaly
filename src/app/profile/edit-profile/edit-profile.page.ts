@@ -1,16 +1,28 @@
 import { Location } from '@angular/common';
 import { Component, HostBinding, NgZone } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { differenceInHours, intervalToDuration, parse } from 'date-fns/esm';
 import { fr } from 'date-fns/esm/locale';
-import { combineLatest, EMPTY, from, interval, Observable, of, Subscription, timer } from 'rxjs';
+import { combineLatest, EMPTY, from, interval, Observable, of, Subscription } from 'rxjs';
 import { filter, map, shareReplay, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { sameValidator } from 'src/app/forms/validators';
 import { AuthService } from '../auth.service';
 import { EditProfileBodyRequest } from '../profile.model';
 import { ProfileService } from '../profile.service';
+
+interface ProfileEditionForm {
+  firstName: FormControl<string>;
+  lastName: FormControl<string>;
+  entityName: FormControl<string>;
+  email: FormControl<string>;
+  passwordCurrent: FormControl<string>;
+  changePassword: FormGroup<{
+    passwordNew: FormControl<string>;
+    passwordNewConfirmation: FormControl<string>;
+  }>;
+}
 
 @Component({
   selector: 'mystk-edit-profile',
@@ -18,9 +30,9 @@ import { ProfileService } from '../profile.service';
   styleUrls: ['./edit-profile.page.scss'],
 })
 export class EditProfilePage {
-  editForm: FormGroup;
   readonly canCancel$: Observable<boolean>;
   private subs: Subscription[] = [];
+  editForm: FormGroup<ProfileEditionForm>;
   @HostBinding('class.temporary-password')
   get isShowingCountdown() {
     return !!this.toast;
@@ -71,7 +83,7 @@ export class EditProfilePage {
       }),
       switchMap(([_, tempPassExpiration]) => {
         if (!!tempPassExpiration) {
-          const passwordNewCtrl = this.editForm.get('changePassword.passwordNew') as FormControl;
+          const passwordNewCtrl = this.editForm.get('changePassword.passwordNew') as UntypedFormControl;
           const tempPassExpirationDate = parse(tempPassExpiration, 'dd-MM-yyyy HH:mm:ss', new Date(), { locale: fr });
           passwordNewCtrl.setValidators(Validators.compose([passwordNewCtrl.validator, Validators.required]));
           passwordNewCtrl.markAsTouched();

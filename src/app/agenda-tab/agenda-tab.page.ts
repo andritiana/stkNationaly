@@ -40,7 +40,7 @@ export class AgendaTabPage {
   }
 
   private loadAgenda(){
-   
+
     this.loading = true;
     this.fpmaApiService.loadAgenda().subscribe((events: AgendaEvent[]) => {
         this.events = events;
@@ -51,13 +51,13 @@ export class AgendaTabPage {
   }
 
   private loadNewAgenda(m: String, y: String){
-      this.fpmaApiService.loadMonthsEventsAgenda(m,y).subscribe((events: AgendaEvent[]) =>{ 
+      this.fpmaApiService.loadMonthsEventsAgenda(m,y).subscribe((events: AgendaEvent[]) =>{
           this.events = events;
           this.loading = false;
         }, err => {
           this.loading = false;
         });
-      
+
   }
 
   public isDateValid(date: Date) {
@@ -89,7 +89,7 @@ export class AgendaTabPage {
     this.currentMonth = title;
 
     const monthNames = {
-      "janvier":"01", 
+      "janvier":"01",
       "février":"02",
       "mars":"03",
       "avril":"04",

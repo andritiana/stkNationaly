@@ -11,8 +11,8 @@ import { AuthService } from '../auth.service';
 })
 export class ResetPasswordComponent implements OnInit {
 
-  emailControl: FormControl;
-  form: FormGroup;
+  emailControl: FormControl<string>;
+  form: FormGroup<{ email: FormControl<string>; }>;
   constructor(
     private authService: AuthService,
     private actionSheetCtrl: ActionSheetController,

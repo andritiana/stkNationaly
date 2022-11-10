@@ -53,8 +53,8 @@ export class ActualitiesTabPage {
   }
 
   public loadNewActuality(event){
-      this.start += 10; 
-      this.fpmaApiService.loadActualityWithStart(this.start.toString()).subscribe((actualities: Actualities[]) =>{ 
+      this.start += 10;
+      this.fpmaApiService.loadActualityWithStart(this.start.toString()).subscribe((actualities: Actualities[]) =>{
         if (actualities.length == 0) {
           event.target.disabled = true;
          } else if (this.cachedActualities$.value instanceof Array) {
@@ -66,7 +66,7 @@ export class ActualitiesTabPage {
       }, () => { }
       );
   }
-  
+
 
   public goToDetails(index: number, actualities: Actualities[]) {
     const navigationExtras: NavigationExtras = { state: { actualities, id: index } };

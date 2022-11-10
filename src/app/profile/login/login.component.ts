@@ -1,9 +1,14 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
-import { catchError, finalize, switchMap, take, tap } from 'rxjs/operators';
+import { finalize, switchMap, take, tap } from 'rxjs/operators';
 import { AuthService } from '../auth.service';
+
+interface LoginForm {
+  login: FormControl<string>;
+  password: FormControl<string>;
+}
 
 @Component({
   selector: 'app-login',
@@ -12,8 +17,8 @@ import { AuthService } from '../auth.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent implements OnInit {
+  loginForm: FormGroup<LoginForm>;
 
-  loginForm: FormGroup;
   constructor(
     private authService: AuthService,
     private router: Router,

@@ -9,9 +9,9 @@
         "*.ts"
       ],
       "parserOptions": {
+        "emitDecoratorMetadata": true,
         "project": [
-          "tsconfig.json",
-          "e2e/tsconfig.json"
+          "tsconfig.app.json"
         ],
         "createDefaultProgram": true
       },
@@ -22,8 +22,10 @@
       "extends": [
         "plugin:@angular-eslint/recommended",
         "plugin:@angular-eslint/template/process-inline-templates",
-        "plugin:@angular-eslint/template/recommended",
-        "plugin:rxjs/recommended"
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "plugin:rxjs/recommended",
+        "prettier"
       ],
       "rules": {
         "@angular-eslint/component-selector": [
@@ -42,6 +44,12 @@
             "type": "attribute"
           }
         ],
+        "@angular-eslint/component-class-suffix": [
+          "warn",
+          {
+            "suffixes": ["Component", "Page"]
+          }
+        ],
         "@typescript-eslint/consistent-type-imports": [
           "warn",
           {
@@ -50,6 +58,9 @@
             "fixStyle": "separate-type-imports"
           }
         ],
+        "@typescript-eslint/no-misused-promises": "warn",
+        "@typescript-eslint/no-floating-promises": "warn",
+        "@typescript-eslint/no-inferrable-types": "warn",
         "rxjs-angular/prefer-takeuntil": [
           "error",
           {
@@ -58,7 +69,12 @@
             "checkDecorators": ["Component"]
           }
         ],
-        "finnish": ["warning"]
+        "rxjs/finnish": [
+          "warn",
+          {
+            "methods": false
+          }
+        ]
       }
     },
     {

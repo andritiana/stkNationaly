@@ -6,7 +6,7 @@
 
 <ion-content [fullscreen]="true">
   <mystk-page-title>STK News</mystk-page-title>
-  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($any($event))">
     <ion-refresher-content
       refreshingSpinner="crescent"
       refreshingText="Mise à jour...">
@@ -25,8 +25,8 @@
     </ion-row>
   </ion-grid>
 
-  
-  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadNewStkNews($event)">
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadNewStkNews($any($event))">
     <ion-infinite-scroll-content
       loadingSpinner="bubbles"
       loadingText="Chargement d'articles...">

@@ -1,16 +1,16 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { AgendaEvent } from '../models/agenda-event.interface';
+import { Injectable } from '@angular/core';
+import type { Observable } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
+import type { Actualities } from '../models/actuality.interface';
+import type { AgendaEvent } from '../models/agenda-event.interface';
+import type { ArticleSpi } from '../models/article-spi.interface';
+import type { GenericPost } from '../models/generic-post.interface';
+import type { LastVisitTimestamps, LastVisitUpdates } from '../models/lastVisitTimestamps.interface';
+import type { LiveSection } from '../models/live-section.interface';
+import type { Presentation } from '../models/presentation.interface';
+import type { StkNews } from '../models/stk-news.interface';
 import { DateHelper } from '../utils/date-helper';
-import { ArticleSpi } from '../models/article-spi.interface';
-import { Presentation } from '../models/presentation.interface';
-import { Actualities } from '../models/actuality.interface';
-import { StkNews } from '../models/stk-news.interface';
-import { LastVisitTimestamps, LastVisitUpdates } from '../models/lastVisitTimestamps.interface';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map, catchError } from 'rxjs';
-import { LiveSection } from '../models/live-section.interface';
-import { GenericPost } from '../models/generic-post.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -41,14 +41,14 @@ export class FpmaApiService {
       })
     } : {};
 
-    return this.http.get(`${this.FPMA_DOMAIN}api/events`, httpOptions)
+    return this.http.get<APIResponse<'events', RawEvent[]>>(`${this.FPMA_DOMAIN}api/events`, httpOptions)
       .pipe(
-        map((res: any) => {
+        map(res => {
           const events: AgendaEvent[] = [];
-          if (res && res.events && res.events.data && res.events.data.length) {
+          if (res?.events?.data?.length) {
             res.events.data.forEach((event, index) => {
               if (event.startdate) {
-                let e: AgendaEvent = this.parseEvent(event);
+                const e: AgendaEvent = this.parseEvent(event);
                 e.id = index;
                 events.push(e);
               }
@@ -59,21 +59,23 @@ export class FpmaApiService {
       );
   }
 
-  public loadMonthsEventsAgenda(month: String, year: String): Observable<AgendaEvent[]>{
+  public loadMonthsEventsAgenda(month: string, year: string): Observable<AgendaEvent[]>{
     const httpOptions =  this.isDevMode ? {
       headers: new HttpHeaders({
         'dev-mode':  ''
       })
     } : {};
-    return this.http.get(`${this.FPMA_DOMAIN}api/events/${year}/${month}`, httpOptions)
+    return this.http.get<APIResponse<'events', RawEvent[]>>(`${this.FPMA_DOMAIN}api/events/${year}/${month}`, httpOptions)
       .pipe(
-        map((res: any) => {
+        map(res => {
           const events: AgendaEvent[] = [];
-          if (res && res.events && res.events.data && res.events.data.length) {
+          if (res?.events?.data?.length) {
             res.events.data.forEach((event, index) => {
               if (event.startdate) {
-                let e: AgendaEvent = this.parseEvent(event);
-                e.id = index;
+                const e: AgendaEvent = {
+                  ...this.parseEvent(event),
+                  id: index,
+                };
                 events.push(e);
               }
             });
@@ -83,11 +85,11 @@ export class FpmaApiService {
       );
   }
 
-  public loadAgendaById(id: number): Observable<AgendaEvent> {
-    return this.http.get(`${this.FPMA_DOMAIN}api/events/${id}`)
+  public loadAgendaById(id: number): Observable<AgendaEvent | null> {
+    return this.http.get<APIResponse<'events', RawEvent>>(`${this.FPMA_DOMAIN}api/events/${id}`)
       .pipe(
-        map((res: any) => {
-          if (res && res.events && res.events.data) {
+        map(res => {
+          if (res?.events?.data) {
             return this.parseEvent(res.events.data);
           }
           return null;
@@ -95,14 +97,15 @@ export class FpmaApiService {
       );
   }
 
-  private parseEvent(elem: any): AgendaEvent {
+  private parseEvent(elem: RawEvent): AgendaEvent {
     return {
-        id: -1,
-        title: elem.title,
-        startTime: DateHelper.getDate(elem.startdate),
-        endTime: elem.enddate ?  DateHelper.getDate(elem.enddate) : DateHelper.getDate(elem.startdate),
-        text : elem.desc,
-        thumbnail : this.parseThumbnailUrl(elem.image)
+      id: -1,
+      title: elem.title,
+      startTime: DateHelper.getDate(elem.startdate),
+      endTime: elem.enddate ?  DateHelper.getDate(elem.enddate) : DateHelper.getDate(elem.startdate),
+      text : elem.desc,
+      thumbnail: this.parseThumbnailUrl(elem.image),
+      allDay: false,
     };
 }
 
@@ -116,17 +119,16 @@ export class FpmaApiService {
       })
     } : {};
 
-    return this.http.get(`${this.FPMA_DOMAIN}api/partages`, httpOptions)
+    return this.http.get<APIResponse<'partages', RawPartage[]>>(`${this.FPMA_DOMAIN}api/partages`, httpOptions)
       .pipe(
-        map((res: any) => {
-          let partages: ArticleSpi[] = [];
-          if (res && res.partages && res.partages.data && res.partages.data.length) {
-            const partagesElem: any[] = res.partages.data;
-            partagesElem.forEach(partage => {
-              partages.push(this.parsePartage(partage));
-            });
+        map(res => {
+          if (res?.partages?.data?.length) {
+            const partagesElem: RawPartage[] = res.partages.data;
+            return partagesElem.map(partage =>
+              this.parsePartage(partage)
+            );
           }
-          return partages;
+          return [];
         }),
       );
   }
@@ -139,26 +141,25 @@ export class FpmaApiService {
       params : new HttpParams().set('start' , start)
     } : { params : new HttpParams().set('start' , start)};
 
-    return this.http.get(`${this.FPMA_DOMAIN}api/partages`, httpOptions)
+    return this.http.get<APIResponse<'partages', RawPartage[]>>(`${this.FPMA_DOMAIN}api/partages`, httpOptions)
       .pipe(
-        map((res: any) => {
-          let partages: ArticleSpi[] = [];
+        map(res => {
           if (res && res.partages && res.partages.data && res.partages.data.length) {
-            const partagesElem: any[] = res.partages.data;
-            partagesElem.forEach(partage => {
-              partages.push(this.parsePartage(partage));
-            });
+            const partagesElem: RawPartage[] = res.partages.data;
+            return partagesElem.map(partage =>
+              this.parsePartage(partage)
+            );
           }
-          return partages;
+          return [];
         }),
       );
   }
 
-  public loadPartageSpiById(id: number): Observable<ArticleSpi> {
-    return this.http.get(`${this.FPMA_DOMAIN}api/partages/${id}`)
+  public loadPartageSpiById(id: number): Observable<ArticleSpi | null> {
+    return this.http.get<APIResponse<'partages', RawPartage>>(`${this.FPMA_DOMAIN}api/partages/${id}`)
       .pipe(
-        map((res: any) => {
-          if (res && res.partages && res.partages.data) {
+        map(res => {
+          if (res?.partages?.data) {
             return this.parsePartage(res.partages.data);
           }
           return null;
@@ -166,7 +167,7 @@ export class FpmaApiService {
       );
   }
 
-  private parsePartage(elem: any): ArticleSpi {
+  private parsePartage(elem: RawPartage): ArticleSpi {
     return {
       title: elem.title,
       creationDate: DateHelper.getDate(elem.created),
@@ -184,11 +185,11 @@ export class FpmaApiService {
         'dev-mode':  ''
       })
     } : {};
-    return this.http.get(`${this.FPMA_DOMAIN}api/broadcasts`, httpOptions)
+    return this.http.get<APIResponse<'broadcast', RawBroadcast[]>>(`${this.FPMA_DOMAIN}api/broadcasts`, httpOptions)
       .pipe(
-        map((res: any) => {
+        map(res => {
           const actualities: Actualities[] = [];
-          if (res && res.broadcast && res.broadcast.data && res.broadcast.data.length) {
+          if (res?.broadcast?.data?.length) {
             res.broadcast.data.forEach(actuality => {
               actualities.push(this.parseActuality(actuality));
             });
@@ -199,18 +200,22 @@ export class FpmaApiService {
   }
 
   public loadActualityWithStart(start:  string): Observable<Actualities[]> {
-    const httpOptions =  this.isDevMode ? {
-      headers: new HttpHeaders({
-        'dev-mode':  ''
-      }) ,
+    const httpOptions = {
+      ...this.isDevMode
+        ? {
+          headers: new HttpHeaders({
+            'dev-mode': ''
+          })
+        }
+        : {},
       params : new HttpParams().set('start' , start)
-    } : { params : new HttpParams().set('start' , start)};
+    };
 
-    return this.http.get(`${this.FPMA_DOMAIN}api/broadcasts`, httpOptions)
+    return this.http.get<APIResponse<'broadcast', RawBroadcast[]>>(`${this.FPMA_DOMAIN}api/broadcasts`, httpOptions)
       .pipe(
-        map((res: any) => {
+        map(res => {
           const actualities: Actualities[] = [];
-          if (res && res.broadcast && res.broadcast.data && res.broadcast.data.length) {
+          if (res?.broadcast?.data?.length) {
             res.broadcast.data.forEach(actuality => {
               actualities.push(this.parseActuality(actuality));
             });
@@ -219,11 +224,11 @@ export class FpmaApiService {
         }),);
   }
 
-  public loadActualityById(id: number): Observable<Actualities> {
-    return this.http.get(`${this.FPMA_DOMAIN}api/broadcasts/${id}`)
+  public loadActualityById(id: number): Observable<Actualities | null> {
+    return this.http.get<APIResponse<'broadcast', RawBroadcast>>(`${this.FPMA_DOMAIN}api/broadcasts/${id}`)
       .pipe(
-        map((res: any) => {
-          if (res && res.broadcast && res.broadcast.data) {
+        map(res => {
+          if (res?.broadcast?.data) {
             return this.parseActuality(res.broadcast.data);
           }
           return null;
@@ -231,7 +236,7 @@ export class FpmaApiService {
       );
   }
 
-  private parseActuality(elem: any): Actualities {
+  private parseActuality(elem: RawBroadcast): Actualities {
     return {
           title: elem.title,
           created: DateHelper.getDate(elem.created),
@@ -250,15 +255,15 @@ export class FpmaApiService {
         'dev-mode':  ''
       })
     } : {};
-    return this.http.get(`${this.FPMA_DOMAIN}api/presentations`, httpOptions)
+    return this.http.get<APIResponse<'presentations', RawPresentation[]>>(`${this.FPMA_DOMAIN}api/presentations`, httpOptions)
       .pipe(
-        map((res: any) => this.parsePresentations(res)),
+        map(res => this.parsePresentations(res)),
         );
   }
 
-  private parsePresentations(elem: any): Presentation[] {
+  private parsePresentations(elem: APIResponse<'presentations', RawPresentation[]>): Presentation[] {
     const presentations: Presentation[] = [];
-    if (elem && elem.presentations && elem.presentations.data && elem.presentations.data.length) {
+    if (elem?.presentations?.data?.length) {
       elem.presentations.data.forEach(presentation => {
         presentations.push({
           title: presentation.title,
@@ -279,9 +284,9 @@ export class FpmaApiService {
         'dev-mode':  ''
       })
     } : {};
-    return this.http.get(`${this.FPMA_DOMAIN}api/stk-news`, httpOptions)
+    return this.http.get<APIResponse<"news", any[]>>(`${this.FPMA_DOMAIN}api/stk-news`, httpOptions)
       .pipe(
-        map((res: any) => this.parseStkNews(res)),
+        map(res => this.parseStkNews(res)),
 
     );
   }
@@ -294,22 +299,22 @@ export class FpmaApiService {
       params : new HttpParams().set('start' , start)
     } : { params : new HttpParams().set('start' , start)};
 
-    return this.http.get(`${this.FPMA_DOMAIN}api/stk-news`, httpOptions)
+    return this.http.get<APIResponse<'news', any[]>>(`${this.FPMA_DOMAIN}api/stk-news`, httpOptions)
       .pipe(
-        map((res: any) => this.parseStkNews(res)),
+        map(res => this.parseStkNews(res)),
       );
   }
 
-  private parseStkNews(elem: any): StkNews[] { // API-V2 OK
+  private parseStkNews(elem: APIResponse<'news', any[]>): StkNews[] { // API-V2 OK
     const news: StkNews[] = [];
-    if (elem && elem.news && elem.news.data && elem.news.data.length > 0) {
-      const newsElem: any[] = elem.news.data;
+    if (elem?.news?.data?.length > 0) {
+      const newsElem = elem.news.data;
       newsElem.forEach( newElem => {
         news.push({
           id: Number(newElem.id),
           title: newElem.title,
           thumbnails: newElem.thumbnails,
-          pdf: newElem.files && newElem.files.length > 0 ? `${newElem.files[0]}` : ''
+          pdf: newElem?.files?.[0]?.toString() ?? ''
         });
       });
     }
@@ -320,13 +325,13 @@ export class FpmaApiService {
    * Method that retrieve list of live sections from the stk.fpma api
    */
   public loadLiveSections(): Observable<LiveSection[]> {
-    return this.http.get(`${this.FPMA_DOMAIN}api/live-sections`)
+    return this.http.get<APIResponse<'live-sections', RawLiveSection[]>>(`${this.FPMA_DOMAIN}api/live-sections`)
       .pipe(
-        map((res: any) => this.parseLiveSections(res)),
+        map(res => this.parseLiveSections(res)),
         );
   }
 
-  private parseLiveSections(elem: any): LiveSection[] {
+  private parseLiveSections(elem: APIResponse<'live-sections', RawLiveSection[]>): LiveSection[] {
     const liveSections: LiveSection[] = [];
     if (elem?.['live-sections']?.data?.length) {
       elem['live-sections'].data.forEach(liveSection => {
@@ -345,15 +350,15 @@ export class FpmaApiService {
         'dev-mode': ''
       })
     } : {};
-    return this.http.get(`${this.FPMA_DOMAIN}api/posts/category/${category}`, httpOptions)
+    return this.http.get<APIResponse<'posts', RawGenericPost[]>>(`${this.FPMA_DOMAIN}api/posts/category/${category}`, httpOptions)
       .pipe(
-        map((res: any) => this.parseGenericPosts(res)),
+        map(res => this.parseGenericPosts(res)),
         );
   }
 
-  private parseGenericPosts(elem: any): GenericPost[] {
+  private parseGenericPosts(elem: APIResponse<'posts', RawGenericPost[]>): GenericPost[] {
     const posts: GenericPost[] = [];
-    if (elem && elem.posts && elem.posts.data && elem.posts.data.length) {
+    if (elem?.posts?.data?.length) {
       elem.posts.data.forEach(post => {
         posts.push({
           title: post.title,
@@ -368,7 +373,7 @@ export class FpmaApiService {
     return posts;
   }
 
-  private parseThumbnailUrl(thumbnailUrl: any): string {
+  private parseThumbnailUrl(thumbnailUrl: string): string {
     if (thumbnailUrl) {
       if (thumbnailUrl.startsWith('http')) {
         return thumbnailUrl;
@@ -376,24 +381,24 @@ export class FpmaApiService {
         return `${this.FPMA_DOMAIN}${thumbnailUrl}`;
       }
     } else {
-      return null;
+      return '';
     }
   }
 
-  public getContentUpdated(lastVisitTimestamps: LastVisitTimestamps): Observable<LastVisitUpdates> {
+  public getContentUpdated(lastVisitTimestamps: LastVisitTimestamps): Observable<LastVisitUpdates | null> {
     const params = new HttpParams()
                       .set('broadcasts', lastVisitTimestamps.broadcasts.toString())
                       .set('events', lastVisitTimestamps.events.toString())
                       .set('news', lastVisitTimestamps.news.toString())
                       .set('partages', lastVisitTimestamps.partages.toString());
-    return this.http.get(`${this.FPMA_DOMAIN}api/content-updates`, { params })
+    return this.http.get<APIResponse<'content-updates', RawContentUpdate>>(`${this.FPMA_DOMAIN}api/content-updates`, { params })
       .pipe(
-        map((res: any) => this.parseContentUpdates(res)),
+        map(res => this.parseContentUpdates(res)),
         );
   }
 
-  private parseContentUpdates(data: any): LastVisitUpdates {
-    const contentUpdated = data ? data['content-updates'] : null;
+  private parseContentUpdates(data: APIResponse<'content-updates', RawContentUpdate>): LastVisitUpdates | null {
+    const contentUpdated = data?.['content-updates'] ?? null;
     if ( contentUpdated && contentUpdated.data) {
       return {
         broadcasts: contentUpdated.data.broadcasts,
@@ -414,3 +419,47 @@ export class FpmaApiService {
     this.isDevMode = false;
   }
 }
+
+export type APIResponse<Name extends string, Data> = { [k in Name]: APIResponseInner<Data> };
+export type APIResponseInner<T> = { code: number; data: T; };
+
+interface RawPartage {
+  created: string;
+  fulltext: string;
+  introtext: string;
+  rawtext: string;
+  thumbnails: string;
+  title: string;
+};
+
+type RawBroadcast = RawPartage;
+type RawPresentation = RawPartage;
+type RawGenericPost = RawPartage;
+interface RawEvent {
+  created: string;
+  desc: string;
+  /** ISO Date yyyy-MM-dd HH:mm:ss */
+  enddate: string;
+  id: string | null;
+  /** URL */
+  image: string;
+  rawDesc: string;
+  /** ISO Date yyyy-MM-dd HH:mm:ss */
+  startdate: string;
+  tags: string[];
+  title: string;
+}
+interface RawLiveSection {
+  category: number;
+  description: string;
+  isDevModeOnly: boolean;
+  /** HEX color */
+  themeColor: string;
+  /** image URL */
+  themeIcon: string;
+  title: string;
+  type: string;
+}
+
+export type RawContentUpdate = Record<'broadcasts' | 'events' | 'news' | 'partages', number>;
+

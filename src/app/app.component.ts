@@ -4,11 +4,12 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { FpmaApiService } from './services/fpma-api.service';
 import { ContentUpdateService } from './services/content-update.service';
-import { LastVisitTimestamps } from './models/lastVisitTimestamps.interface';
+import { LastVisitTimestamps, LastVisitUpdates } from './models/lastVisitTimestamps.interface';
 import { Storage } from '@ionic/storage';
 import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx';
 import { OneSignal } from '@ionic-native/onesignal/ngx';
 import { Router, NavigationExtras } from '@angular/router';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -58,7 +59,9 @@ export class AppComponent {
   checkNbUpdatedContent() {
     this.storage.get('lastVisitTimestamp').then((val: LastVisitTimestamps) => {
       if (val) {
-        this.fpmaService.getContentUpdated(val).subscribe(contentUpdated => {
+        this.fpmaService.getContentUpdated(val).pipe(
+          filter((timestamps): timestamps is LastVisitUpdates => !!timestamps),
+        ).subscribe(contentUpdated => {
           this.contentUpdateService.initNbUpdated(contentUpdated);
         });
       } else {
@@ -92,7 +95,7 @@ export class AppComponent {
       // Redirige vers le détail de l'article selon sa catégorie
       // On reutilise les tabs de details de chaque catégorie, en passant comme seul element l'article pour le slider
 
-      const { section, id } = data.notification.payload.additionalData;
+      const { section, id } = data.notification.payload?.additionalData;
 
       if (section && id && !isNaN(parseInt(id))) {
         switch (section) {
@@ -140,7 +143,7 @@ export class AppComponent {
 
       // Si on clique sur le back button depuis la page d'accueil, on ferme l'application
       if (url === '/tabs/home') {
-        navigator['app'].exitApp();
+        (navigator as any)['app'].exitApp();
       }
       // Si on clique sur la back button depuis une page de catégorie située au même niveau
       // que la page d'accueil, on revient sur la page d'accueil (ex : /tabs/{rootCategory}, /(profile|profile))

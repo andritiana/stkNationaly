@@ -5,9 +5,9 @@
 </ion-header>
 <ion-content [fullscreen]="true">
   <mystk-page-title>Présentation</mystk-page-title>
-  <img *ngIf='presentation.thumbnail' [src]="presentation.thumbnail"/>
+  <img *ngIf='presentation?.thumbnail' [src]="presentation?.thumbnail"/>
   <div class='article-content'>
-    <h3>{{presentation.title}}</h3>
-    <div [innerHTML]="presentation.text"></div>
+    <h3>{{presentation?.title}}</h3>
+    <div [innerHTML]="presentation?.text"></div>
   </div>
 </ion-content>

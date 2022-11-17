@@ -4,7 +4,7 @@ import { FpmaApiService } from '../services/fpma-api.service';
 import { Router, NavigationExtras } from '@angular/router';
 import { ContentUpdateService } from '../services/content-update.service';
 import { finalize, tap } from 'rxjs/operators';
-import { RefresherEventDetail } from '@ionic/core';
+import { IonRefresherCustomEvent, RefresherEventDetail } from '@ionic/core';
 
 @Component({
   selector: 'app-stk-news',
@@ -13,7 +13,7 @@ import { RefresherEventDetail } from '@ionic/core';
 })
 export class StkNewsTabPage {
 
-  public listOfStkNews: StkNews[];
+  public listOfStkNews: StkNews[] = [];
   public pdfToDisplay: string | null = null;
   public start = 0;
 
@@ -33,7 +33,7 @@ export class StkNewsTabPage {
     );
   }
 
-  public loadNewStkNews(event){
+  public loadNewStkNews(event: IonRefresherCustomEvent<void>){
       this.start += 10;
       this.fpmaApiService.loadStkNewsWithStart(this.start.toString()).subscribe((listOfStkNews: StkNews[]) =>{
         if (listOfStkNews.length == 0) {

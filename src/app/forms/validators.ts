@@ -11,7 +11,7 @@ export function sameValidator(
       );
     } else if (control instanceof UntypedFormGroup || control instanceof FormGroup) {
       const [value1, value2] = [controlPath1, controlPath2].map(
-        (path) => control.get(path).value
+        (path) => control.get(path)?.value
       );
       if (value1 === value2) {
         return null;
@@ -20,6 +20,8 @@ export function sameValidator(
           same: true,
         };
       }
+    } else {
+      return null;
     }
   };
 }

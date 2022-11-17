@@ -7,7 +7,7 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { EMPTY, Observable, throwError } from 'rxjs';
+import { EMPTY, from, Observable, throwError } from 'rxjs';
 import { catchError, isEmpty, switchMap, take, tap } from 'rxjs/operators';
 import { AuthService } from '../auth.service';
 
@@ -48,7 +48,7 @@ export class AuthExpirationInterceptor implements HttpInterceptor {
                   take(1),
                   switchMap((isExpired) => {
                     if (wontRefresh && isExpired) {
-                      return this.authService.logOut(true);
+                      return from(this.authService.logOut(true)).pipe(switchMap(() => EMPTY));
                     } else {
                       return next.handle(request);
                     }

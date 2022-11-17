@@ -10,10 +10,10 @@ import { DateHelper } from 'src/app/utils/date-helper';
 })
 export class LiveSectionDetailsPagePage {
 
-  public sectionTitle: string;
-  public posts: GenericPost[];
+  public sectionTitle: string = '';
+  public posts: GenericPost[] = [];
   public DateHelper = DateHelper;
-  public postId: number;
+  public postId?: number;
   public loading = true;
   public slideOpts = {
     initialSlide: 1,
@@ -26,11 +26,12 @@ export class LiveSectionDetailsPagePage {
     private router: Router
   ) {
     this.route.queryParams.subscribe(params => {
-      if (this.router.getCurrentNavigation().extras.state) {
-        this.sectionTitle = this.router.getCurrentNavigation().extras.state.sectionTitle;
-        this.posts = this.router.getCurrentNavigation().extras.state.posts;
-        this.postId = this.router.getCurrentNavigation().extras.state.id;
-        this.slideOpts.initialSlide = this.postId;
+      if (this.router.getCurrentNavigation()?.extras.state) {
+        const navState = this.router.getCurrentNavigation()!.extras.state!;
+        this.sectionTitle = navState.sectionTitle;
+        this.posts = navState.posts;
+        this.postId = navState.id;
+        this.slideOpts.initialSlide = this.postId ?? this.slideOpts.initialSlide;
       }
     });
   }

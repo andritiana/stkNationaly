@@ -17,7 +17,7 @@ interface LoginForm {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent implements OnInit {
-  loginForm: FormGroup<LoginForm>;
+  loginForm!: FormGroup<LoginForm>;
 
   constructor(
     private authService: AuthService,
@@ -27,8 +27,8 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
-      login: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required, Validators.minLength(5)]),
+      login: new FormControl('', {validators: [Validators.required], nonNullable: true}),
+      password: new FormControl('', {validators: [Validators.required, Validators.minLength(5)], nonNullable: true}),
     })
   }
 
@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
     }
     const { login, password } = this.loginForm.value;
     this.authService
-      .logIn(login, password)
+      .logIn(login!, password!)
       .pipe(
         switchMap(() => this.router.navigate(['/profile'], { replaceUrl: true })),
         tap({

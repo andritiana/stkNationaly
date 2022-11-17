@@ -6,7 +6,7 @@
   <h1 class="badge-person-name">{{badgeView.fullName}}</h1>
   <h2 class="badge-person-location">{{badgeView.location.tafo}}</h2>
   <ul class="badge-person-responsabilities-list"
-      *ngIf="badgeView.responsabilities.length > 0">
+      *ngIf="(badgeView.responsabilities.length ?? -1) > 0">
     <!-- <ion-chip class="badge-person-responsabilities-item"
               *ngFor="let responsability of badgeView.responsabilities">
       <ion-label>{{responsability}}</ion-label>
@@ -18,7 +18,7 @@
   </ul>
 </div>
 <ul class="badge-group-list"
-    *ngIf="badgeView.groups.length > 0">
+    *ngIf="(badgeView.groups.length ?? -1) > 0">
   <ion-chip class="badge-group-list-item"
             role="listitem"
             color="warning"
@@ -29,17 +29,18 @@
 <div class="badge-meals"
      *ngIf="badgeView.meals">
   <ion-icon src="/assets/icon/icon-meal.svg"
-            class="badge-icon"></ion-icon><span class="badge-meals-taken">{{badgeView.meals.total -
-    badgeView.meals.remaining}}</span> / {{badgeView.meals.total}}
+            class="badge-icon"></ion-icon><span class="badge-meals-taken">{{
+              badgeView.meals ? (badgeView.meals!.total - badgeView.meals!.remaining) : 0
+            }}</span> / {{badgeView.meals.total}}
 </div>
 <div class="badge-room">
   <ion-icon src="/assets/icon/icon-room.svg"
             class="badge-icon"></ion-icon>
   <div class="badge-room-inner">
     <div class="badge-room-building">Bâtiment&nbsp;<span
-            class="badge-room-building-value">{{badgeView.room.building}}</span></div>
-    <span class="badge-room-floor">{{badgeView.room.floor}}</span>
-    <div class="badge-room-id">Chambre&nbsp;<span class="badge-room-id-value">{{badgeView.room.id}}</span></div>
+            class="badge-room-building-value">{{badgeView.room?.building ?? ''}}</span></div>
+    <span class="badge-room-floor">{{badgeView.room?.floor ?? ''}}</span>
+    <div class="badge-room-id">Chambre&nbsp;<span class="badge-room-id-value">{{badgeView.room?.id ?? ''}}</span></div>
   </div>
   <!-- <ion-icon src="/assets/icon/icon-room.svg"
             class="badge-icon"></ion-icon><span class="badge-room-id">{{badgeView.room}}</span> -->

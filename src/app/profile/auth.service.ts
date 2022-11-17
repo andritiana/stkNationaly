@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { JwtConfig, JwtHelperService } from '@auth0/angular-jwt';
 import { Storage } from '@ionic/storage';
 import { differenceInMinutes } from 'date-fns/esm';
-import { BehaviorSubject, combineLatest, EMPTY, forkJoin, Observable, of } from 'rxjs';
+import { BehaviorSubject, combineLatest, EMPTY, firstValueFrom, forkJoin, Observable, of } from 'rxjs';
 import { map, shareReplay, switchMap, take, tap } from 'rxjs/operators';
 
 const AUTH_STORAGE_KEY = 'auth_token';
@@ -45,7 +45,7 @@ export function jwtOptionsFactory(): JwtConfig {
     disallowedRoutes: [
       new RegExp(String.raw`/api/mystk/auth/.*`),
     ],
-    tokenGetter: () => accessToken$.pipe(take(1)).toPromise(),
+    tokenGetter: () => firstValueFrom(accessToken$.pipe(take(1))),
   };
 }
 
@@ -98,7 +98,7 @@ export class AuthService {
       )
     )
       .subscribe();
-    return redirect ? this.router.navigateByUrl('/') : Promise.resolve(null);
+    return redirect ? this.router.navigateByUrl('/') : Promise.resolve(false);
   }
 
   private invalidateRefreshToken() {
@@ -126,7 +126,7 @@ export class AuthService {
   shouldRefresh$() {
     return accessToken$.pipe(
       map(token => token
-          ? differenceInMinutes(this.jwtHelper.getTokenExpirationDate(token), new Date()) < 5
+          ? differenceInMinutes(this.jwtHelper.getTokenExpirationDate(token) ?? new Date(), new Date()) < 5
           : true
         ),
     )

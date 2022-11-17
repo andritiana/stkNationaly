@@ -10,8 +10,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 export class StkNewsPdfPage {
 
-  public pdf: string;
-  public pdfTitle: string;
+  public pdf = '';
+  public pdfTitle = '';
   public zoomTo = 1;
 
   constructor(
@@ -19,9 +19,10 @@ export class StkNewsPdfPage {
     private router: Router
   ){
     this.route.queryParams.subscribe(params => {
-      if (this.router.getCurrentNavigation().extras.state) {
-        this.pdf = this.router.getCurrentNavigation().extras.state.pdfUrl;
-        this.pdfTitle = this.router.getCurrentNavigation().extras.state.title;
+      if (this.router.getCurrentNavigation()?.extras.state) {
+        const navState = this.router.getCurrentNavigation()!.extras.state;
+        this.pdf = navState?.pdfUrl;
+        this.pdfTitle = navState?.title;
       }
     });
   }

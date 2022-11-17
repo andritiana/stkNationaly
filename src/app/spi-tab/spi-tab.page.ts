@@ -5,7 +5,7 @@ import { ArticleSpi } from '../models/article-spi.interface';
 import { DateHelper } from '../utils/date-helper';
 import { ContentUpdateService } from '../services/content-update.service';
 import { finalize, tap } from 'rxjs/operators';
-import { RefresherEventDetail } from '@ionic/core';
+import { IonRefresherCustomEvent, RefresherEventDetail } from '@ionic/core';
 
 @Component({
   selector: 'app-spi-tab',
@@ -14,7 +14,7 @@ import { RefresherEventDetail } from '@ionic/core';
 })
 export class SpiTabPage {
 
-  public partages: ArticleSpi[];
+  public partages: ArticleSpi[] = [];
   public DateHelper = DateHelper;
   public loading = true;
   private start = 0;
@@ -42,7 +42,7 @@ export class SpiTabPage {
     );
   }
 
-  public loadNewPartages(event){
+  public loadNewPartages(event: IonRefresherCustomEvent<void>){
       this.start += 10;
       this.fpmaApiService.loadPartageSpiWithStart(this.start.toString()).subscribe((partages: ArticleSpi[]) =>{
         if (partages.length == 0) {

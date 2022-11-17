@@ -49,7 +49,7 @@ export class ContentUpdateService {
     this.partageUpdateObservable.next(nbPartagesUpdated);
   }
 
-  public updateEpochTimeStored(content: string): void {
+  public updateEpochTimeStored(content: keyof LastVisitTimestamps): void {
     this.storage.get('lastVisitTimestamp').then((val: LastVisitTimestamps) => {
         let contentsEpochTime: LastVisitTimestamps;
         contentsEpochTime = val;
@@ -60,7 +60,7 @@ export class ContentUpdateService {
     });
   }
 
-  public resetNbUpdated(content: string) {
+  public resetNbUpdated(content: keyof LastVisitTimestamps) {
     switch (content) {
       case 'broadcasts' : {
         this.updateBroadcastsNb(0);

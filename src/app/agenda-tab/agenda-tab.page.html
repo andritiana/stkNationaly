@@ -63,11 +63,11 @@
       [eventSource]="events"
       [currentDate]="calendar.currentDate"
       (onTitleChanged)="onViewTitleChanged($event)"
-      (onEventSelected)="onEventSelected($event)"
+      (onEventSelected)="onEventSelected($any($event))"
       noEventsLabel="Aucun évènement pour ce jour"
       [monthviewEventDetailTemplate]="monthviewEventDetailSTKTemplate"
       [monthviewDisplayEventTemplate]="monthviewDisplayEventSTKTemplate"
-      startingDayMonth="1"
+      [startingDayMonth]="1"
       >
       </calendar>
   </ng-template>

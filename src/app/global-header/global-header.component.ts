@@ -12,8 +12,8 @@ export class GlobalHeaderComponent implements OnInit {
   isDevMode$ = this.fpmaApiService.isDevMode$;
   devModeCounter = 0;
   private DEV_MODE_ACTIVATION_NUMBER = 4;
-  previousClickTimestamp: number;
-  @Input() defaultHref:string;
+  previousClickTimestamp?: number;
+  @Input() defaultHref = '../';
   constructor(
     private fpmaApiService: FpmaApiService,
     public alertController: AlertController

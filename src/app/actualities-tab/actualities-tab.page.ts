@@ -4,9 +4,10 @@ import { DateHelper } from '../utils/date-helper';
 import { FpmaApiService } from '../services/fpma-api.service';
 import { Router, NavigationExtras } from '@angular/router';
 import { ContentUpdateService } from '../services/content-update.service';
-import { RefresherEventDetail } from '@ionic/core';
+import { IonInfiniteScrollCustomEvent, RefresherEventDetail } from '@ionic/core';
 import { filter, startWith, switchMap, take, tap, multicast } from 'rxjs/operators';
 import { Observable, of, BehaviorSubject, Subject } from 'rxjs';
+import { IonInfiniteScroll } from '@ionic/angular';
 
 @Component({
   selector: 'app-actualities-tab',
@@ -15,13 +16,13 @@ import { Observable, of, BehaviorSubject, Subject } from 'rxjs';
 })
 export class ActualitiesTabPage {
 
-  actualities$: Observable<Actualities[]>;
+  actualities$!: Observable<Actualities[]>;
   public DateHelper = DateHelper;
   public loading = true;
   private actualityRefresher$ = new Subject<true | ActualitiesTabPage['NON_VALUE']>();
   private readonly NON_VALUE = Symbol();
   private start = 0;
-  private cachedActualities$: BehaviorSubject<Actualities[] | symbol>;
+  private cachedActualities$ = new BehaviorSubject<Actualities[] | symbol>(this.NON_VALUE);
 
   constructor(
     private fpmaApiService: FpmaApiService,
@@ -52,7 +53,7 @@ export class ActualitiesTabPage {
     );
   }
 
-  public loadNewActuality(event){
+  public loadNewActuality(event: IonInfiniteScrollCustomEvent<void>){
       this.start += 10;
       this.fpmaApiService.loadActualityWithStart(this.start.toString()).subscribe((actualities: Actualities[]) =>{
         if (actualities.length == 0) {
@@ -63,8 +64,7 @@ export class ActualitiesTabPage {
           this.cachedActualities$.next(actualities);
         }
         event.target.complete();
-      }, () => { }
-      );
+      });
   }
 
 

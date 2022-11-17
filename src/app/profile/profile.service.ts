@@ -81,7 +81,7 @@ class MySTKUnexpectedError extends Error {
     super(message);
   }
 
-  toString() {
+  override toString() {
     return `${this.name} : ${this.message}
     ${this.context}
 

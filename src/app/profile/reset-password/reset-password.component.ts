@@ -17,7 +17,7 @@ export class ResetPasswordComponent implements OnInit {
     private authService: AuthService,
     private actionSheetCtrl: ActionSheetController,
   ) {
-    this.emailControl = new FormControl('', [Validators.required, Validators.email]);
+    this.emailControl = new FormControl('', {validators: [Validators.required, Validators.email], nonNullable: true});
     this.form = new FormGroup({
       email: this.emailControl,
     });

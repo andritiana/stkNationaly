@@ -8,7 +8,7 @@ import { Actualities } from '../models/actuality.interface';
 import { StkNews } from '../models/stk-news.interface';
 import { LastVisitTimestamps, LastVisitUpdates } from '../models/lastVisitTimestamps.interface';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError } from 'rxjs';
 import { LiveSection } from '../models/live-section.interface';
 import { GenericPost } from '../models/generic-post.interface';
 
@@ -92,9 +92,7 @@ export class FpmaApiService {
           }
           return null;
         }),
-        catchError((e: any) => {
-          return Observable.throw(e);
-        }));
+      );
   }
 
   private parseEvent(elem: any): AgendaEvent {
@@ -165,9 +163,7 @@ export class FpmaApiService {
           }
           return null;
         }),
-        catchError((e: any) => {
-          return Observable.throw(e);
-        }));
+      );
   }
 
   private parsePartage(elem: any): ArticleSpi {
@@ -232,9 +228,7 @@ export class FpmaApiService {
           }
           return null;
         }),
-        catchError((e: any) => {
-          return Observable.throw(e);
-        }));
+      );
   }
 
   private parseActuality(elem: any): Actualities {
@@ -303,9 +297,7 @@ export class FpmaApiService {
     return this.http.get(`${this.FPMA_DOMAIN}api/stk-news`, httpOptions)
       .pipe(
         map((res: any) => this.parseStkNews(res)),
-        catchError((e: any) => {
-          return Observable.throw(e);
-      }));
+      );
   }
 
   private parseStkNews(elem: any): StkNews[] { // API-V2 OK

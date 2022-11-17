@@ -5,7 +5,7 @@ import { FpmaApiService } from '../services/fpma-api.service';
 import { Router, NavigationExtras } from '@angular/router';
 import { ContentUpdateService } from '../services/content-update.service';
 import { RefresherEventDetail } from '@ionic/core';
-import { filter, shareReplay, startWith, switchMap, take, tap, multicast } from 'rxjs/operators';
+import { filter, startWith, switchMap, take, tap, multicast } from 'rxjs/operators';
 import { Observable, of, BehaviorSubject, Subject } from 'rxjs';
 
 @Component({

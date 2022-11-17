@@ -18,19 +18,19 @@ import { AuthExpirationInterceptor } from './profile/auth/auth-expiration.interc
 @NgModule({
     declarations: [AppComponent],
     imports: [
-        BrowserModule,
-        IonicModule.forRoot({
-            animated: true,
-        }),
-        AppRoutingModule,
-        HttpClientModule,
-        JwtModule.forRoot({
-            jwtOptionsProvider: {
-                provide: JWT_OPTIONS,
-                useFactory: jwtOptionsFactory,
-            }
-        }),
-        IonicStorageModule.forRoot(),
+      BrowserModule,
+      IonicModule.forRoot({
+          animated: true,
+      }),
+      AppRoutingModule,
+      HttpClientModule,
+      JwtModule.forRoot({
+          jwtOptionsProvider: {
+              provide: JWT_OPTIONS,
+              useFactory: jwtOptionsFactory,
+          }
+      }),
+      IonicStorageModule.forRoot(),
     ],
     providers: [
         StatusBar,

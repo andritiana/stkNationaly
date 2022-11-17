@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, flatMap, catchError } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
+import { Observable } from 'rxjs';
 import { Verse } from '../models/verse.interface';
-import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable({
     providedIn: 'root',
@@ -22,9 +22,7 @@ export class VerseService {
         return this.http.get(`${this.FPMA_DOMAIN}api/votd`)
         .pipe(
             map((res: any) => this.parseVerse(res)),
-            catchError((e: any) => {
-            return Observable.throw(e);
-        }));
+            );
     }
 
     private parseVerse(res: any): Verse {

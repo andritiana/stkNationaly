@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { LastVisitUpdates, LastVisitTimestamps } from '../models/lastVisitTimestamps.interface';
 import { Storage } from '@ionic/storage';
-import { Subject } from 'rxjs/internal/Subject';
-import { Observable } from 'rxjs/internal/Observable';
+import { Observable, Subject } from 'rxjs';
+import { LastVisitTimestamps, LastVisitUpdates } from '../models/lastVisitTimestamps.interface';
 
 @Injectable({
   providedIn: 'root',

@@ -5,10 +5,10 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <mystk-page-title>Actualités</mystk-page-title>
   <ion-slides pager="false" [options]="slideOpts" (ionSlideDidChange)="ionSlideDidChange()">
     <ion-slide *ngFor="let actuality of actualities; let i = index">
       <div class="swipe-content">
+        <mystk-page-title>Actualités</mystk-page-title>
           <div class="article-container">
             <img *ngIf="!!actuality.thumbnail" [src]="actuality.thumbnail"/>
             <div [ngClass]="['article-content', 'article-pos-' + i]">

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { JwtConfig, JwtHelperService } from '@auth0/angular-jwt';
-import { Storage } from '@ionic/storage';
+import { Storage } from '@ionic/storage-angular';
 import { differenceInMinutes } from 'date-fns/esm';
 import { BehaviorSubject, combineLatest, EMPTY, firstValueFrom, forkJoin, Observable, of } from 'rxjs';
 import { map, shareReplay, switchMap, take, tap } from 'rxjs/operators';

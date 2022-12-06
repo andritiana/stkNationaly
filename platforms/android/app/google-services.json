@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "974013671728",
+    "firebase_url": "https://stk-national.firebaseio.com",
+    "project_id": "stk-national",
+    "storage_bucket": "stk-national.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:974013671728:android:f82e9f8384b56cdb3500f5",
+        "android_client_info": {
+          "package_name": "com.stknational.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "974013671728-963uq4hjckv91obqte9v3doirjh674o2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-Im4PiO3WMGJMZAU-m0KKsqum0XKHWnM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "974013671728-963uq4hjckv91obqte9v3doirjh674o2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "974013671728-ne30rsgrqe7t94pnmsk6eoovot4suunr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.stknational.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

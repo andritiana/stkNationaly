@@ -5,7 +5,7 @@ import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
 import { FpmaApiService } from './services/fpma-api.service';
 import { ContentUpdateService } from './services/content-update.service';
 import type { LastVisitTimestamps, LastVisitUpdates } from './models/lastVisitTimestamps.interface';
-import { Storage } from '@ionic/storage-angular';
+import { StorageService } from './utils/storage.service';
 import { FirebaseAnalytics } from '@awesome-cordova-plugins/firebase-analytics/ngx';
 import OneSignal from 'onesignal-cordova-plugin';
 import type { NavigationExtras } from '@angular/router';
@@ -27,7 +27,7 @@ export class AppComponent {
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    private storage: Storage,
+    private storage: StorageService,
     private fpmaService: FpmaApiService,
     private contentUpdateService: ContentUpdateService,
     private firebaseAnalytics: FirebaseAnalytics,

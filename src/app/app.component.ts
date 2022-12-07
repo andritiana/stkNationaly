@@ -1,5 +1,5 @@
 import { Component, HostBinding, NgZone } from '@angular/core';
-import { Platform } from '@ionic/angular';
+import { ActionSheetController, Platform, ToastController } from '@ionic/angular';
 import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
 import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
 import { FpmaApiService } from './services/fpma-api.service';
@@ -10,9 +10,23 @@ import { FirebaseAnalytics } from '@awesome-cordova-plugins/firebase-analytics/n
 import OneSignal from 'onesignal-cordova-plugin';
 import type { NavigationExtras } from '@angular/router';
 import { Router } from '@angular/router';
-import type { Observable} from 'rxjs';
+import { combineLatest, concat, distinctUntilChanged, iif, Observable} from 'rxjs';
 import { bindCallback, EMPTY, filter, from, map, of, switchMap, tap, throwError } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { differenceInBusinessDays } from 'date-fns/esm';
+
+const enum NotificationPermissionStatus {
+  /** The user hasn't yet made a choice about whether the app is allowed to schedule notifications. */
+  not_determined = 0,
+  /**	The application is not authorized to post user notifications. */
+  denied = 1,
+  /**	The application is authorized to post user notifications. */
+  authorized = 2,
+  /**	The application is provisionally authorized to post noninterruptive user notifications. See iOS Customizations */
+  provisional = 3,
+  /** For App Clips. The app is authorized to schedule or receive notifications for a limited amount of time */
+  ephemeral = 4,
+};
 
 @UntilDestroy()
 @Component({
@@ -33,6 +47,8 @@ export class AppComponent {
     private firebaseAnalytics: FirebaseAnalytics,
     private router: Router,
     private zone: NgZone,
+    private actionSheetCtrl: ActionSheetController,
+    private toastCtrl: ToastController,
   ) {
     void this.initializeApp();
   }
@@ -46,9 +62,11 @@ export class AppComponent {
         .catch((error: any) => console.error(error));
       if (this.platform.is('cordova')) {
         this.setupPushNotifications();
+        this.logSubscriptionState();
+        this.promptForNotificationPermission();
       }
 
-      this.checkNbUpdatedContent();
+      this.checkNbUpdatedContent().pipe(untilDestroyed(this)).subscribe();
 
       // Spécifique à Android : ferme l'application lorsque l'on clique sur le back button
       this.handleAndroidBackButton();
@@ -59,8 +77,100 @@ export class AppComponent {
     });
   }
 
-  private checkNbUpdatedContent(): Observable<unknown> {
-    return from(this.storage.get('lastVisitTimestamp')).pipe(
+  private promptForNotificationPermission() {
+    return combineLatest([
+      bindCallback(OneSignal.getDeviceState.bind(OneSignal))(),
+      from(this.storage.get<Date>('lastPromptDate')),
+    ])
+      .pipe(
+        map(([deviceState, lastPrompt]) => {
+          if (deviceState.hasNotificationPermission) {
+            return false;
+          }
+          if (deviceState.notificationPermissionStatus === NotificationPermissionStatus.denied) {
+            return isLastPromptOlderThan(13);
+          }
+          return isLastPromptOlderThan(6);
+
+          function isLastPromptOlderThan(days: number) {
+            if (lastPrompt) {
+              const daysSinceLastPrompt = differenceInBusinessDays(new Date(), lastPrompt);
+              if (daysSinceLastPrompt > days) {
+                return true;
+              } else {
+                return false;
+              }
+            }
+            return true;
+          }
+        }),
+        switchMap((doPromptCustom) => doPromptCustom
+          ? this.actionSheetCtrl
+            .create({
+              header: 'Pour rester au courant des derniers évènements et publications de MySTK, nous avons besoin de ton autorisation pour envoyer des notifications',
+              subHeader: "Tu pourras autoriser les notifications via l'invite qui apparaîtra.",
+              buttons: [
+                {
+                  role: 'destructive',
+                  text: 'Autoriser',
+                  data: true,
+                },
+                {
+                  role: 'cancel',
+                  text: 'Annuler',
+                  data: false,
+                },
+              ],
+            })
+            .then(async (actionSheet) => {
+              await actionSheet.present();
+              return actionSheet.onDidDismiss().then(({ data }) => data as boolean);
+            })
+          : of(false)
+        ),
+        switchMap((promptForPermission) => {
+          if (promptForPermission) {
+            return new Promise((resolve) => OneSignal.promptForPushNotificationsWithUserResponse(true, (grant) => resolve(grant))
+            ).then((permissionGranted) => {
+              if (permissionGranted) {
+                return this.toastCtrl
+                  .create({
+                    message: 'Cool ! Tu seras notifié quand des nouvelles publications dans MySTK',
+                    buttons: [{ role: 'cancel', text: 'OK' }],
+                    duration: 3000,
+                  })
+                  .then(async (toast) => toast.present());
+              }
+              return void 0;
+            });
+          } else {
+            return EMPTY;
+          }
+        }),
+        untilDestroyed(this)
+      )
+      .subscribe(() => {
+        void this.storage.set('lastPromptDate', new Date());
+      });
+  }
+
+  private logSubscriptionState() {
+    this.fpmaService.isDevMode$.pipe(
+      distinctUntilChanged(),
+      switchMap(isDevMode => isDevMode
+        ? concat(bindCallback(OneSignal.getDeviceState.bind(OneSignal))(), bindCallback(OneSignal.addSubscriptionObserver.bind(OneSignal))())
+        : (OneSignal.addSubscriptionObserver(() => void 0), EMPTY)
+      ),
+      untilDestroyed(this)
+    ).subscribe(event => {
+      console.group('Push messaging\'s subscription state');
+      console.table(event);
+      console.groupEnd();
+    });
+  }
+
+  private checkNbUpdatedContent(): Observable<LastVisitUpdates> {
+    return from(this.storage.get<LastVisitTimestamps>('lastVisitTimestamp')).pipe(
       switchMap((val: LastVisitTimestamps) => {
         if (val) {
           return this.fpmaService.getContentUpdated(val).pipe(
@@ -90,7 +200,7 @@ export class AppComponent {
     // Si l'application est deja ouverte
     // on force le rafraichissement du nombre de contenus mis a jour, comme si on venait de lancer l'application
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    bindCallback(OneSignal.setNotificationWillShowInForegroundHandler)().pipe(
+    bindCallback(OneSignal.setNotificationWillShowInForegroundHandler.bind(OneSignal))().pipe(
       switchMap(event =>
           this.checkNbUpdatedContent().pipe(map(() => event)),
       ),
@@ -101,11 +211,10 @@ export class AppComponent {
       );
 
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    bindCallback(OneSignal.setNotificationOpenedHandler)().pipe(
+    bindCallback(OneSignal.setNotificationOpenedHandler.bind(OneSignal))().pipe(
       switchMap(data => {
       // Redirige vers le détail de l'article selon sa catégorie
       // On reutilise les tabs de details de chaque catégorie, en passant comme seul element l'article pour le slider
-
       const { section, id } = data.notification.additionalData as {section: string; id: number};
 
       if (section && id && !isNaN(parseInt(id as unknown as string))) {

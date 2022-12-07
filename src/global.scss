@@ -95,10 +95,15 @@ app-agenda-details ion-header ion-back-button.hydrated {
   }
 
 
-.my-pop-up {
-  .alert-wrapper{
-      background-color: white;
-  }
+// .my-pop-up {
+//   .alert-wrapper{
+//       background-color: white;
+//   }
+// }
+
+// TODO when dark mode is handled : delete
+ion-item {
+  --ion-item-background: #f8f8f8;
 }
 
 /*agenda*/
@@ -130,7 +135,8 @@ app-agenda-details ion-header ion-back-button.hydrated {
 }
 
 /* Inputs */
-.item.sc-ion-label-md-h, .item .sc-ion-label-md-h {
+// TODO when dark mode is handled : delete
+.item-label .label-floating {
   --color: rgba(26, 51, 143, 0.5);
 }
 

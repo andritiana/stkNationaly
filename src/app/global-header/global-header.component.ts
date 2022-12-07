@@ -37,7 +37,7 @@ export class GlobalHeaderComponent implements OnInit {
     }
   }
 
-  async presentAlertConfirm() {
+  presentAlertConfirm() {
      this.alertController.create({
       cssClass: 'my-pop-up',
       header: 'Dev Mode',

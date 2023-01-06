@@ -5,7 +5,6 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <mystk-page-title>Évènement</mystk-page-title>
   <ion-spinner *ngIf="loading; else eventContent" name="dots"pager="true"></ion-spinner>
 
 
@@ -13,6 +12,7 @@
     <ion-slides pager="false" [options]="slideOpts">
       <ion-slide *ngFor="let event of events">
         <div class="swipe-content">
+          <mystk-page-title>Évènement</mystk-page-title>
           <div class="article-container">
             <div class='article-content'>
               <h3>{{event.title}} </h3>

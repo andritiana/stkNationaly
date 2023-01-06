@@ -5,10 +5,10 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <mystk-page-title>Spi</mystk-page-title>
   <ion-slides pager="false" [options]="slideOpts" (ionSlideDidChange)="ionSlideDidChange()">
     <ion-slide *ngFor="let partage of partages; let index = index;">
         <div class="swipe-content">
+            <mystk-page-title>Spi</mystk-page-title>
             <div class="article-container">
               <img [src]="partage.thumbnail"/>
               <div [ngClass]="['article-content', 'article-pos-' + index]">

@@ -11,9 +11,9 @@
       "parserOptions": {
         "emitDecoratorMetadata": true,
         "project": [
-          "tsconfig.app.json"
+          "tsconfig.(app|spec).json"
         ],
-        "createDefaultProgram": true
+        "createDefaultProgram": false
       },
       "plugins": [
         "rxjs",

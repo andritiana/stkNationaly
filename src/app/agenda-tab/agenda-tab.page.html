@@ -49,7 +49,7 @@
       </ng-template>
 
       <ng-template #monthviewDisplayEventSTKTemplate let-view="view" let-row="row" let-col="col">
-        <div [class.with-event]="view.dates[row*7+col].events.length">
+        <div [class.with-event]="view.dates[row*7+col].hasEvent">
           {{view.dates[row*7+col].label}}
           <div class="indicator-container">
             <div class="event-indicator" *ngFor="let e of view.dates[row*7+col].events"></div>

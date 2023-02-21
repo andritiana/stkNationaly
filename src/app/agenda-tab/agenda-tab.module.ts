@@ -9,6 +9,7 @@ import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import { AgendaDetailsPage } from './agenda-details-page/agenda-details.page';
 import { GlobalHeaderModule } from '../global-header/global-header.module';
+import { DecodeHtmlEntitiesModule } from '../utils/html-entities/decode-html-entities.module';
 registerLocaleData(localeFr, 'fr-FR');
 
 @NgModule({
@@ -19,6 +20,7 @@ registerLocaleData(localeFr, 'fr-FR');
     AgendaTabPageRoutingModule,
     NgCalendarModule,
     GlobalHeaderModule,
+    DecodeHtmlEntitiesModule
   ],
   declarations: [AgendaTabPage, AgendaDetailsPage]
 })

@@ -40,7 +40,7 @@
              </span>
            </ng-template>
            <span *ngIf="event.allDay" class="monthview-eventdetail-timecolumn">Toute la journée</span>
-           <span class="event-detail"> {{event.title}}</span>
+           <span class="event-detail"> {{event.title | decodeHtmlEntities}}</span>
           </div>
           <div class="no-events-label" *ngIf="selectedDate?.events.length==0">
             <span>{{noEventsLabel}}</span>

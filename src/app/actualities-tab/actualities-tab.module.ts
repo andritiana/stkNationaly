@@ -7,6 +7,7 @@ import { ActualitiesTabPageRoutingModule } from './actualities-tab-routing.modul
 import { ActualityDetailsPage } from './actuality-details-page/actuality-details.page';
 import { GlobalHeaderModule } from '../global-header/global-header.module';
 import { ArticleEmbeddingIframeComponentModule } from '../articles/article-embedding-iframe/article-embedding-iframe.module';
+import { DecodeHtmlEntitiesModule } from '../utils/html-entities/decode-html-entities.module';
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import { ArticleEmbeddingIframeComponentModule } from '../articles/article-embed
     ActualitiesTabPageRoutingModule,
     ArticleEmbeddingIframeComponentModule,
     GlobalHeaderModule,
+    DecodeHtmlEntitiesModule
   ],
   declarations: [ActualitiesTabPage, ActualityDetailsPage]
 })

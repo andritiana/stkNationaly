@@ -15,7 +15,7 @@
           <mystk-page-title>Évènement</mystk-page-title>
           <div class="article-container">
             <div class='article-content'>
-              <h3>{{event.title}} </h3>
+              <h3>{{event.title | decodeHtmlEntities}} </h3>
               <br>
               <div>
                 <span *ngIf="event.startTime.getTime() != event.endTime.getTime(); else uniqueDate">

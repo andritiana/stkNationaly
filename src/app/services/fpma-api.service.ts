@@ -299,19 +299,19 @@ export class FpmaApiService {
       params : new HttpParams().set('start' , start)
     } : { params : new HttpParams().set('start' , start)};
 
-    return this.http.get<APIResponse<'news', any[]>>(`${this.FPMA_DOMAIN}api/stk-news`, httpOptions)
+    return this.http.get<APIResponse<'news', RawNews[]>>(`${this.FPMA_DOMAIN}api/stk-news`, httpOptions)
       .pipe(
         map(res => this.parseStkNews(res)),
       );
   }
 
-  private parseStkNews(elem: APIResponse<'news', any[]>): StkNews[] { // API-V2 OK
+  private parseStkNews(elem: APIResponse<'news', RawNews[]>): StkNews[] { // API-V2 OK
     const news: StkNews[] = [];
     if (elem?.news?.data?.length > 0) {
       const newsElem = elem.news.data;
       newsElem.forEach( newElem => {
         news.push({
-          id: Number(newElem.id),
+          id: Math.floor(Math.random() * newsElem.length), // FIXME add id in the response
           title: newElem.title,
           thumbnails: newElem.thumbnails,
           pdf: newElem?.files?.[0]?.toString() ?? ''
@@ -459,6 +459,11 @@ interface RawLiveSection {
   themeIcon: string;
   title: string;
   type: string;
+}
+
+interface RawNews extends RawPartage {
+  /** URL of the pdf */
+  files: string[];
 }
 
 export type RawContentUpdate = Record<'broadcasts' | 'events' | 'news' | 'partages', number>;

@@ -45,6 +45,11 @@ cf. [documentation][install pnpm] pour windows ou autres manières d'installer p
   # si @ionic/cli est une dépendance du projet, il fournit le bin `ionic`
   pnpm ionic 
   ```
+  
+### build Mac M1 
+```
+arch -x86_64  pnpm ionic cordova plugin add  onesignal-cordova-plugin
+```
 
 ### workflow dev
 

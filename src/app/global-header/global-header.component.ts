@@ -1,18 +1,32 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, Injectable, inject } from '@angular/core';
 import { AlertController } from '@ionic/angular';
+import { BehaviorSubject } from 'rxjs';
 import { FpmaApiService } from '../services/fpma-api.service';
+
+@Injectable()
+export class HeaderProgressBar {
+  private readonly showIndeterminateSubject = new BehaviorSubject(false);
+  readonly showIndeterminate$ = this.showIndeterminateSubject.asObservable();
+
+  toggleIndeterminate(doShow: boolean) {
+    this.showIndeterminateSubject.next(doShow);
+  }
+}
 
 @Component({
   selector: 'app-global-header',
   templateUrl: './global-header.component.html',
   styleUrls: ['./global-header.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [HeaderProgressBar],
 })
 export class GlobalHeaderComponent implements OnInit {
   isDevMode$ = this.fpmaApiService.isDevMode$;
   devModeCounter = 0;
   private DEV_MODE_ACTIVATION_NUMBER = 4;
   previousClickTimestamp?: number;
+  progressBars = inject(HeaderProgressBar, { self: true });
+  showIndeterminateProgress$ = this.progressBars.showIndeterminate$;
   @Input() defaultHref = '../';
   constructor(
     private fpmaApiService: FpmaApiService,
@@ -81,3 +95,4 @@ export class GlobalHeaderComponent implements OnInit {
     }).then(alert => alert.present());
   }
 }
+

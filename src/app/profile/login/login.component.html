@@ -24,7 +24,7 @@
     <div class="login-actions">
       <ion-button expand="block"
                   class="login-actions-connect"
-                  [disabled]="loginForm.invalid"
+                  [disabled]="loginForm.invalid || (processing$ | async)"
                   (click)="submit()">Se connecter</ion-button>
       <ion-button expand="block"
                   class="login-actions-reset-password"

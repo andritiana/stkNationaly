@@ -65,6 +65,25 @@ Les scripts du package.json regroupent des commandes utiles pour le développeme
 
 - [générateur d'icônes Android et iOS][iconKitchen icon]
   - ajouter [resources/ic][ic-logo-svg]
+****- pour l'animation android : [Shape shifter][]
+  - éditer [logo.shapeshifter][]
+  - ou partir du [vector drawable][]
+  - résultat : [Animated Vector Drawable][avd]
 
 [iconKitchen icon]: https://icon.kitchen/i/H4sIAAAAAAAAA1WQwUrEMBCG32W8dmFtXaQ9ugcRFYTtTWSZNmkaNmlikipl2Xd3Jl1BL23zZeab6X%2BGLzSzjNCcQWA4taO0EpoUZllAp9rF0wlUQKHllKCAxAUCmgFNpJJB7Y32GBILoqQXCDngbLhW924igEIce2ctCy7ccrVqi0pSWacOI2YSP2cderPCvTMuELy52%2B7KWmT2%2BLsITev5%2FvZfQUYlo6qq7uuKEE6KfM2m3ubRb7SMnhT3J%2BeJl7sCglYjKfN351Jy9nowclg59frY6sQqeF0O7TOpfXwg0Z%2FxPj7lP17T8%2FEFFzdzJCNdDtrICTlcyuVol5hOnIZ1Yjac%2FzutKoLTLNIu0vNbdiw1uGxickHCx%2BUHTDmhga8BAAA%3D
 [ic-logo-svg]: ./resources/ic-logo%20mySTK.svg
+[Shape shifter]: https://shapeshifter.design/
+[logo.shapeshifter]: ./logo.shapeshifter
+[vector drawable]: ./logo.xml
+[avd]: ./animated_logo.xml
+
+
+### Distribution
+
+#### Firebase App Distribution
+
+```shell
+pnpm run build:android:debug
+```
+
+Glisser déposer l'apk dans App Distribution/Releases

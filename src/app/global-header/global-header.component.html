@@ -1,12 +1,12 @@
 <ion-toolbar>
   <ion-back-button [defaultHref]="defaultHref" slot="start"></ion-back-button>
   <a [routerLink]="['/tabs/home']"
-     class="header-home-link-icon"
-     (click)="enableDevMode()">
+     class="header-home-link-icon">
     <img src='assets/imgs/logo_stk.png'
          class="header-home-link-icon" />
     <img src='assets/imgs/stk.jpeg'
-         class="header-home-link-icon" />
+         class="header-home-link-icon"
+         (click)="enableDevMode()" />
   </a>
   <ion-buttons slot="end">
     <button *ngIf="isDevMode$ | async" (click)="quitDevModePopup($event)">

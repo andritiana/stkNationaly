@@ -51,6 +51,9 @@ cf. [documentation][install pnpm] pour windows ou autres manières d'installer p
 arch -x86_64  pnpm ionic cordova plugin add  onesignal-cordova-plugin
 ```
 
+Avec Xcode 14.3, modifier les fichiers -frameworks.sh pour ajouter -f après les readlink 
+source : https://developer.apple.com/forums/thread/725230
+
 ### workflow dev
 
 Les scripts du package.json regroupent des commandes utiles pour le développement de l'application : 

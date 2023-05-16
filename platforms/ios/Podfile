@@ -4,6 +4,6 @@ platform :ios, '11.0'
 use_frameworks!
 target 'MySTK' do
 	project 'MySTK.xcodeproj'
-	pod 'Firebase/Analytics', '~> 7.0.0'
+	pod 'Firebase/Analytics', '9.3.0'
 	pod 'OneSignalXCFramework', '3.12.4'
 end

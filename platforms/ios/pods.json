@@ -2,19 +2,19 @@
     "declarations": {
         "use_frameworks!": {
             "declaration": "use_frameworks!",
-            "count": 1
+            "count": 2
         }
     },
     "sources": {
         "https://cdn.cocoapods.org/": {
             "source": "https://cdn.cocoapods.org/",
-            "count": 1
+            "count": 2
         }
     },
     "libraries": {
         "Firebase/Analytics": {
             "name": "Firebase/Analytics",
-            "spec": "~> 7.0.0",
+            "spec": "9.3.0",
             "count": 1
         },
         "OneSignalXCFramework": {

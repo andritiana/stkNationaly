@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="50105" id="com.stknational.app" ios-CFBundleVersion="5.2.0" version="5.2.0-beta.3" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="50107" id="com.stknational.app" ios-CFBundleVersion="5.2.0" version="5.2.0-beta.5" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <feature name="CDVWebViewEngine">
         <param name="ios-package" value="CDVWebViewEngine" />
     </feature>
@@ -36,10 +36,6 @@
     <feature name="IonicWebView">
         <param name="ios-package" value="CDVWKWebViewEngine" />
     </feature>
-    <feature name="SplashScreen">
-        <param name="ios-package" value="CDVSplashScreen" />
-        <param name="onload" value="true" />
-    </feature>
     <feature name="StatusBar">
         <param name="ios-package" value="CDVStatusBar" />
         <param name="onload" value="true" />
@@ -63,7 +59,7 @@
     <allow-intent href="geo:*" />
     <allow-navigation href="https://stk.fpma.church/embeded/*" />
     <allow-navigation href="https://www.youtube.com/*" />
-    <allow-navigation href="https://soundcloud.com/*" />
+    <allow-navigation href="https://*.soundcloud.com/*" />
     <resource-file src="GoogleService-Info.plist" />
     <allow-intent href="itms:*" />
     <allow-intent href="itms-apps:*" />

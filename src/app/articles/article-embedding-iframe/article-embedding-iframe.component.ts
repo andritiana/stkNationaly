@@ -1,5 +1,6 @@
 import { Component, ElementRef, HostBinding, Input, OnInit, SimpleChanges, ViewEncapsulation } from "@angular/core";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
+import { BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import '../../../assets/js/soundcloud-api.js';
 
 @Component({
@@ -12,8 +13,16 @@ export class ArticleEmbeddingIframeComponent implements OnInit {
   @Input()
   article?: string;
   @HostBinding('class.article-is-visible')
+  _isVisible = false;
+
   @Input()
-  isVisible?: boolean;
+  set isVisible(v: BooleanInput) {
+    this._isVisible = coerceBooleanProperty(v)
+  };
+  get isVisible(): boolean {
+    return this._isVisible;
+  }
+  @HostBinding('innerHTML')
   processedArticle?: SafeHtml;
 
   constructor(
@@ -22,20 +31,22 @@ export class ArticleEmbeddingIframeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    const container = new DOMParser().parseFromString(
-      this.article ?? '',
-      "text/html"
-    );
-    const iframes = container.getElementsByTagName("iframe");
-
-    this.enableYouTubeAPI(iframes);
-
-    this.processedArticle = this.domSanitizer.bypassSecurityTrustHtml(
-      container.body.innerHTML
-    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes.article) {
+      const container = new DOMParser().parseFromString(
+        this.article ?? '<div></div>',
+        "text/html"
+      );
+      const iframes = container.getElementsByTagName("iframe");
+
+      this.enableYouTubeAPI(iframes);
+
+      this.processedArticle = this.domSanitizer.bypassSecurityTrustHtml(
+        container.body.innerHTML
+      );
+    }
     if (changes.isVisible) {
       const {currentValue, previousValue} = changes.isVisible;
       if (previousValue !== currentValue && currentValue === false) {

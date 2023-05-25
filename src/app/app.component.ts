@@ -1,4 +1,4 @@
-import { Component, HostBinding, NgZone } from '@angular/core';
+import { Component, EnvironmentInjector, HostBinding, NgZone, inject } from '@angular/core';
 import { ActionSheetController, Platform, ToastController } from '@ionic/angular';
 import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
 import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
@@ -14,6 +14,7 @@ import { combineLatest, concat, distinctUntilChanged, iif, Observable} from 'rxj
 import { bindCallback, EMPTY, filter, from, map, of, switchMap, tap, throwError } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { differenceInBusinessDays } from 'date-fns/esm';
+import {register} from 'swiper/element/bundle';
 
 const enum NotificationPermissionStatus {
   /** The user hasn't yet made a choice about whether the app is allowed to schedule notifications. */
@@ -37,6 +38,8 @@ const enum NotificationPermissionStatus {
 export class AppComponent {
   @HostBinding('class.splash-showing')
   public showSplash = true;
+  environmentInjector = inject(EnvironmentInjector);
+
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
@@ -51,6 +54,7 @@ export class AppComponent {
     private toastCtrl: ToastController,
   ) {
     void this.initializeApp();
+    register(true);
   }
 
   initializeApp() {
@@ -264,7 +268,7 @@ export class AppComponent {
   }
 
   handleAndroidBackButton() {
-    this.platform.backButton.subscribeWithPriority(-1, () => {
+    this.platform.backButton.subscribeWithPriority(-1, (processNext) => {
       const url = this.router.url;
 
       // Si on clique sur le back button depuis la page d'accueil, on ferme l'application
@@ -273,11 +277,12 @@ export class AppComponent {
         (navigator as any)['app'].exitApp();
       }
       // Si on clique sur la back button depuis une page de catégorie située au même niveau
-      // que la page d'accueil, on revient sur la page d'accueil (ex : /tabs/{rootCategory}, /(profile|profile))
-      else if (/^\/tabs\/[^\/]+$/.test(url) || /^\/profile\/[^\/]+$/.test(url) || /^\/login\/[^\/]+$/.test(url)) {
+      // que la page d'accueil, on revient sur la page d'accueil (ex : /tabs/{rootCategory}, /(profile|login))
+      else if (/^\/tabs\/[^\/]+$/.test(url) || /^\/profile$/.test(url) || /^\/login\/[^\/]+$/.test(url)) {
         void this.router.navigateByUrl('/tabs/home');
       }
       // Sinon, comportement par défaut d'Ionic
+      processNext();
     });
   }
 

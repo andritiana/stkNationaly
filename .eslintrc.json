@@ -11,7 +11,8 @@
       "parserOptions": {
         "emitDecoratorMetadata": true,
         "project": [
-          "tsconfig.(app|spec).json"
+          "tsconfig.app.json",
+          "tsconfig.spec.json"
         ],
         "createDefaultProgram": false
       },
@@ -61,6 +62,89 @@
         "@typescript-eslint/no-misused-promises": "warn",
         "@typescript-eslint/no-floating-promises": "warn",
         "@typescript-eslint/no-inferrable-types": "warn",
+        "@typescript-eslint/member-ordering": [
+          "warn",
+          {
+            "default": {
+              "memberTypes": [
+                // Index signature
+                "signature",
+                "call-signature",
+
+                // Static initialization
+                "static-initialization",
+
+                // Fields
+                "public-static-field",
+                "public-instance-field",
+                // "public-instance-readonly-field",
+                "public-field",
+                "public-abstract-field",
+                "public-decorated-field",
+
+                "protected-static-field",
+                "protected-instance-field",
+                // "protected-instance-readonly-field",
+                "protected-field",
+                "protected-abstract-field",
+                "protected-decorated-field",
+
+                // "#private-static-field",
+                "private-static-field",
+                // "#private-instance-field",
+                // "#private-field",
+                "private-instance-field",
+                // "private-instance-readonly-field",
+                "private-field",
+                "private-abstract-field",
+                "private-decorated-field",
+
+                "field",
+
+                // Constructors
+                "public-constructor",
+                "protected-constructor",
+                "private-constructor",
+
+                "constructor",
+
+                // Methods
+                "public-static-method",
+                "public-decorated-method",
+                "public-instance-method",
+                "public-abstract-method",
+                "public-method",
+
+                "protected-static-method",
+                "protected-decorated-method",
+                "protected-instance-method",
+                "protected-abstract-method",
+                "protected-method",
+
+                // "#private-static-method",
+                "private-static-method",
+                "private-decorated-method",
+                // "#private-instance-method",
+                "private-instance-method",
+                // "#private-method",
+                "private-method",
+
+
+
+
+
+                "static-method",
+                "instance-method",
+                "abstract-method",
+
+                "decorated-method",
+
+                "method"
+              ],
+              "order": "natural-case-insensitive"
+            }
+          }
+        ],
         "rxjs-angular/prefer-takeuntil": [
           "error",
           {

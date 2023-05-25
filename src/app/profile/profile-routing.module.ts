@@ -13,6 +13,20 @@ const routes: Routes = [
     pathMatch: 'full',
   },
   {
+    path: 'my-events',
+    /* children needed so Ionic shows the back button */
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./my-events/my-events.page').then(m => m.MyEventsPage)
+      }
+    ],
+  },
+  {
+    path: 'my-events/:eventName',
+    loadComponent: () => import('./my-events/event-articles/event-articles.page').then(m => m.EventArticlesPage)
+  },
+  {
     path: 'badge-list',
     loadChildren: () => import('./badge-list/badge-list.module').then(m => m.BadgeListModule)
   },

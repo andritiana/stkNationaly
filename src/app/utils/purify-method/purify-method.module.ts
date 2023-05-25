@@ -1,13 +1,11 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { PurifyMethodPipe } from './purify-method.pipe';
 
 
 
 @NgModule({
-  declarations: [PurifyMethodPipe],
   imports: [
-    CommonModule
+    PurifyMethodPipe
   ],
   exports: [PurifyMethodPipe]
 })

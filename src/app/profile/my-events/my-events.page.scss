@@ -1,0 +1,69 @@
+@use "theme/page";
+@use "theme/components/card";
+
+:host {
+  @include page.host;
+  .my-events {
+    &-outer {
+      @include page.content-wrapper() {
+        --ion-color-primary: #19338F;
+        --content-padding: 2rem;
+        justify-content: center;
+        align-content: start;
+        gap: 1rem;
+      }
+      @media screen and (min-width: 380px) {
+        gap: 1rem;
+      }
+    }
+    &-subtitle {
+      font-size: calc(14rem / 16);
+      font-weight: 300;
+    }
+    &-event-time {
+      display: grid;
+      grid-template-columns: 19ch;
+      font-weight: 600;
+      font-size: calc(14rem / 16);
+    }
+    &-event-list {
+      margin: 0;
+      display: grid;
+      grid-auto-flow: row;
+      gap: 1rem;
+      padding-block: 1rem;
+
+    }
+    &-event-card {
+      @include card.shadow;
+      @include card.borders;
+      list-style-type: none;
+      padding: calc(12rem / 16);
+      font-size: calc(12rem / 16);
+      font-weight: 500;
+      max-width: 420px;
+      position: relative;
+      overflow: hidden;
+
+      &-anchor {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        gap: 1rem;
+        text-decoration: none;
+        &-icon {
+         font-size: calc(24rem / 16);
+        }
+      }
+    }
+  }
+  /* trick to show box shadows despite ion-accordion-group's content's hidden overflow */
+  ion-accordion {
+    margin-inline: -1rem;
+    width: calc(100% + 1rem);
+  }
+  [slot=content] {
+    padding-inline: 1rem;
+    width: calc(100% + 1rem - 10px);
+  }
+}

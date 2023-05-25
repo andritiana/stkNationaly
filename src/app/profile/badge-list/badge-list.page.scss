@@ -5,9 +5,25 @@
   @include page.host;
   .badges {
     &-outer {
+      --ion-color-primary: #19338F;
       @include page.content-wrapper {
         align-content: flex-start;
       };
+    }
+    &-preview-list {
+      min-width: 0;
+      position: relative;
+      display: flex;
+      justify-content: center;
+    }
+  }
+  mystk-badge-card {
+    max-width: 400px;
+    &:nth-of-type(n-2) {
+      position: absolute;
+    }
+    &:last-of-type {
+      position: relative;
     }
   }
 }

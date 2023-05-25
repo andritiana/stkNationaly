@@ -2,10 +2,13 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { EMPTY, throwError } from 'rxjs';
 import type { Observable } from 'rxjs';
-import { catchError, filter, map, switchMap, take } from 'rxjs/operators';
+import { catchError, exhaustMap, filter, map, switchMap, take } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import type { Profile, Badge, EditProfileBodyRequest } from './profile.model';
 import { CacheBuffer } from '../utils/cache/cache';
+import { compareDesc, parseISO } from 'date-fns/esm';
+
+export type EventCardInfo = Omit<Badge, 'badgeString' | 'roomInfos' | 'remarks'>;
 
 @Injectable({
   providedIn: 'root'
@@ -61,10 +64,26 @@ export class ProfileService {
         if (id == null) {
           return EMPTY;
         } else {
-          return this.http.get<Badge[]>(`${this.baseAPI}/profile/${id}/badges`)
+          return this.http.get<Badge[]>(`${this.baseAPI}/profile/${id}/badges`).pipe(
+            map(badges => badges.sort((a, b) => compareDesc(parseISO(b.eventStartAt), parseISO(a.eventStartAt)))),
+          )
         }
       })
     )
+  }
+
+  /**
+   * Extracts events from badges and spreads the resulting array.
+   */
+  getMyEvents(): Observable<EventCardInfo> {
+    return this.getMyBadges()
+    .pipe(
+      exhaustMap((badges) => badges), // prefer exhaustMap to switchMap so the Observable completes at the end of the array
+      map((badge) => {
+        const { badgeString, roomInfos, remarks, ...event } = badge;
+        return event;
+      }),
+    );
   }
 }
 

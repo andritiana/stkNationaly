@@ -3,6 +3,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({
   name: 'method',
   pure: true,
+  standalone: true,
 })
 export class PurifyMethodPipe<Arg0, Args, R> implements PipeTransform {
 

@@ -4,6 +4,7 @@
 
 /** Ionic CSS Variables **/
 :root {
+  --ion-font-family: 'Roboto Flex', Roboto, system-ui, Arial, sans-serif;
   /** primary **/
   --ion-color-primary: #19338F;
   --ion-color-primary-rgb: 56, 128, 255;
@@ -78,6 +79,7 @@
 
   /** additional light colors **/
   --ion-label-color: hsla(227, 69%, 33%, 0.5);
+  --ion-text-color: #19338F;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -160,8 +162,8 @@
     --ion-background-color: #f8f8f8;
     --ion-background-color-rgb: 0,0,0;
 
-    --ion-text-color: #000000;
-    --ion-text-color-rgb: 255,255,255;
+    --ion-text-color: #19338f;
+    --ion-text-color-rgb: 25,51,143;
 
     --ion-color-step-50: #0d0d0d;
     --ion-color-step-100: #1a1a1a;

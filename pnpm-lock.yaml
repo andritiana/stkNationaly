@@ -34,6 +34,7 @@ specifiers:
   '@ionic/storage-angular': ^3.0.6
   '@ngneat/until-destroy': ^9.2.3
   '@schematics/angular': ^14.2.10
+  '@types/color': ^3.0.3
   '@types/jasmine': ~4.3.1
   '@types/jasminewd2': ~2.0.8
   '@types/node': ^12.12.62
@@ -41,6 +42,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin': 5.43.0
   '@typescript-eslint/parser': 5.43.0
   '@wordpress/html-entities': ^3.24.0
+  color: ^4.2.3
   cordova-android: ^11.0.0
   cordova-ios: ^6.2.0
   cordova-plugin-androidx-adapter: ^1.1.3
@@ -99,6 +101,7 @@ dependencies:
   '@ionic/storage-angular': 3.0.6_bhkymh3mvb6yhwbs35nl4cllki
   '@ngneat/until-destroy': 9.2.3_bhkymh3mvb6yhwbs35nl4cllki
   '@wordpress/html-entities': 3.29.0
+  color: 4.2.3
   cordova-plugin-firebase-analytics: 7.0.5
   cordova-res: 0.15.4
   cordova-sqlite-storage: 6.0.0
@@ -135,6 +138,7 @@ devDependencies:
   '@angular/language-service': 14.2.12
   '@ionic/angular-toolkit': 7.0.0
   '@schematics/angular': 14.2.11
+  '@types/color': 3.0.3
   '@types/jasmine': 4.3.1
   '@types/jasminewd2': 2.0.8
   '@types/node': 12.20.52
@@ -2492,6 +2496,22 @@ packages:
     dependencies:
       '@types/node': 12.20.52
 
+  /@types/color-convert/2.0.0:
+    resolution: {integrity: sha512-m7GG7IKKGuJUXvkZ1qqG3ChccdIM/qBBo913z+Xft0nKCX4hAU/IxKwZBU4cpRZ7GS5kV4vOblUkILtSShCPXQ==}
+    dependencies:
+      '@types/color-name': 1.1.1
+    dev: true
+
+  /@types/color-name/1.1.1:
+    resolution: {integrity: sha512-rr+OQyAjxze7GgWrSaJwydHStIhHq2lvY3BOC2Mj7KnzI7XK0Uw1TOOdI9lDoajEbSWLiYgoo4f1R51erQfhPQ==}
+    dev: true
+
+  /@types/color/3.0.3:
+    resolution: {integrity: sha512-X//qzJ3d3Zj82J9sC/C18ZY5f43utPbAJ6PhYt/M7uG6etcF6MRpKdN880KBy43B0BMzSfeT96MzrsNjFI3GbA==}
+    dependencies:
+      '@types/color-convert': 2.0.0
+    dev: true
+
   /@types/connect-history-api-fallback/1.3.5:
     resolution: {integrity: sha512-h8QJa8xSb1WD4fpKBDcATDNGXghFj6/3GRWG6dhmRcu0RX1Ubasur2Uvx5aeEwlf0MwblEC2bMzzMQntxnw/Cw==}
     dependencies:
@@ -3788,8 +3808,9 @@ packages:
     hasBin: true
     dev: true
 
-  /color/4.2.0:
-    resolution: {integrity: sha512-hHTcrbvEnGjC7WBMk6ibQWFVDgEFTVmjrz2Q5HlU6ltwxv0JJN2Z8I7uRbWeQLF04dikxs8zgyZkazRJvSMtyQ==}
+  /color/4.2.3:
+    resolution: {integrity: sha512-1rXeuUUiGGrykh+CeBdu5Ie7OJwinCgQY0bc7GCRxy5xVHy+moaqkpL/jqQq0MtQOeYcrqEz4abc5f0KtU7W4A==}
+    engines: {node: '>=12.5.0'}
     dependencies:
       color-convert: 2.0.1
       color-string: 1.9.0
@@ -8530,7 +8551,7 @@ packages:
     engines: {node: '>=12.13.0'}
     requiresBuild: true
     dependencies:
-      color: 4.2.0
+      color: 4.2.3
       detect-libc: 1.0.3
       node-addon-api: 4.3.0
       prebuild-install: 7.0.0
@@ -8594,7 +8615,7 @@ packages:
     dev: true
 
   /simple-swizzle/0.2.2:
-    resolution: {integrity: sha1-pNprY1/8zMoz9w0Xy5JZLeleVXo=}
+    resolution: {integrity: sha512-JA//kQgZtbuY83m+xT+tXJkmJncGMTFT+C+g2h2R9uxkYIrE2yy9sgmcLhCnw57/WSD+Eh3J97FPEDFnbXnDUg==}
     dependencies:
       is-arrayish: 0.3.2
     dev: false

@@ -8,9 +8,13 @@
         *ngIf="profile$ | async as profile">
     <mystk-page-title>Mes badges</mystk-page-title>
     <div class="badges-preview-list">
-      <mystk-badge-card *ngFor="let badge of (badgeList$ | async)"
+      <mystk-badge-card *ngFor="let badge of (badgeList$ | async); last as isLast; count as size"
                         [badge]="badge"
-                        [profile]="profile"></mystk-badge-card>
+                        [profile]="profile"
+                        [ngStyle]="{transform: badge.transform,
+                                    top: isLast ? (size - 1) * halfHeaderHeight + 'px' : 0,
+                                    'margin-bottom.px': isLast ? (size - 1) * halfHeaderHeight + 16 : 16
+                                  }"></mystk-badge-card>
     </div>
   </main>
 </ion-content>

@@ -18,13 +18,13 @@
   margin: 0.5rem;
   padding: var(--card-padding);
 
+  background: var(--ion-background-color);
   color: var(--ion-color-primary);
   display: grid;
   justify-content: stretch;
   grid-auto-flow: row;
   text-align: center;
   font-size: 0.75rem;
-  overflow: hidden;
   gap: 1.5rem;
   .badge {
     &-event {
@@ -33,7 +33,7 @@
       font-weight: 700;
       background: var(--badge-event-time-color);
       padding: 1rem;
-      height: 4.125rem;
+      height: var(--badge-event-height, 4.125rem);
       display: grid;
       align-items: center;
       justify-content: flex-start;

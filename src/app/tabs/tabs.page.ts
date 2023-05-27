@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef } from '@angular/core';
 import { ContentUpdateService } from '../services/content-update.service';
 
 @Component({
@@ -8,58 +8,52 @@ import { ContentUpdateService } from '../services/content-update.service';
 })
 export class TabsPage {
 
-  constructor(private contentUpdateService: ContentUpdateService) {
-    this.contentUpdateService.getBroadcastUpdateObservable().subscribe( (nbBroadcasts) => {
-      this.updateNotificationIcon('broadcastNotification', nbBroadcasts);
+  constructor(private eltRef: ElementRef<HTMLElement>, private contentUpdateService: ContentUpdateService) {
+    this.contentUpdateService.getBroadcastUpdateObservable().subscribe( (isNew) => {
+      this.updateNotificationIcon('broadcastNotification', isNew);
     });
-    this.contentUpdateService.getEventUpdateObservable().subscribe( (nbEvents) => {
-      this.updateNotificationIcon('eventNotification', nbEvents);
+    this.contentUpdateService.getEventUpdateObservable().subscribe( (isNew) => {
+      this.updateNotificationIcon('eventNotification', isNew);
     });
-    this.contentUpdateService.getNewsUpdateObservable().subscribe( (nbNews) => {
-      this.updateNotificationIcon('newsNotification', nbNews);
+    this.contentUpdateService.getNewsUpdateObservable().subscribe( (isNew) => {
+      this.updateNotificationIcon('newsNotification', isNew);
     });
-    this.contentUpdateService.getPartageUpdateObservable().subscribe( (nbPartages) => {
-      this.updateNotificationIcon('partageNotification', nbPartages);
+    this.contentUpdateService.getPartageUpdateObservable().subscribe( (isNew) => {
+      this.updateNotificationIcon('partageNotification', isNew);
     });
   }
 
-  private updateNotificationIcon(id: string, nb: number) {
+  private updateNotificationIcon(id: string, isNew: boolean) {
     setTimeout(() => {
-      const existingElmt = document.getElementById(id);
-      if (existingElmt) {
-        if (nb) {
-          existingElmt.innerHTML = nb.toString();
-        } else {
-          existingElmt.remove();
-        }
+      let tabId: number = -1;
+      switch (id) {
+        case 'broadcastNotification':
+          tabId = 1
+          break;
+        case 'eventNotification':
+          tabId = 5
+          break;
+        case 'newsNotification':
+          tabId = 4
+          break;
+        case 'partageNotification':
+          tabId = 3
+          break;
+      }
+
+      const el: Element | undefined = this.eltRef.nativeElement.getElementsByClassName('tab-layout-icon-top')[tabId];
+      if (!el) {
+        return;
+      }
+
+      // Si la rubrique contient du nouveau contenu
+      // on rajoute la class CSS "new"
+      if (isNew) {
+        el.classList.add('new');
       } else {
-        if (nb) {
-          const spanNb = document.createElement('SPAN');
-          spanNb.id = id;
-          spanNb.innerHTML = nb.toString();
-          this.createElementNotification(spanNb, id);
-        }
+        el.classList.remove('new');
       }
     }, 1000);
-}
-
-private createElementNotification(element: HTMLSpanElement, id: string) {
-  switch (id) {
-    case 'broadcastNotification':
-      document.getElementsByClassName('tab-layout-icon-top')[1].appendChild(element);
-      break;
-    case 'eventNotification':
-      document.getElementsByClassName('tab-layout-icon-top')[5].appendChild(element);
-      break;
-    case 'newsNotification':
-      document.getElementsByClassName('tab-layout-icon-top')[4].appendChild(element);
-      break;
-    case 'partageNotification':
-      document.getElementsByClassName('tab-layout-icon-top')[3].appendChild(element);
-      break;
-    default:
-      console.log(`no notification`);
   }
-}
 
 }

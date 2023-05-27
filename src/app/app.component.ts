@@ -4,7 +4,7 @@ import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
 import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
 import { FpmaApiService } from './services/fpma-api.service';
 import { ContentUpdateService } from './services/content-update.service';
-import type { LastVisitTimestamps, LastVisitUpdates } from './models/lastVisitTimestamps.interface';
+import type { LastVisitTimestamps } from './models/lastVisitTimestamps.interface';
 import { StorageService } from './utils/storage.service';
 import { FirebaseAnalytics } from '@awesome-cordova-plugins/firebase-analytics/ngx';
 import OneSignal from 'onesignal-cordova-plugin';
@@ -169,14 +169,14 @@ export class AppComponent {
     });
   }
 
-  private checkNbUpdatedContent(): Observable<LastVisitUpdates> {
+  private checkNbUpdatedContent(): Observable<LastVisitTimestamps> {
     return from(this.storage.get<LastVisitTimestamps>('lastVisitTimestamp')).pipe(
       switchMap((val: LastVisitTimestamps) => {
         if (val) {
-          return this.fpmaService.getContentUpdated(val).pipe(
-            filter((timestamps): timestamps is LastVisitUpdates => !!timestamps),
+          return this.fpmaService.getContentUpdated().pipe(
+            filter((timestamps): timestamps is LastVisitTimestamps => !!timestamps),
             tap(contentUpdated =>
-              this.contentUpdateService.initNbUpdated(contentUpdated)
+              this.contentUpdateService.initUpdatedStatus(val, contentUpdated)
             )
           );
         } else {

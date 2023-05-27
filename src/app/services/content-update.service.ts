@@ -1,51 +1,51 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { LastVisitTimestamps, LastVisitUpdates } from '../models/lastVisitTimestamps.interface';
+import { LastVisitTimestamps } from '../models/lastVisitTimestamps.interface';
 import { StorageService } from '../utils/storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ContentUpdateService {
-  private eventUpdateObservable = new Subject<number>();
-  private broadcastUpdateObservable = new Subject<number>();
-  private newsUpdateObservable = new Subject<number>();
-  private partageUpdateObservable = new Subject<number>();
+  private eventUpdateObservable = new Subject<boolean>();
+  private broadcastUpdateObservable = new Subject<boolean>();
+  private newsUpdateObservable = new Subject<boolean>();
+  private partageUpdateObservable = new Subject<boolean>();
 
 
   constructor(private storage: StorageService) {}
 
-  public initNbUpdated(lastVisitUpdated: LastVisitUpdates) {
-    this.updateBroadcastsNb(lastVisitUpdated.broadcasts);
-    this.updateEventsNb(lastVisitUpdated.events);
-    this.updateNewsNb(lastVisitUpdated.news);
-    this.updatePartagesNb(lastVisitUpdated.partages);
+  public initUpdatedStatus(storedVisitTimestamp: LastVisitTimestamps, lastVisitTimestamp: LastVisitTimestamps) {
+    this.updateBroadcastsStatus(storedVisitTimestamp.broadcasts < lastVisitTimestamp.broadcasts);
+    this.updateEventsStatus(storedVisitTimestamp.events < lastVisitTimestamp.events);
+    this.updateNewsStatus(storedVisitTimestamp.news < lastVisitTimestamp.news);
+    this.updatePartagesStatus(storedVisitTimestamp.partages < lastVisitTimestamp.partages);
   }
 
-  public getEventUpdateObservable(): Observable<number> {
+  public getEventUpdateObservable(): Observable<boolean> {
     return this.eventUpdateObservable.asObservable();
   }
-  public getBroadcastUpdateObservable(): Observable<number> {
+  public getBroadcastUpdateObservable(): Observable<boolean> {
     return this.broadcastUpdateObservable.asObservable();
   }
-  public getNewsUpdateObservable(): Observable<number> {
+  public getNewsUpdateObservable(): Observable<boolean> {
     return this.newsUpdateObservable.asObservable();
   }
-  public getPartageUpdateObservable(): Observable<number> {
+  public getPartageUpdateObservable(): Observable<boolean> {
     return this.partageUpdateObservable.asObservable();
   }
 
-  public updateBroadcastsNb(nbBroadcastssUpdated: number): void {
+  public updateBroadcastsStatus(nbBroadcastssUpdated: boolean): void {
     this.broadcastUpdateObservable.next(nbBroadcastssUpdated);
   }
 
-  public updateEventsNb(nbEventsUpdated: number): void {
+  public updateEventsStatus(nbEventsUpdated: boolean): void {
     this.eventUpdateObservable.next(nbEventsUpdated);
   }
-  public updateNewsNb(nbNewsUpdated: number): void {
+  public updateNewsStatus(nbNewsUpdated: boolean): void {
     this.newsUpdateObservable.next(nbNewsUpdated);
   }
-  public updatePartagesNb(nbPartagesUpdated: number): void {
+  public updatePartagesStatus(nbPartagesUpdated: boolean): void {
     this.partageUpdateObservable.next(nbPartagesUpdated);
   }
 
@@ -61,22 +61,22 @@ export class ContentUpdateService {
   public resetNbUpdated(content: keyof LastVisitTimestamps) {
     switch (content) {
       case 'broadcasts' : {
-        this.updateBroadcastsNb(0);
+        this.updateBroadcastsStatus(false);
         void this.updateEpochTimeStored('broadcasts');
         break;
       }
       case 'events' : {
-        this.updateEventsNb(0);
+        this.updateEventsStatus(false);
         void this.updateEpochTimeStored('events');
         break;
       }
       case 'partages' : {
-        this.updatePartagesNb(0);
+        this.updatePartagesStatus(false);
         void this.updateEpochTimeStored('partages');
         break;
       }
       case 'news' : {
-        this.updateNewsNb(0);
+        this.updateNewsStatus(false);
         void this.updateEpochTimeStored('news');
         break;
       }

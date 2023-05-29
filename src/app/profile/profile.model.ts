@@ -16,6 +16,7 @@ export interface Profile {
   /** @type ISO date only */
   tagExpireAt: string;
   responsabilities: Responsability[];
+  ongoingSubscribedEvent: string;
 }
 
 export interface Badge {
@@ -27,6 +28,7 @@ export interface Badge {
   eventStartAt: string;
   /** @type ISO date only */
   eventEndAt: string;
+  websiteCategoryId: number;
 }
 
 export interface EditProfileBodyRequest {

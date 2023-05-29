@@ -13,6 +13,10 @@ const routes: Routes = [
     pathMatch: 'full',
   },
   {
+    path: 'my-events',
+    loadComponent: () => import('./my-events/my-events.page').then(m => m.MyEventsPage)
+  },
+  {
     path: 'badge-list',
     loadChildren: () => import('./badge-list/badge-list.module').then(m => m.BadgeListModule)
   },

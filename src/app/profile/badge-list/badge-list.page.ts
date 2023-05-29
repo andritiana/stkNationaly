@@ -26,7 +26,6 @@ export class BadgeListPage implements OnInit {
       map((badges) => {
         const size = badges.length;
         return badges
-          .sort((a, b) => compareDesc(parseISO(b.eventStartAt), parseISO(a.eventStartAt)))
           .map((b, idx) => {
             const translateY = idx < size - 1 ? (this.halfHeaderHeight * idx).toString() + 'px' : '0px';
             const translateZ = (-5 * (size - idx - 1) + 1).toString() + 'px';

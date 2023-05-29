@@ -1,4 +1,4 @@
-import { Component, HostBinding, NgZone } from '@angular/core';
+import { Component, EnvironmentInjector, HostBinding, NgZone, inject } from '@angular/core';
 import { ActionSheetController, Platform, ToastController } from '@ionic/angular';
 import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
 import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
@@ -37,6 +37,8 @@ const enum NotificationPermissionStatus {
 export class AppComponent {
   @HostBinding('class.splash-showing')
   public showSplash = true;
+  environmentInjector = inject(EnvironmentInjector);
+  
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,

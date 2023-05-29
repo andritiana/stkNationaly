@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EnvironmentInjector, inject } from '@angular/core';
 import { ContentUpdateService } from '../services/content-update.service';
 
 @Component({
@@ -7,6 +7,8 @@ import { ContentUpdateService } from '../services/content-update.service';
   styleUrls: ['tabs.page.scss']
 })
 export class TabsPage {
+
+  environmentInjector = inject(EnvironmentInjector);
 
   constructor(private contentUpdateService: ContentUpdateService) {
     this.contentUpdateService.getBroadcastUpdateObservable().subscribe( (nbBroadcasts) => {

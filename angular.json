@@ -33,7 +33,8 @@
             "inlineStyleLanguage": "scss",
             "stylePreprocessorOptions": {
               "includePaths": [
-                "src/"
+                "src/",
+                "node_modules"
               ]
             },
             "styles": [

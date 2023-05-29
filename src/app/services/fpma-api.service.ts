@@ -6,7 +6,7 @@ import type { Actualities } from '../models/actuality.interface';
 import type { AgendaEvent } from '../models/agenda-event.interface';
 import type { ArticleSpi } from '../models/article-spi.interface';
 import type { GenericPost } from '../models/generic-post.interface';
-import type { LastVisitTimestamps, LastVisitUpdates } from '../models/lastVisitTimestamps.interface';
+import type { LastVisitTimestamps } from '../models/lastVisitTimestamps.interface';
 import type { LiveSection } from '../models/live-section.interface';
 import type { Presentation } from '../models/presentation.interface';
 import type { StkNews } from '../models/stk-news.interface';
@@ -385,26 +385,20 @@ export class FpmaApiService {
     }
   }
 
-  public getContentUpdated(lastVisitTimestamps: LastVisitTimestamps): Observable<LastVisitUpdates | null> {
-    const params = new HttpParams()
-                      .set('broadcasts', lastVisitTimestamps.broadcasts.toString())
-                      .set('events', lastVisitTimestamps.events.toString())
-                      .set('news', lastVisitTimestamps.news.toString())
-                      .set('partages', lastVisitTimestamps.partages.toString());
-    return this.http.get<APIResponse<'content-updates', RawContentUpdate>>(`${this.FPMA_DOMAIN}api/content-updates`, { params })
+  public getContentUpdated(): Observable<LastVisitTimestamps | null> {
+    return this.http.get<RawContentUpdate>(`${this.FPMA_DOMAIN}api/content-updates`)
       .pipe(
         map(res => this.parseContentUpdates(res)),
         );
   }
 
-  private parseContentUpdates(data: APIResponse<'content-updates', RawContentUpdate>): LastVisitUpdates | null {
-    const contentUpdated = data?.['content-updates'] ?? null;
-    if ( contentUpdated && contentUpdated.data) {
+  private parseContentUpdates(data: RawContentUpdate): LastVisitTimestamps | null {
+    if (data) {
       return {
-        broadcasts: contentUpdated.data.broadcasts,
-        events: contentUpdated.data.events,
-        news: contentUpdated.data.news,
-        partages: contentUpdated.data.partages
+        broadcasts: data.broadcastsLatestTs,
+        events: data.eventsLatestTs,
+        news: data.stkNewsLatestTs,
+        partages: data.partagesLatestTs
       };
     } else {
       return null;
@@ -466,5 +460,5 @@ interface RawNews extends RawPartage {
   files: string[];
 }
 
-export type RawContentUpdate = Record<'broadcasts' | 'events' | 'news' | 'partages', number>;
+export type RawContentUpdate = Record<'broadcastsLatestTs' | 'eventsLatestTs' | 'stkNewsLatestTs' | 'partagesLatestTs', number>;
 

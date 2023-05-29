@@ -1,16 +1,28 @@
 import { Location } from '@angular/common';
 import { Component, HostBinding, NgZone } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { differenceInHours, intervalToDuration, parse } from 'date-fns/esm';
 import { fr } from 'date-fns/esm/locale';
-import { combineLatest, EMPTY, from, interval, Observable, of, Subscription, timer } from 'rxjs';
+import { combineLatest, EMPTY, from, interval, Observable, of, Subscription } from 'rxjs';
 import { filter, map, shareReplay, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { sameValidator } from 'src/app/forms/validators';
 import { AuthService } from '../auth.service';
 import { EditProfileBodyRequest } from '../profile.model';
 import { ProfileService } from '../profile.service';
+
+interface ProfileEditionForm {
+  firstName: FormControl<string | null>;
+  lastName: FormControl<string | null>;
+  entityName: FormControl<string | null>;
+  email: FormControl<string | null>;
+  passwordCurrent: FormControl<string | null>;
+  changePassword: FormGroup<{
+    passwordNew: FormControl<string | null>;
+    passwordNewConfirmation: FormControl<string | null>;
+  }>;
+}
 
 @Component({
   selector: 'mystk-edit-profile',
@@ -18,14 +30,14 @@ import { ProfileService } from '../profile.service';
   styleUrls: ['./edit-profile.page.scss'],
 })
 export class EditProfilePage {
-  editForm: FormGroup;
   readonly canCancel$: Observable<boolean>;
   private subs: Subscription[] = [];
+  editForm?: FormGroup<ProfileEditionForm>;
   @HostBinding('class.temporary-password')
   get isShowingCountdown() {
     return !!this.toast;
   }
-  toast: HTMLIonToastElement;
+  toast?: HTMLIonToastElement;
   constructor(
     private authService: AuthService,
     private profileService: ProfileService,
@@ -71,7 +83,7 @@ export class EditProfilePage {
       }),
       switchMap(([_, tempPassExpiration]) => {
         if (!!tempPassExpiration) {
-          const passwordNewCtrl = this.editForm.get('changePassword.passwordNew') as FormControl;
+          const passwordNewCtrl = this.editForm?.get('changePassword.passwordNew') as UntypedFormControl;
           const tempPassExpirationDate = parse(tempPassExpiration, 'dd-MM-yyyy HH:mm:ss', new Date(), { locale: fr });
           passwordNewCtrl.setValidators(Validators.compose([passwordNewCtrl.validator, Validators.required]));
           passwordNewCtrl.markAsTouched();
@@ -90,7 +102,7 @@ export class EditProfilePage {
                 filter(expired => expired),
                   tap(() => this.authService.logOut()),
               )),
-              tap(() => this.ngZone.run(() => this.toast.message = this.computeCountdownToExpiration(tempPassExpirationDate)))
+              tap(() => this.ngZone.run(() => this.toast && (this.toast.message = this.computeCountdownToExpiration(tempPassExpirationDate))))
             )))
           )
         } else {
@@ -126,11 +138,22 @@ export class EditProfilePage {
   }
 
   submit() {
-    this.editForm.markAllAsTouched();
-    if (this.editForm.invalid) {
+    this.editForm?.markAllAsTouched();
+    if (this.editForm?.invalid) {
       return;
     } else {
-      const { email, passwordCurrent: oldPassword, changePassword: { passwordNew: newPassword } } = this.editForm.value;
+      const { email, passwordCurrent: oldPassword, changePassword: { passwordNew: newPassword } } = this.editForm?.getRawValue() ?? {changePassword: {}};
+      if (!email || !oldPassword) {
+        void this.toastController.create({
+          message: "L'email ou l'ancien mot de passe ne peuvent être vides",
+          translucent: true,
+          color: 'danger',
+        }).then((toastElt => {
+          this.toast = toastElt;
+          return toastElt.present();
+        }));
+        return;
+      }
       const body: EditProfileBodyRequest = { email, oldPassword };
       if (newPassword) {
         body.newPassword = newPassword;

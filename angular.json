@@ -1,7 +1,6 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
-  "defaultProject": "app",
   "newProjectRoot": "projects",
   "projects": {
     "app": {
@@ -9,10 +8,10 @@
       "sourceRoot": "src",
       "projectType": "application",
       "prefix": "app",
-      "schematics": {},
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
+          "defaultConfiguration": "production",
           "options": {
             "outputPath": "www",
             "index": "src/index.html",
@@ -31,8 +30,11 @@
                 "output": "./svg"
               }
             ],
+            "inlineStyleLanguage": "scss",
             "stylePreprocessorOptions": {
-              "includePaths": ["src/"]
+              "includePaths": [
+                "src/"
+              ]
             },
             "styles": [
               {
@@ -42,7 +44,9 @@
                 "input": "src/global.scss"
               }
             ],
-            "scripts": ["src/assets/js/soundcloud-api.js"]
+            "scripts": [
+              "src/assets/js/soundcloud-api.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -52,22 +56,27 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
                 }
-              ]
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             },
             "ci": {
               "progress": false
@@ -76,12 +85,13 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "app:build"
-          },
+          "defaultConfiguration": "development",
           "configurations": {
             "production": {
               "browserTarget": "app:build:production"
+            },
+            "development": {
+              "browserTarget": "app:build:development"
             },
             "ci": {
               "progress": false
@@ -101,7 +111,11 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
-            "styles": [],
+            "inlineStyleLanguage": "scss",
+            "styles": [
+              "src/theme/variables.scss",
+              "src/global.scss"
+            ],
             "scripts": [],
             "assets": [
               {
@@ -113,6 +127,11 @@
                 "glob": "**/*",
                 "input": "src/assets",
                 "output": "/assets"
+              },
+              {
+                "glob": "**/*.svg",
+                "input": "node_modules/ionicons/dist/ionicons/svg",
+                "output": "./svg"
               }
             ]
           },
@@ -124,14 +143,12 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "tsconfig.app.json",
-              "tsconfig.spec.json",
-              "e2e/tsconfig.json"
-            ],
-            "exclude": ["**/node_modules/**"]
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         },
         "e2e": {
@@ -150,7 +167,7 @@
           }
         },
         "ionic-cordova-build": {
-          "builder": "@ionic/angular-toolkit:cordova-build",
+          "builder": "@ionic/cordova-builders:cordova-build",
           "options": {
             "browserTarget": "app:build"
           },
@@ -161,7 +178,7 @@
           }
         },
         "ionic-cordova-serve": {
-          "builder": "@ionic/angular-toolkit:cordova-serve",
+          "builder": "@ionic/cordova-builders:cordova-serve",
           "options": {
             "cordovaBuildTarget": "app:ionic-cordova-build",
             "devServerTarget": "app:serve"
@@ -177,9 +194,21 @@
     }
   },
   "cli": {
-    "defaultCollection": "@ionic/angular-toolkit"
+    "packageManager": "pnpm",
+    "schematicCollections": [
+      "@angular-eslint/schematics",
+      "@ionic/angular-toolkit"
+    ]
   },
   "schematics": {
+    "@schematics/angular:component": {
+      "style": "scss",
+      "displayBlock": true,
+      "prefix": "mystk"
+    },
+    "@angular/angular-devkit:component": {
+      "styleext": "scss"
+    },
     "@ionic/angular-toolkit:component": {
       "styleext": "scss"
     },

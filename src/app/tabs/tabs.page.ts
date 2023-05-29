@@ -1,6 +1,5 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ContentUpdateService } from '../services/content-update.service';
-import { ViewDidEnter } from '@ionic/angular';
 
 @Component({
   selector: 'app-tabs',
@@ -44,7 +43,7 @@ export class TabsPage {
     }, 1000);
 }
 
-private createElementNotification(element, id) {
+private createElementNotification(element: HTMLSpanElement, id: string) {
   switch (id) {
     case 'broadcastNotification':
       document.getElementsByClassName('tab-layout-icon-top')[1].appendChild(element);

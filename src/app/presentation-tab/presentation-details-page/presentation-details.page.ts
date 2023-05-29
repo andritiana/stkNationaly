@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Presentation } from 'src/app/models/presentation.interface';
-import { DomSanitizer } from '@angular/platform-browser';
-import { FpmaApiService } from 'src/app/services/fpma-api.service';
 
 @Component({
   selector: 'app-presentation-details',
@@ -11,17 +10,16 @@ import { FpmaApiService } from 'src/app/services/fpma-api.service';
 })
 export class PresentationDetailsPage {
 
-  public presentation: Presentation;
+  public presentation?: Presentation;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private sanitized: DomSanitizer,
-    private actRoute: ActivatedRoute
   ) {
     this.route.queryParams.subscribe(params => {
-      if (this.router.getCurrentNavigation().extras.state) {
-        this.presentation = this.router.getCurrentNavigation().extras.state.presentation;
+      if (this.router.getCurrentNavigation()?.extras.state) {
+        this.presentation = this.router.getCurrentNavigation()!.extras.state!.presentation;
       }
     });
   }

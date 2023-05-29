@@ -9,8 +9,8 @@ import { ProfileService } from '../profile.service';
   styleUrls: ['./badge-list.page.scss']
 })
 export class BadgeListPage implements OnInit {
-  badgeList$: Observable<Badge[]>;
-  profile$: Observable<Profile>;
+  badgeList$!: Observable<Badge[]>;
+  profile$!: Observable<Profile>;
 
   constructor(
     private profileService: ProfileService,

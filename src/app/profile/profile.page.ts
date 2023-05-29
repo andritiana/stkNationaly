@@ -10,7 +10,7 @@ import { ProfileService } from './profile.service';
   styleUrls: ['./profile.page.scss'],
 })
 export class ProfilePage implements OnInit {
-  myProfile$: Observable<Profile>;
+  myProfile$?: Observable<Profile>;
 
   constructor(
     private profileService: ProfileService,

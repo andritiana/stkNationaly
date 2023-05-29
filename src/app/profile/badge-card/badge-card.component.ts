@@ -10,35 +10,35 @@ import { Badge, Profile } from '../profile.model';
 export class BadgeCardComponent implements OnInit {
 
   @Input()
-  badge: Badge;
+  badge?: Badge;
   @Input()
-  profile: Profile;
+  profile?: Profile;
 
-  badgeView: EventBadge;
-  qrCodeData: string;
+  badgeView!: EventBadge;
+  qrCodeData: string = '';
 
   constructor() { }
 
   ngOnInit(): void {
-    const { building, floor, id } = this.badge.roomInfos.match(/BAT-(?<building>[^-]*)-(?<floor>[^-]*)-CH(?<id>[^-]*)/).groups
+    const { building = '', floor = '', id = '' } = this.badge?.roomInfos.match(/BAT-(?<building>[^-]*)-(?<floor>[^-]*)-CH(?<id>[^-]*)/)?.groups ?? {}
     const profile = this.profile;
     const room = { building, floor, id };
     this.badgeView = {
-      event: this.badge.eventName,
-      fullName: profile.firstname.trim()
-        .replace(/^(.)(.*)/, (substr, firstLetter: string, otherLetters: string) => firstLetter + otherLetters) + ` ${profile.lastname.toUpperCase()}`,
-      groups: this.badge.remarks?.split('|') ?? [],
+      event: this.badge?.eventName ?? '',
+      fullName: profile?.firstname.trim()
+        .replace(/^(.)(.*)/, (substr, firstLetter: string, otherLetters: string) => firstLetter + otherLetters) + ` ${profile?.lastname.toUpperCase()}`,
+      groups: this.badge?.remarks?.split('|') ?? [],
       location: {
-        district: profile.entityRegion,
-        tafo: profile.entityName,
+        district: profile?.entityRegion ?? '',
+        tafo: profile?.entityName ?? '',
       },
-      responsabilities: profile.responsabilities?.map(({ name }) => name) ?? [],
+      responsabilities: profile?.responsabilities?.map(({ name }) => name) ?? [],
       room,
       meals: null,//{ total: 7, remaining: 7 },
-      timeCategory: this.computeTimeCategory(this.badge),
+      timeCategory: this.badge ? this.computeTimeCategory(this.badge) : 'past',
     }
 
-    this.qrCodeData = this.badge.badgeString;
+    this.qrCodeData = this.badge?.badgeString ?? '';
   }
 
   computeTimeCategory(badge: Badge): EventBadge['timeCategory'] {
@@ -73,10 +73,10 @@ interface EventBadge {
     id: string;
     building: string;
     floor: string
-  },
+  } | null,
   meals: {
     total: number;
     remaining: number;
-  },
+  } | null,
   timeCategory: 'past' | 'current' | 'future';
 }

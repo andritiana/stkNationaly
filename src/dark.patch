@@ -1,0 +1,145 @@
+diff --git a/src/app/global-header/global-header.component.scss b/src/app/global-header/global-header.component.scss
+index 5b857a4..2a9b27f 100644
+--- a/src/app/global-header/global-header.component.scss
++++ b/src/app/global-header/global-header.component.scss
+@@ -1,6 +1,5 @@
+ :host {
+   ion-toolbar {
+-    --background: #FFF;
+     &:last-of-type {
+       --border-width: 0;
+     }
+diff --git a/src/global.scss b/src/global.scss
+index 05b5428..20769f1 100644
+--- a/src/global.scss
++++ b/src/global.scss
+@@ -25,20 +25,24 @@
+ @import "~@ionic/angular/css/text-transformation.css";
+ @import "~@ionic/angular/css/flex-utils.css";
+ 
+-$color-blue-primary: #19338F;
++$color-blue-primary: rgb(25, 51, 143);
+ 
+ :root,
+ ion-content { /* needed to pierce through ion-content's containment, otherwise light DOM doesn't inherit from :root */
+-  --primary-darker-tuple: 26 51 143; //#1A338F
++  --primary-darker-tuple: hsl(227, 20%, 33%); //#1A338F hsl(227 69% 33%)
++  --primary-darker-tuple: 26 51 143; //#1A338F hsl(227 69% 33%)
+   --primary-darker: rgb(var(--primary-darker-tuple)); //#1A338F
+   --mystk-warning-tuple: 245 221 144; // #F5DD90
+   --mystk-warning-color: rgb(var(--mystk-warning-tuple)); // #F5DD90
+   --mystk-success-tuple: 217 235 222; // #D9EBDE
+   --mystk-success-color: rgb(var(--mystk-success-tuple)); // #F5DD90
++  @media (prefers-color-scheme: dark) {
++    --primary-darker-tuple: 246deg 90% 79%;//227deg 69% 83%; //#B6C3F2 hsl(227deg 69% 83%)
++    --primary-darker: hsl(var(--primary-darker-tuple)); //#B6C3F2
++
++  }
+ }
+ ion-content {
+-  --background: #F7F7F7;
+-  --ion-background-color: var(--background);
+   background: var(--background);
+ }
+ ion-header {
+@@ -62,6 +66,10 @@ ion-back-button.hydrated {
+   visibility: visible;
+ }
+ 
++ion-item.item-input.item-has-focus .label-floating {
++  --ion-color-primary: var(--primary-darker);
++}
++
+ 
+ .homeMenu,
+ .refresh-button {
+@@ -124,4 +132,7 @@ ion-back-button.hydrated {
+ /* Inputs */
+ .item.sc-ion-label-md-h, .item .sc-ion-label-md-h {
+   --color: rgba(26, 51, 143, 0.5);
++  @media (prefers-color-scheme: dark) {
++    --color: hsla(227deg, 89%, 93%, 0.7);
++  }
+ }
+diff --git a/src/theme/variables.scss b/src/theme/variables.scss
+index 3d1bc31..6974aaf 100644
+--- a/src/theme/variables.scss
++++ b/src/theme/variables.scss
+@@ -5,8 +5,8 @@
+ /** Ionic CSS Variables **/
+ :root {
+   /** primary **/
+-  --ion-color-primary: #19338F;
+-  --ion-color-primary-rgb: 56, 128, 255;
++  --ion-color-primary: hsl(227deg, 70%, 33%);
++  --ion-color-primary-rgb: 25, 51, 143;
+   --ion-color-primary-contrast: #ffffff;
+   --ion-color-primary-contrast-rgb: 255, 255, 255;
+   --ion-color-primary-shade: #3171e0;
+@@ -84,8 +84,8 @@
+    */
+ 
+   body {
+-    --ion-color-primary: #19338F;
+-    --ion-color-primary-rgb: 66,140,255;
++    --ion-color-primary: hsl(227deg, 70%, 83%);
++    --ion-color-primary-rgb: 181, 194, 242;
+     --ion-color-primary-contrast: #ffffff;
+     --ion-color-primary-contrast-rgb: 255,255,255;
+     --ion-color-primary-shade: #3a7be0;
+@@ -154,8 +154,8 @@
+    */
+ 
+   .ios body {
+-    --ion-background-color: #f8f8f8;
+-    --ion-background-color-rgb: 0,0,0;
++    --ion-background-color: hsl(226deg, 20%, 33%);
++    --ion-background-color-rgb: 67, 75, 101;
+ 
+     --ion-text-color: #000000;
+     --ion-text-color-rgb: 255,255,255;
+@@ -180,11 +180,11 @@
+     --ion-color-step-900: #e6e6e6;
+     --ion-color-step-950: #f2f2f2;
+ 
+-    --ion-toolbar-background: #19338F;
++    --ion-toolbar-background: var(--ion-color-primary);
+ 
+-    --ion-item-background: #19338F;
++    --ion-item-background: var(--ion-background-color);
+ 
+-    --ion-card-background: #19338F;
++    --ion-card-background: var(--ion-color-primary);
+   }
+ 
+ 
+@@ -194,8 +194,8 @@
+    */
+ 
+   .md body {
+-    --ion-background-color: #f8f8f8;
+-    --ion-background-color-rgb: 18,18,18;
++    --ion-background-color: hsl(227deg, 20%, 33%);
++    --ion-background-color-rgb: 67, 75, 101;
+ 
+     --ion-text-color: #000000;
+     --ion-text-color-rgb: 255,255,255;
+@@ -222,12 +222,12 @@
+     --ion-color-step-900: #e7e7e7;
+     --ion-color-step-950: #f3f3f3;
+ 
+-    --ion-item-background: #19338F;
++    --ion-item-background: var(--ion-background-color);
+ 
+-    --ion-toolbar-background: #19338F;
++    --ion-toolbar-background: var(--ion-color-primary);
+ 
+-    --ion-tab-bar-background: #19338F;
++    --ion-tab-bar-background: var(--ion-color-primary);
+ 
+-    --ion-card-background: #19338F;
++    --ion-card-background: var(--ion-color-primary);
+   }
+-}
+\ No newline at end of file
++}

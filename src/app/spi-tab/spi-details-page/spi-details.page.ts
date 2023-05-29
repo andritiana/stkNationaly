@@ -12,10 +12,10 @@ import { DateHelper } from 'src/app/utils/date-helper';
 })
 export class SpiDetailsPage {
 
-  @ViewChild(IonSlides, { static: false }) slides: IonSlides;
+  @ViewChild(IonSlides, { static: false }) slides?: IonSlides;
 
-  public partages: ArticleSpi[];
-  public articleIndex: number;
+  public partages?: ArticleSpi[];
+  public articleIndex?: number;
   public DateHelper = DateHelper;
   currentIndex$ = new BehaviorSubject(0);
   public slideOpts = {
@@ -31,15 +31,15 @@ export class SpiDetailsPage {
   ) {
     this.route.queryParams.subscribe(params => {
         this.articleIndex = this.actRoute.snapshot.params.id;
-        if (this.router.getCurrentNavigation().extras.state) {
-          this.partages = this.router.getCurrentNavigation().extras.state.articles;
-          this.slideOpts.initialSlide = this.articleIndex;
+        if (this.router.getCurrentNavigation()?.extras.state) {
+          this.partages = this.router.getCurrentNavigation()?.extras?.state?.articles;
+          this.slideOpts.initialSlide = this.articleIndex ?? this.slideOpts.initialSlide;
         }
     });
   }
 
   async ionSlideDidChange() {
-    this.currentIndex$.next(await this.slides.getActiveIndex());
+    this.currentIndex$.next(await this.slides!.getActiveIndex());
   }
 
   goToHome() {

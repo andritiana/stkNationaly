@@ -3,9 +3,11 @@ import { StkNews } from '../models/stk-news.interface';
 import { FpmaApiService } from '../services/fpma-api.service';
 import { Router, NavigationExtras } from '@angular/router';
 import { ContentUpdateService } from '../services/content-update.service';
-import { finalize, tap } from 'rxjs/operators';
-import { RefresherEventDetail } from '@ionic/core';
+import { finalize, retry, tap } from 'rxjs/operators';
+import { IonRefresherCustomEvent, RefresherEventDetail } from '@ionic/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'app-stk-news',
   templateUrl: 'stk-news-tab.page.html',
@@ -13,7 +15,7 @@ import { RefresherEventDetail } from '@ionic/core';
 })
 export class StkNewsTabPage {
 
-  public listOfStkNews: StkNews[];
+  public listOfStkNews: StkNews[] = [];
   public pdfToDisplay: string | null = null;
   public start = 0;
 
@@ -21,28 +23,31 @@ export class StkNewsTabPage {
     private fpmaApiService: FpmaApiService,
     private router: Router,
     private contentUpdateService: ContentUpdateService) {
-    this.loadStkNews().subscribe();
+    this.loadStkNews().pipe(untilDestroyed(this)).subscribe((stkNews: StkNews[]) => {
+      this.listOfStkNews = stkNews;
+    });
     this.contentUpdateService.resetNbUpdated('news');
   }
 
   loadStkNews() {
-    return this.fpmaApiService.loadStkNews().pipe(
-      tap((stkNews: StkNews[]) => {
-        this.listOfStkNews = stkNews;
-      }),
-    );
+    return this.fpmaApiService.loadStkNews();
   }
 
-  public loadNewStkNews(event){
-      this.start += 10; 
-      this.fpmaApiService.loadStkNewsWithStart(this.start.toString()).subscribe((listOfStkNews: StkNews[]) =>{ 
+  public loadNewStkNews(event: IonRefresherCustomEvent<void>){
+      this.start += 10;
+      this.fpmaApiService.loadStkNewsWithStart(this.start.toString())
+      .pipe(
+        retry({count: 1, resetOnSuccess: true, delay: 1000 }),
+        untilDestroyed(this),
+        )
+      .subscribe((listOfStkNews: StkNews[]) =>{
         if (listOfStkNews.length == 0) {
           event.target.disabled = true;
          } else {
           this.listOfStkNews = this.listOfStkNews.concat(listOfStkNews);
-        } 
+        }
         event.target.complete();
-      }, () => { }
+      },
       );
   }
 

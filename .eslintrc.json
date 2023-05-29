@@ -1,0 +1,90 @@
+{
+  "root": true,
+  "ignorePatterns": [
+    "projects/**/*"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "*.ts"
+      ],
+      "parserOptions": {
+        "emitDecoratorMetadata": true,
+        "project": [
+          "tsconfig.(app|spec).json"
+        ],
+        "createDefaultProgram": false
+      },
+      "plugins": [
+        "rxjs",
+        "rxjs-angular"
+      ],
+      "extends": [
+        "plugin:@angular-eslint/recommended",
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "plugin:rxjs/recommended",
+        "prettier"
+      ],
+      "rules": {
+        "@angular-eslint/component-selector": [
+          "error",
+          {
+            "prefix": "mystk",
+            "style": "kebab-case",
+            "type": "element"
+          }
+        ],
+        "@angular-eslint/directive-selector": [
+          "error",
+          {
+            "prefix": "mystk",
+            "style": "camelCase",
+            "type": "attribute"
+          }
+        ],
+        "@angular-eslint/component-class-suffix": [
+          "warn",
+          {
+            "suffixes": ["Component", "Page"]
+          }
+        ],
+        "@typescript-eslint/consistent-type-imports": [
+          "warn",
+          {
+            "prefer": "type-imports",
+            "disallowTypeAnnotations": false,
+            "fixStyle": "separate-type-imports"
+          }
+        ],
+        "@typescript-eslint/no-misused-promises": "warn",
+        "@typescript-eslint/no-floating-promises": "warn",
+        "@typescript-eslint/no-inferrable-types": "warn",
+        "rxjs-angular/prefer-takeuntil": [
+          "error",
+          {
+            "alias": ["untilDestroyed"],
+            "checkComplete": true,
+            "checkDecorators": ["Component"]
+          }
+        ],
+        "rxjs/finnish": [
+          "warn",
+          {
+            "methods": false
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "*.html"
+      ],
+      "extends": [
+        "plugin:@angular-eslint/template/recommended"
+      ],
+      "rules": {}
+    }
+  ]
+}

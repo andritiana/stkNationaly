@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { LastVisitUpdates, LastVisitTimestamps } from '../models/lastVisitTimestamps.interface';
-import { Storage } from '@ionic/storage';
-import { Subject } from 'rxjs/internal/Subject';
-import { Observable } from 'rxjs/internal/Observable';
+import { Observable, Subject } from 'rxjs';
+import { LastVisitTimestamps, LastVisitUpdates } from '../models/lastVisitTimestamps.interface';
+import { StorageService } from '../utils/storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +13,7 @@ export class ContentUpdateService {
   private partageUpdateObservable = new Subject<number>();
 
 
-  constructor(private storage: Storage) {}
+  constructor(private storage: StorageService) {}
 
   public initNbUpdated(lastVisitUpdated: LastVisitUpdates) {
     this.updateBroadcastsNb(lastVisitUpdated.broadcasts);
@@ -50,37 +49,35 @@ export class ContentUpdateService {
     this.partageUpdateObservable.next(nbPartagesUpdated);
   }
 
-  public updateEpochTimeStored(content: string): void {
-    this.storage.get('lastVisitTimestamp').then((val: LastVisitTimestamps) => {
-        let contentsEpochTime: LastVisitTimestamps;
-        contentsEpochTime = val;
+  public updateEpochTimeStored(content: keyof LastVisitTimestamps) {
+    return this.storage.get<LastVisitTimestamps>('lastVisitTimestamp').then(contentsEpochTime => {
         const now = new Date();
         const secondsSinceEpoch = Math.round(now.getTime() / 1000);
         contentsEpochTime[content] = secondsSinceEpoch;
-        this.storage.set('lastVisitTimestamp', contentsEpochTime);
+        return this.storage.set('lastVisitTimestamp', contentsEpochTime);
     });
   }
 
-  public resetNbUpdated(content: string) {
+  public resetNbUpdated(content: keyof LastVisitTimestamps) {
     switch (content) {
       case 'broadcasts' : {
         this.updateBroadcastsNb(0);
-        this.updateEpochTimeStored('broadcasts');
+        void this.updateEpochTimeStored('broadcasts');
         break;
       }
       case 'events' : {
         this.updateEventsNb(0);
-        this.updateEpochTimeStored('events');
+        void this.updateEpochTimeStored('events');
         break;
       }
       case 'partages' : {
         this.updatePartagesNb(0);
-        this.updateEpochTimeStored('partages');
+        void this.updateEpochTimeStored('partages');
         break;
       }
       case 'news' : {
         this.updateNewsNb(0);
-        this.updateEpochTimeStored('news');
+        void this.updateEpochTimeStored('news');
         break;
       }
       default: {

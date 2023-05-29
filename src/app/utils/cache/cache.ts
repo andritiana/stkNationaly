@@ -8,7 +8,7 @@ export class CacheBuffer<T> {
   private readonly manualValue$ = new Subject<T>();
   private readonly refresher$ = new BehaviorSubject(null);
   private readonly emits$ = new Subject<T>();
-  private cachedSource$: Observable<T>;
+  private cachedSource$: Observable<T> | null = null;
   private expiration?: number;
   private expirationDate?: Date;
 

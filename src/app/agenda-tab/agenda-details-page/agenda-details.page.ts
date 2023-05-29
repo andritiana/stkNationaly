@@ -12,8 +12,8 @@ export class AgendaDetailsPage {
 
   public DateHelper = DateHelper;
 
-  public events: AgendaEvent[];
-  public eventId: number;
+  public events: AgendaEvent[] = [];
+  public eventId?: number;
   public loading = true;
   public slideOpts = {
     initialSlide: 1,
@@ -27,10 +27,11 @@ export class AgendaDetailsPage {
     private router: Router,
   ) {
     this.route.queryParams.subscribe(params => {
-      if (this.router.getCurrentNavigation().extras.state) {
-        this.events = this.router.getCurrentNavigation().extras.state.events;
-        this.eventId = this.router.getCurrentNavigation().extras.state.id;
-        this.slideOpts.initialSlide = this.eventId;
+      if (this.router.getCurrentNavigation()?.extras.state) {
+        const navState = this.router.getCurrentNavigation()!.extras.state!;
+        this.events = navState.events;
+        this.eventId = navState.id;
+        this.slideOpts.initialSlide = this.eventId ?? this.slideOpts.initialSlide;
         this.loading = false;
       }
      });

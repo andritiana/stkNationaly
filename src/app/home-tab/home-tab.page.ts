@@ -15,7 +15,7 @@ import { catchError } from 'rxjs/operators';
 })
 export class HomeTabPage implements OnInit {
 
-  public verse: Verse;
+  public verse?: Verse;
   public loading = true;
   public displayLiveSections = false;
   public liveSections: LiveSection[] = [];
@@ -84,7 +84,7 @@ export class HomeTabPage implements OnInit {
   }
 
 
-  getColor(colorHexa) {
+  getColor(colorHexa: string) {
     if (colorHexa && /^#([0-9A-F]{3}){1,2}$/i.test(colorHexa)) {
       return colorHexa;
     } else {

@@ -10,11 +10,11 @@ import '../../../assets/js/soundcloud-api.js';
 })
 export class ArticleEmbeddingIframeComponent implements OnInit {
   @Input()
-  article: string;
+  article?: string;
   @HostBinding('class.article-is-visible')
   @Input()
-  isVisible: boolean;
-  processedArticle: SafeHtml;
+  isVisible?: boolean;
+  processedArticle?: SafeHtml;
 
   constructor(
     private domSanitizer: DomSanitizer,
@@ -23,7 +23,7 @@ export class ArticleEmbeddingIframeComponent implements OnInit {
 
   ngOnInit() {
     const container = new DOMParser().parseFromString(
-      this.article,
+      this.article ?? '',
       "text/html"
     );
     const iframes = container.getElementsByTagName("iframe");
@@ -65,12 +65,11 @@ export class ArticleEmbeddingIframeComponent implements OnInit {
     }
 
     iframes.forEach((iframe: HTMLIFrameElement) => {
-      // iframe.style.display = 'none';
-      const mediaUrl = new URL(iframe.getAttribute("src"));
+      const mediaUrl = new URL(iframe.getAttribute("src") ?? '');
 
       if (/youtube.com/.test(mediaUrl.hostname)) {
         // Fonctionne lorsque l'url de la video contient le parametre 'enablejsapi' à 1
-        iframe.contentWindow.postMessage(
+        iframe.contentWindow?.postMessage(
           `{"event":"command","func":"pauseVideo","args":""}`,
           "*"
         );

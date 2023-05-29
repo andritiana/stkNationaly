@@ -9,8 +9,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class LiveSectionsEmbeddedPagePage {
 
-  public title: string;
-  public url: SafeResourceUrl;
+  public title: string = '';
+  public url?: SafeResourceUrl;
   public loading = true;
 
   constructor(
@@ -19,9 +19,10 @@ export class LiveSectionsEmbeddedPagePage {
     private sanitizer: DomSanitizer
     ) {
     this.route.queryParams.subscribe(params => {
-      if (this.router.getCurrentNavigation().extras.state) {
-        this.title = this.router.getCurrentNavigation().extras.state.title;
-        this.url = this.sanitizer.bypassSecurityTrustResourceUrl(this.router.getCurrentNavigation().extras.state.url);
+      if (this.router.getCurrentNavigation()?.extras.state) {
+        const navState = this.router.getCurrentNavigation()!.extras.state!;
+        this.title = navState.title;
+        this.url = this.sanitizer.bypassSecurityTrustResourceUrl(navState.url);
       }
     });
   }

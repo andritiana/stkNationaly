@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { LiveSectionsEmbeddedPagePage } from './live-sections-embedded-page.page';
@@ -7,7 +7,7 @@ describe('LiveSectionsEmbeddedPagePage', () => {
   let component: LiveSectionsEmbeddedPagePage;
   let fixture: ComponentFixture<LiveSectionsEmbeddedPagePage>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ LiveSectionsEmbeddedPagePage ],
       imports: [IonicModule.forRoot()]

@@ -1,6 +1,6 @@
 export interface StkNews {
   id: number;
   title: string;
-  thumbnails: string[];
+  thumbnails: string;
   pdf: string;
 }

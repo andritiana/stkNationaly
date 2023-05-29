@@ -1,10 +1,19 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
-import { catchError, finalize, switchMap, take, tap } from 'rxjs/operators';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { BehaviorSubject } from 'rxjs';
+import { finalize, switchMap, take, tap } from 'rxjs/operators';
+import { HeaderProgressBar } from 'src/app/global-header/global-header.component';
 import { AuthService } from '../auth.service';
 
+interface LoginForm {
+  login: FormControl<string>;
+  password: FormControl<string>;
+}
+
+@UntilDestroy()
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -12,8 +21,11 @@ import { AuthService } from '../auth.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent implements OnInit {
+  loginForm!: FormGroup<LoginForm>;
+  @ViewChild(HeaderProgressBar)
+  private headerProgress: HeaderProgressBar | undefined;
+  processing$ = new BehaviorSubject(false);
 
-  loginForm: FormGroup;
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -21,9 +33,10 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.processing$.pipe(untilDestroyed(this)).subscribe(processing => this.headerProgress?.toggleIndeterminate(processing));
     this.loginForm = new FormGroup({
-      login: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required, Validators.minLength(5)]),
+      login: new FormControl('', {validators: [Validators.required], nonNullable: true}),
+      password: new FormControl('', {validators: [Validators.required, Validators.minLength(5)], nonNullable: true}),
     })
   }
 
@@ -32,13 +45,16 @@ export class LoginComponent implements OnInit {
       return;
     }
     const { login, password } = this.loginForm.value;
+    this.processing$.next(true);
     this.authService
-      .logIn(login, password)
+      .logIn(login!, password!)
       .pipe(
         switchMap(() => this.router.navigate(['/profile'], { replaceUrl: true })),
         tap({
           error: (e) => {
-            this.loginForm.setErrors({ response: e });
+            this.loginForm.controls.login.setErrors({ response: e });
+            this.loginForm.controls.password.setErrors({ response: e });
+            this.processing$.next(false);
             this.toastController.create({
               color: 'danger',
               duration: 3000,
@@ -46,13 +62,15 @@ export class LoginComponent implements OnInit {
             }).then(toast => toast.present());
           }
         }),
-        finalize(() =>
+        finalize(() =>{
+          this.processing$.next(false);
           this.loginForm.valueChanges.pipe(take(1)).subscribe(() => {
-            this.loginForm.setErrors(null);
-          })
-        )
+            this.loginForm.controls.login.updateValueAndValidity();
+            this.loginForm.controls.password.updateValueAndValidity();
+          });
+        })
       )
-      .subscribe(() => this.loginForm.setErrors({}));
+      .subscribe(() => this.loginForm.setErrors(null));
   }
 
 }

@@ -11,7 +11,7 @@ import { Presentation } from '../models/presentation.interface';
 })
 export class PresentationTabPage {
 
-  public presentations: Presentation[];
+  public presentations: Presentation[] = [];
   public loading = true;
   public title = 'Présentation';
 

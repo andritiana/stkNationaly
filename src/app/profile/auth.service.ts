@@ -2,9 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { JwtConfig, JwtHelperService } from '@auth0/angular-jwt';
-import { Storage } from '@ionic/storage';
+import { StorageService } from '../utils/storage.service';
 import { differenceInMinutes } from 'date-fns/esm';
-import { BehaviorSubject, combineLatest, EMPTY, forkJoin, Observable, of } from 'rxjs';
+import { BehaviorSubject, combineLatest, EMPTY, firstValueFrom, forkJoin, Observable, of } from 'rxjs';
 import { map, shareReplay, switchMap, take, tap } from 'rxjs/operators';
 
 const AUTH_STORAGE_KEY = 'auth_token';
@@ -32,10 +32,10 @@ export interface JwtPayload {
 }
 
 export function initializeTokensFromStorage() {
-  const storage = inject(Storage);
+  const storage = inject(StorageService);
   return () => Promise.all([
-    storage.get(REFRESH_STORAGE_KEY).then(refreshToken => refreshToken && refreshToken$.next(refreshToken)),
-    storage.get(AUTH_STORAGE_KEY).then(jwtString => jwtString && accessToken$.next(jwtString)),
+    storage.get<string>(REFRESH_STORAGE_KEY).then(refreshToken => refreshToken && refreshToken$.next(refreshToken)),
+    storage.get<string>(AUTH_STORAGE_KEY).then(jwtString => jwtString && accessToken$.next(jwtString)),
   ]);
 }
 
@@ -45,7 +45,7 @@ export function jwtOptionsFactory(): JwtConfig {
     disallowedRoutes: [
       new RegExp(String.raw`/api/mystk/auth/.*`),
     ],
-    tokenGetter: () => accessToken$.pipe(take(1)).toPromise(),
+    tokenGetter: () => firstValueFrom(accessToken$.pipe(take(1))),
   };
 }
 
@@ -65,7 +65,7 @@ export class AuthService {
   private isRefreshing$ = new BehaviorSubject(false);
 
   constructor(
-    private storage: Storage,
+    private storage: StorageService,
     private http: HttpClient,
     private jwtHelper: JwtHelperService,
     private router: Router,
@@ -98,7 +98,7 @@ export class AuthService {
       )
     )
       .subscribe();
-    return redirect ? this.router.navigateByUrl('/') : Promise.resolve(null);
+    return redirect ? this.router.navigateByUrl('/') : Promise.resolve(false);
   }
 
   private invalidateRefreshToken() {
@@ -126,7 +126,7 @@ export class AuthService {
   shouldRefresh$() {
     return accessToken$.pipe(
       map(token => token
-          ? differenceInMinutes(this.jwtHelper.getTokenExpirationDate(token), new Date()) < 5
+          ? differenceInMinutes(this.jwtHelper.getTokenExpirationDate(token) ?? new Date(), new Date()) < 5
           : true
         ),
     )

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="50107" id="com.stknational.app" ios-CFBundleVersion="5.2.0" version="5.2.0-beta.5" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="50200" id="com.stknational.app" ios-CFBundleVersion="5.2.0" version="5.2.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>MySTK</name>
     <description>Application de la section jeune de l'Eglise protestante malgache en France.</description>
     <author email="marc@stk-national.fr" href="https://stk.fpma.church/">STK National</author>

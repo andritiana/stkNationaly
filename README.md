@@ -2,11 +2,12 @@
 
 ## Dev
 
-### pnpm
+### Pré-requis
+
+#### pnpm
 
 Le package manager utilisé est [pnpm][why pnpm] :
 
-#### Pré-requis
 
 ```shell
 curl -fsSL https://get.pnpm.io/install.sh | sh -
@@ -17,6 +18,54 @@ cf. [documentation][install pnpm] pour windows ou autres manières d'installer p
 [why pnpm]: https://pnpm.io/motivation
 [install pnpm]: https://pnpm.io/installation#on-posix-systems
 
+#### Android
+
+- java 11
+  - instructions pour installer via sdkman
+    - installer sdkman
+
+      ```shell
+      curl -s "https://get.sdkman.io" | bash
+      # suivre les instructions
+      # à la fin, ouvrir un nouveau terminal
+      ```
+  
+      voir [sur le site][sdkman install] pour Windows
+
+    - utilisation
+
+      ```shell
+      # dans le dossier du projet, la première fois
+      sdk env install
+      # configurer sdkman pour qu'il gère la version automatiquement en entrée et en sortie du dossier
+      sdk config # mettre sdkman_auto_env=true
+      # manuellement
+      sdk env # clear en sortie du dossier
+      ```
+
+  - définir la variable d'environnement JAVA_HOME
+    - cf. [doc cordova][set env vars]
+- SDK Android
+  - installer le SDK android
+    - via les [cmdline tools][]
+      - définir la variable d'environnement ANDROID_SDK_ROOT
+
+      ```shell
+      ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager --install "build-tools;32.0.0"  "platform-tools"  "platforms;android-32" "sources;android-32"
+      ```
+
+    - ou en installant Android Studio
+      - [procédure][install Android studio]
+      - [téléchargements][Android Studio downloads]
+      - définir la variable d'environnement ANDROID_SDK_ROOT
+   
+
+[sdkman install]: https://sdkman.io/install
+[set env vars]: https://cordova.apache.org/docs/en/11.x/guide/platforms/android/index.html#setting-environment-variables
+[cmdline tools]: https://developer.android.com/studio?hl=fr#command-tools:~:text=Command%20line%20tools%20only
+[install Android studio]: https://developer.android.com/studio/install?hl=frs
+[Android Studio downloads]: https://developer.android.com/studio?hl=fr#command-tools:~:text=Android%20Studio%20downloads
+
 #### Commandes usuelles
 
 - installer les dépendances  
@@ -24,6 +73,12 @@ cf. [documentation][install pnpm] pour windows ou autres manières d'installer p
   ```shell
   pnpm install
   ```
+
+- pour n'installer que les versions précisément définies dans le pnpm-lock.yml :
+
+```shell
+pnpm install --frozen-lockfile
+```
   
 - ajouter un paquet
 

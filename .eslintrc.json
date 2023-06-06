@@ -11,7 +11,8 @@
       "parserOptions": {
         "emitDecoratorMetadata": true,
         "project": [
-          "tsconfig.(app|spec).json"
+          "tsconfig.app.json",
+          "tsconfig.spec.json"
         ],
         "createDefaultProgram": false
       },

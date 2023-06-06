@@ -14,7 +14,17 @@ const routes: Routes = [
   },
   {
     path: 'my-events',
-    loadComponent: () => import('./my-events/my-events.page').then(m => m.MyEventsPage)
+    /* children needed so Ionic shows the back button */
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./my-events/my-events.page').then(m => m.MyEventsPage)
+      }
+    ],
+  },
+  {
+    path: 'my-events/:eventName',
+    loadComponent: () => import('./my-events/event-articles/event-articles.page').then(m => m.EventArticlesPage)
   },
   {
     path: 'badge-list',

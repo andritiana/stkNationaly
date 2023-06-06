@@ -19,6 +19,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/cdk": "^14.0.0",
     "@angular/common": "^14.2.12",
     "@angular/core": "^14.2.12",
     "@angular/forms": "^14.2.12",
@@ -36,6 +37,8 @@
     "@ionic/core": "^6.4.2",
     "@ionic/storage-angular": "^3.0.6",
     "@ngneat/until-destroy": "^9.2.3",
+    "@rx-angular/cdk": "^14.0.0",
+    "@rx-angular/template": "14.0.0",
     "@wordpress/html-entities": "^3.24.0",
     "color": "^4.2.3",
     "cordova-plugin-firebase-analytics": "^7.0.5",
@@ -52,6 +55,7 @@
     "onesignal-cordova-plugin": "^3.3.0",
     "qrcode": "^1.5.0",
     "rxjs": "^7.8.0",
+    "swiper": "^9.3.2",
     "tslib": "^2.3.1",
     "zone.js": "~0.11.8"
   },

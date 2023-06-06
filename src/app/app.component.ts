@@ -14,6 +14,7 @@ import { combineLatest, concat, distinctUntilChanged, iif, Observable} from 'rxj
 import { bindCallback, EMPTY, filter, from, map, of, switchMap, tap, throwError } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { differenceInBusinessDays } from 'date-fns/esm';
+import {register} from 'swiper/element/bundle';
 
 const enum NotificationPermissionStatus {
   /** The user hasn't yet made a choice about whether the app is allowed to schedule notifications. */
@@ -38,7 +39,7 @@ export class AppComponent {
   @HostBinding('class.splash-showing')
   public showSplash = true;
   environmentInjector = inject(EnvironmentInjector);
-  
+
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
@@ -53,6 +54,7 @@ export class AppComponent {
     private toastCtrl: ToastController,
   ) {
     void this.initializeApp();
+    register(true);
   }
 
   initializeApp() {

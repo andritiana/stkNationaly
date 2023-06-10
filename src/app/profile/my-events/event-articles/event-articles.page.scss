@@ -1,3 +1,55 @@
+@use "src/theme/page";
+@use "src/theme/components/card";
+
 :host {
   display: block;
+  @include page.host;
+  --content-gap: 1.5rem;
+
+  .event-article {
+    &-outer {
+      @include page.content-wrapper;
+    }
+
+    &-segment {
+      --background: #FFF;
+      --border-radius: 150px;
+      border-radius: var(--border-radius);
+      @include card.shadow;
+      &-button {
+        --indicator-color: #DDE0EE;
+        --background-checked: transparent;
+        --border-style: none;
+        --border-radius: 150px;
+        display: none;
+        position: relative;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+
+        &-ripple {
+          margin-left: calc(-1 * var(--padding-start));
+          margin-right: calc(-1 * var(--padding-end));
+        }
+
+        &-shown {
+          display: flex;
+        }
+
+        &-label {
+          font-size: 0.75rem;
+          white-space: normal;
+        }
+
+        &.segment-button-checked {
+          font-weight: 700;
+        }
+      }
+    }
+
+    &-content {
+      &-wrapper {
+        width: 100%;
+      }
+    }
+  }
 }

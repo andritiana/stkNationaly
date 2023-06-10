@@ -1,20 +1,52 @@
 import { CommonModule } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
+import type { ElementRef, OnInit } from '@angular/core';
+import { ApplicationRef, CUSTOM_ELEMENTS_SCHEMA, ChangeDetectorRef, Component, ViewChild, inject } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { ForModule } from '@rx-angular/template/for';
 import { LetModule } from '@rx-angular/template/let';
-import { BehaviorSubject, Observable, combineLatest, distinctUntilChanged, exhaustMap, filter, map, of, shareReplay, switchMap, take, tap } from 'rxjs';
+import { deepEqual, strictDeepEqual } from 'fast-equals';
+import { EMPTY, Observable, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  delayWhen,
+  distinctUntilChanged,
+  filter,
+  fromEventPattern,
+  map,
+  of,
+  pairwise,
+  shareReplay,
+  startWith,
+  switchMap,
+  take,
+  withLatestFrom,
+} from 'rxjs';
 import { ArticleEmbeddingIframeComponentModule } from 'src/app/articles/article-embedding-iframe/article-embedding-iframe.module';
+import { type GenericPost } from 'src/app/models/generic-post.interface';
 import { FpmaApiService } from 'src/app/services/fpma-api.service';
 import { PurifyMethodPipe } from 'src/app/utils/purify-method/purify-method.pipe';
-import { GlobalHeaderModule } from '../../../global-header/global-header.module';
-import { EventCardInfo, ProfileService } from '../../profile.service';
-import { type GenericPost } from 'src/app/models/generic-post.interface';
+import { distinctUntilChangedDeep } from 'src/app/utils/rx/distinct-until-changed-deep';
 import type Swiper from 'swiper';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { SwiperContainer } from 'swiper/element';
+import type { SwiperContainer } from 'swiper/element';
+import { GlobalHeaderModule } from '../../../global-header/global-header.module';
+import type { EventCardInfo } from '../../profile.service';
+import { ProfileService } from '../../profile.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+type GenericPostIndexed = GenericPost & {
+  /** Absolute index in the global array */
+  index: number;
+};
+type ListWithSelectedIndexOfGenericPost = GenericPostIndexed[] & {
+  /** Index of the currently selected slide (in the trio of slides in the DOM) */
+  slideIndex: number;
+};
+
+@UntilDestroy()
 @Component({
   selector: 'mystk-event-articles',
   standalone: true,
@@ -30,17 +62,27 @@ import { SwiperContainer } from 'swiper/element';
         <mystk-page-title>{{ (event$ | async)?.eventName }}</mystk-page-title>
         <ng-template
           [rxLet]="currentIndex$"
+          rxLetStrategy="local"
           let-currentIndex>
-          <ng-container *rxLet="trio$ as articlesTrio">
-            <ion-segment [formControl]="segmentControl">
+          <ng-container *rxLet="trio$ as articlesTrio; strategy: 'native'">
+            <ion-segment
+              [formControl]="segmentControl"
+              class="event-article-segment">
+              <!-- only 3 segment buttons are shown, but all are in the DOM because they have quite a latency before initializing that disrupts the flow of events -->
               <ion-segment-button
-                *ngFor="let article of articlesTrio"
-                [value]="article.title">
-                <ion-label>{{ article.title }}</ion-label>
+                class="event-article-segment-button ion-activatable"
+                *ngFor="let article of articles$ | async; index as idx"
+                [value]="article.index"
+                [class.event-article-segment-button-shown]="articlesTrio | method : articleShouldShow : article"
+                (touchstart)="touchStart($event)">
+                <ion-label class="event-article-segment-button-label">{{ article.title }}</ion-label>
+                <ion-ripple-effect class="event-article-segment-button-ripple"></ion-ripple-effect>
               </ion-segment-button>
             </ion-segment>
-            <swiper-container (slidechange)="slideChanged($any($event))"
-                              #swiper>
+            <swiper-container
+              class="event-article-content-wrapper"
+              (slidechange)="slideChanged($any($event), articlesTrio)"
+              #swiper>
               <swiper-slide *ngFor="let article of articlesTrio">
                 <mystk-article-embedding-iframe
                   class="event-article-content"
@@ -66,75 +108,43 @@ import { SwiperContainer } from 'swiper/element';
   ],
 })
 export class EventArticlesPage implements OnInit {
-  @ViewChild('swiper')
-  swiper?: ElementRef<SwiperContainer>;
-
-  private getEvent = () =>
-    switchMap((eventName: string) =>
-      this.routeState
-        ? of(this.routeState)
-        : this.profileService.getMyEvents().pipe(
-            filter((evt) => evt.eventName.replace(' ', '_') === eventName),
-            // take(1),
-            shareReplay({ refCount: true }),
-          )
-    );
-  private getArticles = () =>
-    switchMap(({ websiteCategoryId }: EventCardInfo) => this.fpmaService.loadGenericPosts(websiteCategoryId));
-
-    segmentControl = new FormControl('');
-
-  event$ = inject(ActivatedRoute).paramMap.pipe(
-    map((params) => params.get('eventName')),
-    filter((p): p is string => !!p),
-    this.getEvent(),
-    shareReplay({ refCount: true })
-  );
-  private articles$ = this.event$.pipe(this.getArticles(), shareReplay({ refCount: false }));
+  articles$: Observable<GenericPostIndexed[]>;
   currentIndex$ = new BehaviorSubject(0);
-  // currentArticle$ = combineLatest([this.currentIndex$, this.articles$]).pipe(
-  //   map(([currentIdx, articles]) => articles[currentIdx]),
-  //   tap( article => this.segmentControl.setValue(article.title)),
-  // );
+  event$: Observable<EventCardInfo>;
+  segmentControl = new FormControl('0', { nonNullable: true });
+  swiper?: Swiper;
+  trio$: Observable<ListWithSelectedIndexOfGenericPost>;
 
-  trio$ = combineLatest([this.articles$, this.currentIndex$]).pipe(
-    distinctUntilChanged((previous, current) => previous[0] == current[0] && previous[1] === current[1]),
-    map(([articles, index]): [GenericPost[], number] => {
-      if (index === 0) {
-        return [articles.slice(0, 3), 0];
-      }
-      if (index === articles.length - 1) {
-        const trio = articles.slice(-3, articles.length);
-        return [trio, trio.length - 1];
-      } else {
-        return [articles.slice(index - 1, index + 2), 1];
-      }
-      return [[], 0];
-    }),
-    map(([trio, relativeIndex]) => Object.assign([] as GenericPost[], trio, { relativeIndex })),
-    tap(trio => this.segmentControl.setValue(trio[trio.relativeIndex].title)),
-    shareReplay(),
-  );
+  @ViewChild('swiper')
+  set swiperContainer(elt: ElementRef<SwiperContainer> | undefined) {
+    this.swiper = elt?.nativeElement.swiper;
+  }
 
+  private readonly cdRef = inject(ChangeDetectorRef);
   private readonly fpmaService = inject(FpmaApiService);
   private readonly profileService = inject(ProfileService);
   private readonly routeState? = inject(Router).getCurrentNavigation()?.extras.state as EventCardInfo;
 
-  constructor() {}
+  constructor() {
+    this.event$ = inject(ActivatedRoute).paramMap.pipe(
+      map((params) => params.get('eventName')),
+      filter((p): p is string => !!p),
+      this.getEvent(),
+      shareReplay({ refCount: true })
+    );
 
-  ngOnInit(): void {
-    combineLatest([this.segmentControl.valueChanges, this.trio$]).pipe(
-      distinctUntilChanged((previous, current) => previous[0] === current[0] && previous[1] === current[1]),
-      map(([selectedTitle, trio]) => trio.findIndex(({title}) => title === selectedTitle ))
-    ).subscribe(index => {
-      this.currentIndex$.next(index);
-      this.swiper?.nativeElement.swiper.slideTo(index);
-    });
-  }
+    this.articles$ = this.event$.pipe(
+      switchMap(({ websiteCategoryId }: EventCardInfo) => this.fpmaService.loadGenericPosts(websiteCategoryId)),
+      map((articles) =>
+        articles
+          .map((a, index) => ({ ...a, index }))
+      ),
+      shareReplay({ refCount: false, bufferSize: 1 })
+    );
 
-  getSlideArticlesAround = (index: number): Observable<GenericPost[] & { relativeIndex: number }> =>
-    this.articles$.pipe(
-      map((articles): [GenericPost[], number] => {
+    this.trio$ = combineLatest([this.articles$, this.currentIndex$]).pipe(
+      distinctUntilChangedDeep(),
+      map(([articles, index]): [articles: GenericPostIndexed[], segment: number] => {
         if (index === 0) {
           return [articles.slice(0, 3), 0];
         }
@@ -144,21 +154,104 @@ export class EventArticlesPage implements OnInit {
         } else {
           return [articles.slice(index - 1, index + 2), 1];
         }
-        return [[], 0];
       }),
-      map(([trio, relativeIndex]) => {
-        const mergedObject = Object.assign([], trio, { relativeIndex });
-        return Object.setPrototypeOf(mergedObject, Array.prototype);
-      }),
-      tap(trio => this.segmentControl.setValue(trio[trio.relativeIndex].title)),
+      map(([trio, slideIndex]) => Object.assign(trio, { slideIndex })),
+      shareReplay({ refCount: true, bufferSize: 1 })
+    );
+  }
+
+  articleShouldShow(trio: GenericPostIndexed[], article: GenericPostIndexed) {
+    return !!trio.find((a) => deepEqual(a, article));
+  }
+
+  ngOnInit(): void {
+    const articlesChangedInTrio$ = this.trio$.pipe(
+      startWith([] as unknown as ListWithSelectedIndexOfGenericPost),
+      pairwise(),
+      map(([prev, curr]): [trio: ListWithSelectedIndexOfGenericPost, changed: boolean] =>
+        // deepEqual ignores the relativeIndex when comparing, so we actually compare the array only
+        prev.length !== 0 && !deepEqual(prev, curr) ? [curr, true] : [curr, false]
+      ),
+      shareReplay({ refCount: true, windowTime: 300, bufferSize: 1 })
     );
 
-  slideChanged(event: CustomEvent<[Swiper]>) {
-    const [swiper] = event.detail;
-    this.currentIndex$.next(swiper.realIndex);
+    this.segmentControl.valueChanges
+      .pipe(distinctUntilChanged())
+      .pipe(
+        startWith(this.segmentControl.value),
+        map((v) => Number(v)),
+        withLatestFrom(this.trio$),
+        map(([absoluteIndex, trio]) => {
+          return {
+            relativeIndex: trio.findIndex(({ index }) => index === absoluteIndex),
+            absoluteIndex,
+          };
+        }),
+        // will trigger the stream of `trio$` immediately, before resuming this pipe
+        tap(({ absoluteIndex }) => this.currentIndex$.next(absoluteIndex)),
+        withLatestFrom(articlesChangedInTrio$),
+        // if the articles in trio changed (and not just the cursor), let the stream of `articlesChangedInTrio$` handle it
+        switchMap(([indices, [, articlesChanged]]) => (articlesChanged ? EMPTY : of(null)).pipe(map(() => indices))),
+        untilDestroyed(this)
+      )
+      .subscribe(({ relativeIndex }) => {
+        if (this.swiper?.realIndex !== relativeIndex) {
+          this.swiper?.slideTo(relativeIndex);
+        }
+      });
+
+    articlesChangedInTrio$
+      .pipe(
+        delayWhen(([, changed]) => {
+          if (changed) {
+            const swiper = this.swiper;
+            /* queue detectChanges and swiper update in the next loop so the template (segments and slides) gets the change of articles first */
+            return Promise.resolve().then(() => {
+              this.cdRef.detectChanges();
+              swiper?.update();
+              return swiperUpdate$(swiper);
+            });
+          } else {
+            return of(null);
+          }
+        }),
+        untilDestroyed(this)
+      )
+      .subscribe(([trio]) => {
+        // if the change came from the segment buttons, swiper is late and trio holds the reference
+        if (this.swiper?.realIndex !== trio.slideIndex) {
+          this.swiper?.slideTo(trio.slideIndex);
+        }
+      });
+
+    function swiperUpdate$(swiper?: Swiper) {
+      return fromEventPattern(
+        (fn) => swiper?.on('update', fn),
+        (fn) => swiper?.off('update', fn)
+      ).pipe(take(1));
+    }
   }
 
-  segmentChanged(e: any) {
-    console.log(e);
+  slideChanged(event: CustomEvent<[Swiper]>, trio: ListWithSelectedIndexOfGenericPost) {
+    const [swiper] = event.detail;
+    // swiper's slide changed so it holds the reference and the segment should follow
+    if (swiper.realIndex !== trio.slideIndex) {
+      this.segmentControl.setValue(trio[swiper.realIndex].index.toString());
+    }
   }
+
+  touchStart(event: TouchEvent) {
+    // prevent click after touch, otherwise segment button is triggered twice (with old *and* new value)
+    event.preventDefault();
+  }
+
+  private getEvent = () =>
+    switchMap((eventName: string) =>
+      this.routeState
+        ? of(this.routeState)
+        : this.profileService.getMyEvents().pipe(
+            filter((evt) => evt.eventName.replace(' ', '_') === eventName),
+            shareReplay({ refCount: true })
+          )
+    );
 }

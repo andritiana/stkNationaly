@@ -36,11 +36,11 @@ export class AuthExpirationInterceptor implements HttpInterceptor {
               isEmpty(),
               catchError((error: HttpErrorResponse) => {
                 if (error.status === 401) {
-                  return throwError(this.router.navigateByUrl('/login')).pipe(
+                  return throwError(() => this.router.navigateByUrl('/login')).pipe(
                     switchMap(() => EMPTY)
                   );
                 } else {
-                  return throwError(error);
+                  return throwError(() => error);
                 }
               }),
               switchMap((wontRefresh) => {

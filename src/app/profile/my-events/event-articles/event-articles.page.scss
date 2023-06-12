@@ -43,12 +43,22 @@
         &.segment-button-checked {
           font-weight: 700;
         }
+
+        ion-skeleton-text {
+          --background-rgb: var(--ion-color-primary-rgb);
+          width: 12ch;
+          height: 2em;
+        }
       }
     }
 
     &-content {
       &-wrapper {
         width: 100%;
+        ion-skeleton-text {
+          --background-rgb: var(--ion-color-primary-rgb);
+          width: 100%;
+        }
       }
     }
   }

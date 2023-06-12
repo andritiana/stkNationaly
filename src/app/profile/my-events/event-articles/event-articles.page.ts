@@ -62,12 +62,13 @@ type ListWithSelectedIndexOfGenericPost = GenericPostIndexed[] & {
         <mystk-page-title>{{ (event$ | async)?.eventName }}</mystk-page-title>
         <ng-template
           [rxLet]="currentIndex$"
-          rxLetStrategy="local"
+          rxLetStrategy="native"
           let-currentIndex>
-          <ng-container *rxLet="trio$ as articlesTrio; strategy: 'native'">
+          <ng-container *rxLet="trio$ as articlesTrio; suspense: loadingTplt; suspenseTrigger: susp; strategy: 'native'">
             <ion-segment
               [formControl]="segmentControl"
-              class="event-article-segment">
+              class="event-article-segment"
+              mode="ios">
               <!-- only 3 segment buttons are shown, but all are in the DOM because they have quite a latency before initializing that disrupts the flow of events -->
               <ion-segment-button
                 class="event-article-segment-button ion-activatable"
@@ -92,6 +93,29 @@ type ListWithSelectedIndexOfGenericPost = GenericPostIndexed[] & {
             </swiper-container>
           </ng-container>
         </ng-template>
+        <ng-template #loadingTplt>
+        <ion-segment
+              class="event-article-segment"
+              mode="ios">
+              <ion-segment-button
+                class="event-article-segment-button event-article-segment-button-shown">
+                <ion-label class="event-article-segment-button-label"><ion-skeleton-text></ion-skeleton-text></ion-label>
+              </ion-segment-button>
+              <ion-segment-button
+                class="event-article-segment-button event-article-segment-button-shown">
+                <ion-label class="event-article-segment-button-label"><ion-skeleton-text></ion-skeleton-text></ion-label>
+              </ion-segment-button>
+              <ion-segment-button
+                class="event-article-segment-button event-article-segment-button-shown">
+                <ion-label class="event-article-segment-button-label"><ion-skeleton-text></ion-skeleton-text></ion-label>
+              </ion-segment-button>
+            </ion-segment>
+            <section class="event-article-content-wrapper">
+              <p *ngFor="let p of skeletonArticle">
+                <ion-skeleton-text></ion-skeleton-text>
+              </p>
+            </section>
+        </ng-template>
       </main>
     </ion-content>
   `,
@@ -114,7 +138,8 @@ export class EventArticlesPage implements OnInit {
   segmentControl = new FormControl('0', { nonNullable: true });
   swiper?: Swiper;
   trio$: Observable<ListWithSelectedIndexOfGenericPost>;
-
+  skeletonArticle = new Array(40);
+  susp = new BehaviorSubject(true);
   @ViewChild('swiper')
   set swiperContainer(elt: ElementRef<SwiperContainer> | undefined) {
     this.swiper = elt?.nativeElement.swiper;

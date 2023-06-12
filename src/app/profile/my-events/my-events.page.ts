@@ -1,14 +1,16 @@
-import { Component, OnInit, inject } from '@angular/core';
+import type { OnInit} from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { isAfter, isWithinInterval, parseISO } from 'date-fns/esm';
-import { Observable, exhaustMap, map, partition, shareReplay, toArray } from 'rxjs';
-import { GlobalHeaderModule } from '../../global-header/global-header.module';
-import { Badge } from '../profile.model';
-import { EventCardInfo, ProfileService } from '../profile.service';
+import type { Observable} from 'rxjs';
+import { partition, shareReplay, toArray } from 'rxjs';
 import { PurifyMethodPipe } from 'src/app/utils/purify-method/purify-method.pipe';
+import { GlobalHeaderModule } from '../../global-header/global-header.module';
+import type { EventCardInfo} from '../profile.service';
+import { ProfileService } from '../profile.service';
 
 
 @Component({
@@ -27,7 +29,7 @@ import { PurifyMethodPipe } from 'src/app/utils/purify-method/purify-method.pipe
         <ion-accordion-group
           multiple
           [value]="['past', 'future', 'ongoing']">
-          <ion-accordion value="ongoing">
+          <ion-accordion value="ongoing" mode="ios">
             <ion-item slot="header"
                       class="my-events-event-time">
               <ion-label>En cours</ion-label>
@@ -36,20 +38,21 @@ import { PurifyMethodPipe } from 'src/app/utils/purify-method/purify-method.pipe
               slot="content"
               class="my-events-event-list">
               <li
-                class="my-events-event-card"
+                class="my-events-event-card ion-activatable"
                 *ngFor="let event of ongoingEvent$ | async">
                 <a
                   class="my-events-event-card-anchor"
-                  [routerLink]="[event.eventName | method:replaceSpaces]">
+                  [routerLink]="[(event.websiteCategoryId ? event.eventName : '.') | method:replaceSpaces]">
                   <ion-icon
                     class="my-events-event-card-anchor-icon"
                     src="/assets/icon/icon-event.svg"></ion-icon>
                   {{ event.eventName }}
                 </a>
+                <ion-ripple-effect></ion-ripple-effect>
               </li>
             </ul>
           </ion-accordion>
-          <ion-accordion value="future">
+          <ion-accordion value="future" mode="ios">
             <ion-item slot="header"
                       class="my-events-event-time">
               <ion-label>À venir</ion-label>
@@ -58,20 +61,21 @@ import { PurifyMethodPipe } from 'src/app/utils/purify-method/purify-method.pipe
               slot="content"
               class="my-events-event-list">
               <li
-                class="my-events-event-card"
+                class="my-events-event-card ion-activatable"
                 *ngFor="let event of futureEvents$ | async">
                 <a
                   class="my-events-event-card-anchor"
-                  [routerLink]="[event.eventName | method:replaceSpaces]">
+                  [routerLink]="[(event.websiteCategoryId ? event.eventName : '.') | method:replaceSpaces]">
                   <ion-icon
                     class="my-events-event-card-anchor-icon"
                     src="/assets/icon/icon-event.svg"></ion-icon>
                   {{ event.eventName }}
                 </a>
+                <ion-ripple-effect></ion-ripple-effect>
               </li>
             </ul>
           </ion-accordion>
-          <ion-accordion value="past">
+          <ion-accordion value="past" mode="ios">
             <ion-item slot="header"
                       class="my-events-event-time">
               <ion-label>Passés</ion-label>
@@ -80,29 +84,21 @@ import { PurifyMethodPipe } from 'src/app/utils/purify-method/purify-method.pipe
               slot="content"
               class="my-events-event-list">
               <li
-                class="my-events-event-card"
+                class="my-events-event-card ion-activatable"
                 *ngFor="let event of pastEvents$ | async">
                 <a
                   class="my-events-event-card-anchor"
-                  [routerLink]="[event.eventName | method:replaceSpaces]">
+                  [routerLink]="[(event.websiteCategoryId ? event.eventName : '.') | method:replaceSpaces]">
                   <ion-icon
                     class="my-events-event-card-anchor-icon"
                     src="/assets/icon/icon-event.svg"></ion-icon>
                   {{ event.eventName }}
                 </a>
+                <ion-ripple-effect></ion-ripple-effect>
               </li>
             </ul>
           </ion-accordion>
         </ion-accordion-group>
-        <!-- <a *ngFor="let event of myEvents"
-            class="my-events-route-anchor ion-activatable"
-            [routerLink]="['events']">
-            <ion-ripple-effect></ion-ripple-effect>
-            <ion-icon
-              class="my-events-route-anchor-icon"
-              src="/assets/icon/icon-event.svg"></ion-icon>
-            {{event.eventName}}
-          </a> -->
       </main>
     </ion-content>
   `,
@@ -110,8 +106,8 @@ import { PurifyMethodPipe } from 'src/app/utils/purify-method/purify-method.pipe
   imports: [CommonModule, IonicModule, GlobalHeaderModule, RouterModule, PurifyMethodPipe],
 })
 export class MyEventsPage implements OnInit {
-  ongoingEvent$!: Observable<EventCardInfo[]>;
   futureEvents$!: Observable<EventCardInfo[]>;
+  ongoingEvent$!: Observable<EventCardInfo[]>;
   pastEvents$!: Observable<EventCardInfo[]>;
   private readonly profileService = inject(ProfileService);
 

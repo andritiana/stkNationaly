@@ -4,6 +4,12 @@
   </ion-toolbar>
 </ion-header>
 <ion-content fullscreen>
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($any($event))">
+    <ion-refresher-content
+      refreshingSpinner="crescent"
+      refreshingText="Mise à jour...">
+    </ion-refresher-content>
+  </ion-refresher>
   <main class="profile-outer"
         *ngIf="myProfile$ | async as profile">
     <mystk-page-title>Mon profil</mystk-page-title>

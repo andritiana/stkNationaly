@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
-import { Platform } from '@ionic/angular';
+import { Platform, RefresherEventDetail } from '@ionic/angular';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { addWeeks } from 'date-fns';
 import { isAfter, parseISO } from 'date-fns/esm';
 import OneSignal from 'onesignal-cordova-plugin';
 import type { Observable, Subscription } from 'rxjs';
-import { bindCallback, combineLatest, map, shareReplay } from 'rxjs';
+import { bindCallback, combineLatest, map } from 'rxjs';
 import { AuthService } from './auth.service';
 import type { Profile } from './profile.model';
 import { ProfileService } from './profile.service';
@@ -26,13 +26,17 @@ let readTagsOnce = false;
   styleUrls: ['./profile.page.scss'],
 })
 export class ProfilePage {
+  loading$!: Observable<boolean>;
   myProfile$?: Observable<Profile>;
   private platform = inject(Platform);
 
   constructor(private profileService: ProfileService, private authService: AuthService) {}
 
-  ionViewDidEnter(): void {
-    this.myProfile$ = this.profileService.getMyProfile().pipe(shareReplay({ refCount: true, bufferSize: 1 }));
+  ngOnInit() {
+    this.profileService.profileCache.setExpiration(1000 * 60 * 10);
+    this.loading$ = this.profileService.profileCache.getEvents().isLoading$();
+    this.myProfile$ = this.profileService.getMyProfile();
+
     void this.platform.ready().then((readySource) => {
       if (readySource === 'cordova' && !readTagsOnce) {
         this.sendOrDeleteEventTags();
@@ -40,11 +44,15 @@ export class ProfilePage {
       }
 
     });
-
   }
 
   logOut() {
     return this.authService.logOut();
+  }
+
+  public async refresh(evt: CustomEvent<RefresherEventDetail>) {
+    await this.profileService.profileCache.refresh();
+    evt.detail.complete();
   }
 
   private sendOrDeleteEventTags(): Subscription {

@@ -268,7 +268,7 @@ export class AppComponent {
   }
 
   handleAndroidBackButton() {
-    this.platform.backButton.subscribeWithPriority(-1, () => {
+    this.platform.backButton.subscribeWithPriority(-1, (processNext) => {
       const url = this.router.url;
 
       // Si on clique sur le back button depuis la page d'accueil, on ferme l'application
@@ -277,11 +277,12 @@ export class AppComponent {
         (navigator as any)['app'].exitApp();
       }
       // Si on clique sur la back button depuis une page de catégorie située au même niveau
-      // que la page d'accueil, on revient sur la page d'accueil (ex : /tabs/{rootCategory}, /(profile|profile))
-      else if (/^\/tabs\/[^\/]+$/.test(url) || /^\/profile\/[^\/]+$/.test(url) || /^\/login\/[^\/]+$/.test(url)) {
+      // que la page d'accueil, on revient sur la page d'accueil (ex : /tabs/{rootCategory}, /(profile|login))
+      else if (/^\/tabs\/[^\/]+$/.test(url) || /^\/profile$/.test(url) || /^\/login\/[^\/]+$/.test(url)) {
         void this.router.navigateByUrl('/tabs/home');
       }
       // Sinon, comportement par défaut d'Ionic
+      processNext();
     });
   }
 

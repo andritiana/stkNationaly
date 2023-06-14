@@ -1,16 +1,18 @@
 import { CommonModule } from '@angular/common';
 import type { ElementRef, OnInit } from '@angular/core';
-import { ApplicationRef, CUSTOM_ELEMENTS_SCHEMA, ChangeDetectorRef, Component, ViewChild, inject } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectorRef, Component, ViewChild, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
-import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import { IonicModule, Platform, ViewDidLeave } from '@ionic/angular';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ForModule } from '@rx-angular/template/for';
 import { LetModule } from '@rx-angular/template/let';
-import { deepEqual, strictDeepEqual } from 'fast-equals';
-import { EMPTY, Observable, tap } from 'rxjs';
+import { deepEqual } from 'fast-equals';
 import {
   BehaviorSubject,
+  EMPTY,
+  Observable,
+  Subscription,
   combineLatest,
   delayWhen,
   distinctUntilChanged,
@@ -23,6 +25,7 @@ import {
   startWith,
   switchMap,
   take,
+  tap,
   withLatestFrom,
 } from 'rxjs';
 import { ArticleEmbeddingIframeComponentModule } from 'src/app/articles/article-embedding-iframe/article-embedding-iframe.module';
@@ -35,7 +38,6 @@ import type { SwiperContainer } from 'swiper/element';
 import { GlobalHeaderModule } from '../../../global-header/global-header.module';
 import type { EventCardInfo } from '../../profile.service';
 import { ProfileService } from '../../profile.service';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 type GenericPostIndexed = GenericPost & {
   /** Absolute index in the global array */
@@ -64,7 +66,7 @@ type ListWithSelectedIndexOfGenericPost = GenericPostIndexed[] & {
           [rxLet]="currentIndex$"
           rxLetStrategy="native"
           let-currentIndex>
-          <ng-container *rxLet="trio$ as articlesTrio; suspense: loadingTplt; suspenseTrigger: susp; strategy: 'native'">
+          <ng-container *rxLet="trio$ as articlesTrio; suspense: loadingTplt; strategy: 'native'">
             <ion-segment
               [formControl]="segmentControl"
               class="event-article-segment"
@@ -94,27 +96,24 @@ type ListWithSelectedIndexOfGenericPost = GenericPostIndexed[] & {
           </ng-container>
         </ng-template>
         <ng-template #loadingTplt>
-        <ion-segment
-              class="event-article-segment"
-              mode="ios">
-              <ion-segment-button
-                class="event-article-segment-button event-article-segment-button-shown">
-                <ion-label class="event-article-segment-button-label"><ion-skeleton-text></ion-skeleton-text></ion-label>
-              </ion-segment-button>
-              <ion-segment-button
-                class="event-article-segment-button event-article-segment-button-shown">
-                <ion-label class="event-article-segment-button-label"><ion-skeleton-text></ion-skeleton-text></ion-label>
-              </ion-segment-button>
-              <ion-segment-button
-                class="event-article-segment-button event-article-segment-button-shown">
-                <ion-label class="event-article-segment-button-label"><ion-skeleton-text></ion-skeleton-text></ion-label>
-              </ion-segment-button>
-            </ion-segment>
-            <section class="event-article-content-wrapper">
-              <p *ngFor="let p of skeletonArticle">
-                <ion-skeleton-text></ion-skeleton-text>
-              </p>
-            </section>
+          <ion-segment
+            class="event-article-segment"
+            mode="ios">
+            <ion-segment-button class="event-article-segment-button event-article-segment-button-shown">
+              <ion-label class="event-article-segment-button-label"><ion-skeleton-text></ion-skeleton-text></ion-label>
+            </ion-segment-button>
+            <ion-segment-button class="event-article-segment-button event-article-segment-button-shown">
+              <ion-label class="event-article-segment-button-label"><ion-skeleton-text></ion-skeleton-text></ion-label>
+            </ion-segment-button>
+            <ion-segment-button class="event-article-segment-button event-article-segment-button-shown">
+              <ion-label class="event-article-segment-button-label"><ion-skeleton-text></ion-skeleton-text></ion-label>
+            </ion-segment-button>
+          </ion-segment>
+          <section class="event-article-content-wrapper">
+            <p *ngFor="let p of skeletonArticle">
+              <ion-skeleton-text></ion-skeleton-text>
+            </p>
+          </section>
         </ng-template>
       </main>
     </ion-content>
@@ -131,15 +130,16 @@ type ListWithSelectedIndexOfGenericPost = GenericPostIndexed[] & {
     ReactiveFormsModule,
   ],
 })
-export class EventArticlesPage implements OnInit {
+export class EventArticlesPage implements OnInit, ViewDidLeave {
   articles$: Observable<GenericPostIndexed[]>;
   currentIndex$ = new BehaviorSubject(0);
   event$: Observable<EventCardInfo>;
   segmentControl = new FormControl('0', { nonNullable: true });
+  skeletonArticle = new Array(40);
+  subs: Subscription[] = [];
   swiper?: Swiper;
   trio$: Observable<ListWithSelectedIndexOfGenericPost>;
-  skeletonArticle = new Array(40);
-  susp = new BehaviorSubject(true);
+
   @ViewChild('swiper')
   set swiperContainer(elt: ElementRef<SwiperContainer> | undefined) {
     this.swiper = elt?.nativeElement.swiper;
@@ -147,6 +147,7 @@ export class EventArticlesPage implements OnInit {
 
   private readonly cdRef = inject(ChangeDetectorRef);
   private readonly fpmaService = inject(FpmaApiService);
+  private readonly platform = inject(Platform);
   private readonly profileService = inject(ProfileService);
   private readonly routeState? = inject(Router).getCurrentNavigation()?.extras.state as EventCardInfo;
 
@@ -160,10 +161,7 @@ export class EventArticlesPage implements OnInit {
 
     this.articles$ = this.event$.pipe(
       switchMap(({ websiteCategoryId }: EventCardInfo) => this.fpmaService.loadGenericPosts(websiteCategoryId)),
-      map((articles) =>
-        articles
-          .map((a, index) => ({ ...a, index }))
-      ),
+      map((articles) => articles.map((a, index) => ({ ...a, index }))),
       shareReplay({ refCount: false, bufferSize: 1 })
     );
 
@@ -183,10 +181,16 @@ export class EventArticlesPage implements OnInit {
       map(([trio, slideIndex]) => Object.assign(trio, { slideIndex })),
       shareReplay({ refCount: true, bufferSize: 1 })
     );
+
+    this.handleBackButton();
   }
 
   articleShouldShow(trio: GenericPostIndexed[], article: GenericPostIndexed) {
     return !!trio.find((a) => deepEqual(a, article));
+  }
+
+  ionViewDidLeave() {
+    this.subs.forEach((s) => s.unsubscribe());
   }
 
   ngOnInit(): void {
@@ -279,4 +283,15 @@ export class EventArticlesPage implements OnInit {
             shareReplay({ refCount: true })
           )
     );
+
+  private handleBackButton() {
+    const subscription = this.platform.backButton.subscribeWithPriority(0, (processNext) => {
+      if (!this.swiper?.isBeginning ?? false) {
+        this.swiper?.slideTo(0);
+      } else {
+        processNext();
+      }
+    });
+    this.subs.push(subscription);
+  }
 }

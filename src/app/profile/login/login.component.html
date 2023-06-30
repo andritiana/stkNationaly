@@ -10,16 +10,24 @@
       <h2 class="login-h2">Connecte-toi à ton profil grâce à tes identifiants</h2>
     </header>
     <form class="login-form"
-          [formGroup]="loginForm">
+          [formGroup]="loginForm"
+          (submit)="submit()">
       <ion-item>
         <ion-label position="floating">Nom d'utilisateur ou adresse e-mail</ion-label>
-        <ion-input formControlName="login"></ion-input>
+        <ion-input formControlName="login" autocomplete type="email" name="login"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="floating">Mot de passe</ion-label>
-        <ion-input type="password"
-                   formControlName="password"></ion-input>
+        <ion-input passwordRevelator
+                   [icon]="passwordIcon"
+                   #revelator="revelator"
+                   formControlName="password"
+                   type="password"
+                   name="password"
+                   autocomplete></ion-input>
+        <ion-icon color="primary" #passwordIcon (click)="revelator.toggle()" slot="end"></ion-icon>
       </ion-item>
+      <button style="position: absolute; visibility: hidden; pointer-events: none;"></button>
     </form>
     <div class="login-actions">
       <ion-button expand="block"

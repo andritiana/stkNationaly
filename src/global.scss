@@ -141,4 +141,7 @@ ion-item {
 .item-label .label-floating {
   --color: rgba(26, 51, 143, 0.5);
 }
+.item-input:has(.pr-input-with-icon) {
+  align-items: center;
+}
 

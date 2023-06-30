@@ -1,16 +1,19 @@
 import { Location } from '@angular/common';
 import { Component, HostBinding, NgZone } from '@angular/core';
-import { FormControl, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
+import type { UntypedFormControl} from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { differenceInHours, intervalToDuration, parse } from 'date-fns/esm';
 import { fr } from 'date-fns/esm/locale';
-import { combineLatest, EMPTY, from, interval, Observable, of, Subscription } from 'rxjs';
+import type { Observable, Subscription} from 'rxjs';
+import { EMPTY, combineLatest, from, interval, of } from 'rxjs';
 import { filter, map, shareReplay, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { sameValidator } from 'src/app/forms/validators';
 import { AuthService } from '../auth.service';
-import { EditProfileBodyRequest } from '../profile.model';
+import type { EditProfileBodyRequest } from '../profile.model';
 import { ProfileService } from '../profile.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 interface ProfileEditionForm {
   firstName: FormControl<string | null>;
@@ -162,10 +165,10 @@ export class EditProfilePage {
         .editMyProfile(body)
         .pipe(
           tap({
-            error: (error) => {
+            error: (error: HttpErrorResponse) => {
               this.toastController
                 .create({
-                  message: error.message,
+                  message: error?.message,
                   color: 'danger',
                   duration: 3000,
                 })

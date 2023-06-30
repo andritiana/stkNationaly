@@ -6,6 +6,7 @@ import { EditProfilePage } from './edit-profile.page';
 import { IonicModule } from '@ionic/angular';
 import { GlobalHeaderModule } from 'src/app/global-header/global-header.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { PasswordRevelatorDirective } from '../../forms/reveal-password.directive';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     ReactiveFormsModule,
     GlobalHeaderModule,
     EditProfileRoutingModule,
+    PasswordRevelatorDirective,
   ],
 })
 export class EditProfileModule { }

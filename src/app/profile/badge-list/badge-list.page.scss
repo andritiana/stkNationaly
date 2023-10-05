@@ -27,3 +27,15 @@
     }
   }
 }
+.badges-preview-list-item-handle {
+  position: absolute;
+  top: 30%;
+  transform: translateY(-50%);
+  right: 1rem;
+  font-size: 1.5rem;
+  opacity: .2;
+
+  &:where(mystk-badge-card:last-of-type  *) {
+    top: 50%;
+  }
+}

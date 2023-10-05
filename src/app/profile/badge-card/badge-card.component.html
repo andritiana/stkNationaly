@@ -1,4 +1,4 @@
-<header [ngClass]="['badge-event', 'badge-event-' + badgeView.timeCategory]">{{badgeView.event}}</header>
+<header [ngClass]="['badge-event', 'badge-event-' + badgeView.timeCategory]"><span>{{badgeView.event}}</span><ng-content select="[cdkDragHandle]"></ng-content></header>
 <div class="badge-code">
   <mystk-qrcode-generator [data]="qrCodeData | json"></mystk-qrcode-generator>
 </div>

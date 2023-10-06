@@ -25,8 +25,6 @@ specifiers:
   '@awesome-cordova-plugins/core': ^6.3.0
   '@awesome-cordova-plugins/firebase-analytics': ^6.3.0
   '@awesome-cordova-plugins/onesignal': ^6.3.0
-  '@awesome-cordova-plugins/splash-screen': ^6.3.0
-  '@awesome-cordova-plugins/status-bar': ^6.3.0
   '@ionic/angular': ^6.4.2
   '@ionic/angular-toolkit': ^7.0.0
   '@ionic/cli': ^6.20.8
@@ -69,7 +67,7 @@ specifiers:
   jasmine-spec-reporter: ~7.0.0
   karma: ~6.4.1
   karma-chrome-launcher: ~3.1.1
-  karma-coverage-istanbul-reporter: ~3.0.3
+  karma-coverage: ~2.2.0
   karma-jasmine: ~5.1.0
   karma-jasmine-html-reporter: ^2.0.0
   localforage: ^1.10.0
@@ -99,8 +97,6 @@ dependencies:
   '@awesome-cordova-plugins/core': 6.3.0_rxjs@7.8.0
   '@awesome-cordova-plugins/firebase-analytics': 6.3.0_ntg3f3zqlxxfimid6yk2jr2ztu
   '@awesome-cordova-plugins/onesignal': 6.3.0_ntg3f3zqlxxfimid6yk2jr2ztu
-  '@awesome-cordova-plugins/splash-screen': 6.3.0_ntg3f3zqlxxfimid6yk2jr2ztu
-  '@awesome-cordova-plugins/status-bar': 6.3.0_ntg3f3zqlxxfimid6yk2jr2ztu
   '@ionic/angular': 6.7.0_3fzbrz2jxpio33aaizjosenm3i
   '@ionic/cordova-builders': 7.0.0_gkeoc4qcbaqxncabkukiruxlri
   '@ionic/core': 6.7.0
@@ -169,7 +165,7 @@ devDependencies:
   jasmine-spec-reporter: 7.0.0
   karma: 6.4.1
   karma-chrome-launcher: 3.1.1
-  karma-coverage-istanbul-reporter: 3.0.3
+  karma-coverage: 2.2.1
   karma-jasmine: 5.1.0_karma@6.4.1
   karma-jasmine-html-reporter: 2.0.0_uk6l45dlsjldsnfgnal4othgyq
   prettier: 2.8.7
@@ -668,28 +664,6 @@ packages:
 
   /@awesome-cordova-plugins/onesignal/6.3.0_ntg3f3zqlxxfimid6yk2jr2ztu:
     resolution: {integrity: sha512-BEfv2RP+HyqWHvvFhcbCiibDni6BwovazxtQbr2ZQ2taNr6tQT2RnSWjvBMd2NVTlh7fcnGdoarpFGOZsf5+Uw==}
-    peerDependencies:
-      '@awesome-cordova-plugins/core': ^6.0.1
-      rxjs: ^5.5.0 || ^6.5.0 || ^7.3.0
-    dependencies:
-      '@awesome-cordova-plugins/core': 6.3.0_rxjs@7.8.0
-      '@types/cordova': 11.0.0
-      rxjs: 7.8.0
-    dev: false
-
-  /@awesome-cordova-plugins/splash-screen/6.3.0_ntg3f3zqlxxfimid6yk2jr2ztu:
-    resolution: {integrity: sha512-ToKzDZxt6Y4cqAanoLFx//pKrp29d2R939qPKtaMSCfD+qGdqJZl5GGb+6P9FwqHzmpvHf2o8WkiSKBjchcQTg==}
-    peerDependencies:
-      '@awesome-cordova-plugins/core': ^6.0.1
-      rxjs: ^5.5.0 || ^6.5.0 || ^7.3.0
-    dependencies:
-      '@awesome-cordova-plugins/core': 6.3.0_rxjs@7.8.0
-      '@types/cordova': 11.0.0
-      rxjs: 7.8.0
-    dev: false
-
-  /@awesome-cordova-plugins/status-bar/6.3.0_ntg3f3zqlxxfimid6yk2jr2ztu:
-    resolution: {integrity: sha512-YDblzIKyPN5PGhd4YFhYcZP2AmS4gGQpCTbdpGenzymGPF5CyMrfIVGg7I2x39JsbQDUnGPOWIDUhy+5aLuLSg==}
     peerDependencies:
       '@awesome-cordova-plugins/core': ^6.0.1
       rxjs: ^5.5.0 || ^6.5.0 || ^7.3.0
@@ -6136,11 +6110,6 @@ packages:
   /isstream/0.1.2:
     resolution: {integrity: sha1-R+Y/evVa+m+S4VAOaQ64uFKcCZo=}
 
-  /istanbul-lib-coverage/2.0.5:
-    resolution: {integrity: sha512-8aXznuEPCJvGnMSRft4udDRDtb1V3pkQkMMI5LI+6HuQz5oQ4J2UFn1H82raA3qJtyOLkkwVqICBQkjnGtn5mA==}
-    engines: {node: '>=6'}
-    dev: true
-
   /istanbul-lib-coverage/3.2.0:
     resolution: {integrity: sha512-eOeJ5BHCmHYvQK7xt9GkdHuzuCGS1Y6g9Gvnx3Ym33fz/HpLRYxiS0wHNr+m/MBC8B647Xt608vCDEvhl9c6Mw==}
     engines: {node: '>=8'}
@@ -6166,21 +6135,19 @@ packages:
       supports-color: 7.2.0
     dev: true
 
-  /istanbul-lib-source-maps/3.0.6:
-    resolution: {integrity: sha512-R47KzMtDJH6X4/YW9XTx+jrLnZnscW4VpNN+1PViSYTejLVPWv7oov+Duf8YQSPyVRUvueQqz1TcsC6mooZTXw==}
-    engines: {node: '>=6'}
+  /istanbul-lib-source-maps/4.0.1:
+    resolution: {integrity: sha512-n3s8EwkdFIJCG3BPKBYvskgXGoy88ARzvegkitk60NxRdwltLOTaH7CUiMRXvwYorl0Q712iEjcWB+fK/MrWVw==}
+    engines: {node: '>=10'}
     dependencies:
       debug: 4.3.4
-      istanbul-lib-coverage: 2.0.5
-      make-dir: 2.1.0
-      rimraf: 2.7.1
+      istanbul-lib-coverage: 3.2.0
       source-map: 0.6.1
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /istanbul-reports/3.0.2:
-    resolution: {integrity: sha512-9tZvz7AiR3PEDNGiV9vIouQ/EAcqMXFmkcA1CDFTwOB98OZVDL0PH9glHotf5Ugp6GCOTypfzGWI/OqjWNCRUw==}
+  /istanbul-reports/3.1.5:
+    resolution: {integrity: sha512-nUsEMa9pBt/NOHqbcbeJEgqIlY/K7rVWUX6Lql2orY5e9roQOthbR3vtY4zzf2orPELg80fnxxk9zUyPlgwD1w==}
     engines: {node: '>=8'}
     dependencies:
       html-escaper: 2.0.2
@@ -6324,13 +6291,15 @@ packages:
       which: 1.3.1
     dev: true
 
-  /karma-coverage-istanbul-reporter/3.0.3:
-    resolution: {integrity: sha512-wE4VFhG/QZv2Y4CdAYWDbMmcAHeS926ZIji4z+FkB2aF/EposRb6DP6G5ncT/wXhqUfAb/d7kZrNKPonbvsATw==}
+  /karma-coverage/2.2.1:
+    resolution: {integrity: sha512-yj7hbequkQP2qOSb20GuNSIyE//PgJWHwC2IydLE6XRtsnaflv+/OSGNssPjobYUlhVVagy99TQpqUt3vAUG7A==}
+    engines: {node: '>=10.0.0'}
     dependencies:
       istanbul-lib-coverage: 3.2.0
+      istanbul-lib-instrument: 5.2.1
       istanbul-lib-report: 3.0.0
-      istanbul-lib-source-maps: 3.0.6
-      istanbul-reports: 3.0.2
+      istanbul-lib-source-maps: 4.0.1
+      istanbul-reports: 3.1.5
       minimatch: 3.1.2
     transitivePeerDependencies:
       - supports-color
@@ -6683,6 +6652,7 @@ packages:
     dependencies:
       pify: 4.0.1
       semver: 5.7.1
+    optional: true
 
   /make-dir/3.1.0:
     resolution: {integrity: sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw==}

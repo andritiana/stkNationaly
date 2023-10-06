@@ -1,7 +1,5 @@
 import { Component, EnvironmentInjector, HostBinding, NgZone, inject } from '@angular/core';
 import { ActionSheetController, Platform, ToastController } from '@ionic/angular';
-import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
-import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
 import { FpmaApiService } from './services/fpma-api.service';
 import { ContentUpdateService } from './services/content-update.service';
 import type { LastVisitTimestamps, LastVisitUpdates } from './models/lastVisitTimestamps.interface';
@@ -42,8 +40,6 @@ export class AppComponent {
 
   constructor(
     private platform: Platform,
-    private splashScreen: SplashScreen,
-    private statusBar: StatusBar,
     private storage: StorageService,
     private fpmaService: FpmaApiService,
     private contentUpdateService: ContentUpdateService,
@@ -59,7 +55,6 @@ export class AppComponent {
 
   initializeApp() {
     return this.platform.ready().then(() => {
-      this.statusBar.styleDefault();
 
       this.firebaseAnalytics.logEvent('page_view', {page: 'home'})
         .then?.((res: any) => console.log(res))
@@ -75,9 +70,6 @@ export class AppComponent {
       // Spécifique à Android : ferme l'application lorsque l'on clique sur le back button
       this.handleAndroidBackButton();
 
-      if (typeof ngDevMode !== 'undefined' && !!ngDevMode) {
-        this.splashScreen.hide();
-      }
     });
   }
 

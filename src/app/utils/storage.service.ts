@@ -7,7 +7,7 @@ import { Storage } from '@ionic/storage-angular';
 })
 export class StorageService {
   private _storage?: Storage;
-  storage!: Promise<Storage>;
+  private storage!: Promise<Storage>;
 
   constructor() {
     void this.init();

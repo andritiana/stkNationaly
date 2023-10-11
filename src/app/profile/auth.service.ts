@@ -1,16 +1,16 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { JwtConfig, JwtHelperService } from '@auth0/angular-jwt';
-import { differenceInMinutes } from 'date-fns/esm';
+import { differenceInMinutes } from 'date-fns';
 import { BehaviorSubject, combineLatest, EMPTY, firstValueFrom, forkJoin, Observable, of, timer } from 'rxjs';
 import { distinctUntilChanged, filter, map, retry, shareReplay, switchMap, take, tap } from 'rxjs/operators';
 import { StorageService } from '../utils/storage.service';
 import { FpmaApiService } from './../services/fpma-api.service';
 
-const AUTH_STORAGE_KEY = 'auth_token';
-const REFRESH_STORAGE_KEY = 'refresh_token';
+export const AUTH_STORAGE_KEY = 'auth_token';
+export const REFRESH_STORAGE_KEY = 'refresh_token';
 
 interface AuthPairResponse {
   accessToken: string;
@@ -63,6 +63,10 @@ export class AuthService {
   private isRefreshing$ = new BehaviorSubject(false);
   private readonly userId$ = this.accessTokenPayload$.pipe(map((jwt) => jwt?.sub));
   private fpmaService = inject(FpmaApiService);
+  private ngZone = inject(NgZone);
+  /** To inspect how many refresh requests are queued */
+  private pendingRefreshes = 0;
+  private lastSuccessfulRefresh = new Date('1970-01-01');
   constructor(
     private storage: StorageService,
     private http: HttpClient,
@@ -116,13 +120,18 @@ export class AuthService {
       take(1),
       switchMap(([refreshToken, userId]) => {
         if (this.isRefreshing$.value) {
+          // a refresh is already ongoing, so wait for it to finish and the next switchMap will just emit null
+          this.pendingRefreshes++;
           return this.isRefreshing$.pipe(
             distinctUntilChanged(),
             filter((isRefreshing) => !isRefreshing),
-            take(1)
+            take(1),
+            tap(() => this.pendingRefreshes--),
           );
-        }
-        if (!!refreshToken && userId) {
+        } else if (!!refreshToken && userId) {
+          if (differenceInMinutes(new Date(), this.lastSuccessfulRefresh) < 1) {
+            return of(true);
+          }
           this.isRefreshing$.next(true);
           return this.http.post<AuthPairResponse>(`${this.baseAPI}/auth/token/refresh`, { refreshToken, userId });
         } else {
@@ -130,12 +139,13 @@ export class AuthService {
         }
       }),
       switchMap((tokensOrRefresh) =>
+        // if `tokensOrRefresh` is boolean, no http request was necessary
         typeof tokensOrRefresh === 'boolean'
           ? of(null)
           : forkJoin([
               this.setAccesToken(tokensOrRefresh.accessToken),
               this.setRefreshToken(tokensOrRefresh.refreshToken),
-            ]).pipe(tap(() => this.isRefreshing$.next(false)))
+            ])
       ),
       tap({
         // eslint-disable-next-line rxjs/no-implicit-any-catch
@@ -143,29 +153,36 @@ export class AuthService {
           console.error(e);
         },
       }),
+      take(1),
       retry({
         count: 3,
         resetOnSuccess: true,
         delay: (error: HttpErrorResponse, retryCount) => {
           if (error.status === 0) {
-            return timer((1000 * 2) ^ retryCount).pipe(take(1));
+            return timer((1000 * 2) ^ retryCount).pipe(take(1), tap(() => this.isRefreshing$.next(false)));
           } else {
             this.isRefreshing$.next(false);
             return of(1);
           }
         },
       }),
+      take(1),
       tap({
         next: (r) => {
           if (typeof ngDevMode !== 'undefined' && !!ngDevMode || this.fpmaService.isDevMode) {
             console.log('refreshed %o', r);
+          }
+          if (r instanceof Array) {
+            this.lastSuccessfulRefresh = new Date();
+            // wait for this stream to fully process before letting pending streams through
+            this.ngZone.runOutsideAngular(() => setTimeout(() => this.isRefreshing$.next(false)));
           }
         },
         error: () => {
           this.isRefreshing$.next(false);
           void this.setRefreshToken(null);
         },
-      })
+      }),
     );
   }
 
@@ -197,12 +214,12 @@ export class AuthService {
     return refreshToken ? this.http.post(`${this.baseAPI}/auth/token/invalidate`, { refreshToken }) : of();
   }
 
-  private setAccesToken(accessToken: string | null): Promise<unknown> {
+  private setAccesToken(accessToken: string | null): Promise<string | null> {
     accessToken$.next(accessToken);
     return this.storage.set(AUTH_STORAGE_KEY, accessToken);
   }
 
-  private setRefreshToken(refreshToken: string | null): Promise<unknown> {
+  private setRefreshToken(refreshToken: string | null): Promise<string | null> {
     refreshToken$.next(refreshToken);
     return this.storage.set(REFRESH_STORAGE_KEY, refreshToken);
   }

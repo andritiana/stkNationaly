@@ -14,6 +14,8 @@
 :host {
   --card-padding: 1.5rem;
   @include card.shadow;
+  @include card.borders;
+
   border-radius: 15px;
   margin: 0.5rem;
   padding: var(--card-padding);

@@ -4,7 +4,8 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   selector: 'mystk-page-title',
   template: `<h1 class="page-title">
     <ng-content></ng-content>
-  </h1>`,
+  </h1>
+  <ng-content select="ion-button"></ng-content>`,
   styleUrls: ['./page-title.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -1,7 +1,7 @@
 @use "theme/page";
 :host {
   @include page.host;
-  display: block;
+
   .edit-profile {
     &-outer {
       @include page.content-wrapper {
@@ -23,6 +23,10 @@
           font-size: 0.875rem;
           --padding-top: 0;
           --padding-bottom: 0;
+        }
+        &-password-revelator {
+          font-size: inherit;
+          align-self: flex-end;
         }
         &-error {
           --min-height: 1rem;

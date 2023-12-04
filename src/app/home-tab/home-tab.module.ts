@@ -6,6 +6,7 @@ import { HomeTabPage } from './home-tab.page';
 
 import { HomeTabPageRoutingModule } from './home-tab-routing.module';
 import { GlobalHeaderModule } from '../global-header/global-header.module';
+import { PurifyMethodPipe } from '../utils/purify-method/purify-method.pipe';
 
 @NgModule({
   imports: [
@@ -14,6 +15,7 @@ import { GlobalHeaderModule } from '../global-header/global-header.module';
     FormsModule,
     HomeTabPageRoutingModule,
     GlobalHeaderModule,
+    PurifyMethodPipe,
   ],
   declarations: [HomeTabPage]
 })

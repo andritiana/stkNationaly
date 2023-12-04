@@ -1,9 +1,11 @@
 
 @mixin host {
-  --ion-text-color: var(--primary-darker);
 
+  ion-content::part(scroll) {
+    // padding-top: 0;
+  }
   mystk-page-title {
-    margin-top: calc(-1 * var(--content-padding));
+    // margin-top: calc(-1 * var(--content-padding));
     margin-bottom: calc(-1 * var(--page-title-margin-v));
   }
 }
@@ -17,7 +19,11 @@
   min-height: 100%;
   align-content: center;
   margin-bottom: calc(2 * var(--content-padding)); // compensate mystk-page-title's negative margin
+  &:has(> mystk-page-title) {
+    padding-top: 0;
+  }
   @content;
+
 
   @media screen and (min-width: 380px) {
     --content-padding: 1.875rem;

@@ -1,7 +1,5 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <app-global-header></app-global-header>
-  </ion-toolbar>
+  <app-global-header></app-global-header>
 </ion-header>
 
 <ion-content [fullscreen]="true">
@@ -19,33 +17,36 @@
       </ng-template>
     </div>
     <div class="button-tag-container">
-      <div class="horizontal-button" (click)="goToPage('stk')">
-        <img src="assets/imgs/presentation_blue.svg"/>
+      <ion-card class="horizontal-button" [routerLink]="['../presentation-tab']">
+        <ion-icon src="assets/imgs/presentation.svg"
+                  class="horizontal-button-icon"></ion-icon>
         <span>Qu'est ce que la STK ?</span>
-      </div>
+      </ion-card>
 
       <ng-container *ngIf="displayLiveSections; else defaultDisplay">
         <ng-container *ngFor="let liveSection of liveSections">
-
-          <div *ngIf="!liveSection.isDevModeOnly || (isDevMode$ | async)" class="horizontal-button" [ngStyle]="{'border-color': getColor(liveSection.themeColor)}" (click)="goToSection(liveSection)">
+          <div *ngIf="!liveSection.isDevModeOnly || (isDevMode$ | async)"
+               class="horizontal-button"
+               [style.borderColor]="liveSection.themeColor | method:getColor"
+               (click)="goToSection(liveSection)">
             <img [attr.src]="liveSection?.themeIcon" />
             <span>{{liveSection?.title}}</span>
           </div>
-
         </ng-container>
       </ng-container>
+
       <ng-template #defaultDisplay>
         <div class="two-buttons">
-          <div class="button-column" (click)="goToPage('actus')">
+          <ion-card class="button-column" [routerLink]="['../actualities-tab']">
             <span class="button-title">
               Actualités STK
             </span>
-          </div>
-          <div class="button-column prime" (click)="goToPage('partage')">
+          </ion-card>
+          <ion-card class="button-column prime" [routerLink]="['../spi-tab']">
             <span class="button-title">
               Partage Spi
             </span>
-          </div>
+          </ion-card>
         </div>
       </ng-template>
     </div>

@@ -6,7 +6,6 @@
   .my-events {
     &-outer {
       @include page.content-wrapper() {
-        --ion-color-primary: #19338F;
         --content-padding: 2rem;
         justify-content: center;
         align-content: start;
@@ -44,6 +43,8 @@
       max-width: 420px;
       position: relative;
       overflow: hidden;
+      background: var(--ion-card-background);
+      color: var(--ion-card-color);
 
       &-anchor {
         display: grid;

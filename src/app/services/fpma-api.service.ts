@@ -59,7 +59,7 @@ export class FpmaApiService {
       );
   }
 
-  public loadMonthsEventsAgenda(month: string, year: string): Observable<AgendaEvent[]>{
+  public loadMonthsEventsAgenda(month: number, year: number): Observable<AgendaEvent[]>{
     const httpOptions =  this.isDevMode ? {
       headers: new HttpHeaders({
         'dev-mode':  ''

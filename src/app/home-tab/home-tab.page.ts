@@ -1,12 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { Verse } from '../models/verse.interface';
-import { VerseService } from '../services/verse.service';
-import { NavigationExtras, Router } from '@angular/router';
+import type { OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import type { NavigationExtras} from '@angular/router';
+import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
-import { FpmaApiService } from '../services/fpma-api.service';
-import { LiveSection, LiveSectionEmbeddedContent, LiveSectionPosts } from '../models/live-section.interface';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import type { LiveSection, LiveSectionEmbeddedContent, LiveSectionPosts } from '../models/live-section.interface';
+import type { Verse } from '../models/verse.interface';
+import { FpmaApiService } from '../services/fpma-api.service';
+import { VerseService } from '../services/verse.service';
 
 @Component({
   selector: 'app-home-tab',
@@ -32,8 +34,8 @@ export class HomeTabPage implements OnInit {
   ngOnInit(): void {
     this.loading = true;
 
-    const verse$ = this.verseService.getVerseOfTheDay().pipe(catchError(e => of(null)));
-    const liveSections$ = this.fpmaApiService.loadLiveSections().pipe(catchError(e => of(null)));
+    const verse$ = this.verseService.getVerseOfTheDay().pipe(catchError((e: unknown) => of(null)));
+    const liveSections$ = this.fpmaApiService.loadLiveSections().pipe(catchError((e: unknown) => of(null)));
     forkJoin({
       verse: verse$,
       liveSections: liveSections$
@@ -54,16 +56,6 @@ export class HomeTabPage implements OnInit {
       this.displayLiveSections = this.liveSections.some(ls => !ls.isDevModeOnly);
     } else {
       this.displayLiveSections = this.liveSections.length > 0;
-    }
-  }
-
-  goToPage(page: string): void {
-    if (page === 'partage') {
-      this.router.navigate(['/tabs/spi-tab']);
-    } else if (page === 'stk') {
-      this.router.navigate(['/tabs/presentation-tab']);
-    } else if (page === 'actus') {
-      this.router.navigate(['/tabs/actualities-tab']);
     }
   }
 

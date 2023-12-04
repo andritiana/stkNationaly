@@ -12,14 +12,14 @@
     </ion-refresher-content>
   </ion-refresher>
   <mystk-page-title>Actualités</mystk-page-title>
-  <ion-spinner *ngIf="loading" name="dots"pager="true"></ion-spinner>
+  <ion-spinner *ngIf="loading" name="dots" pager="true"></ion-spinner>
   <ng-container *ngIf="actualities$ | async as actualities">
     <ion-card class="actuality-card" *ngFor="let actuality of actualities; let i = index" (click)="goToDetails(i, actualities)">
       <img *ngIf="!!actuality.thumbnail" [src]="actuality.thumbnail"/>
       <div class="titles-container">
           <div class="actuality-title">{{actuality.title | decodeHtmlEntities}}</div>
           <div class="actuality-date">{{DateHelper.getDateWrittenFr(actuality.created)}}</div>
-          <div>{{actuality.rawtext | decodeHtmlEntities}}</div>
+          <div class="actuality-excerpt">{{actuality.rawtext | decodeHtmlEntities}}</div>
       </div>
     </ion-card>
   </ng-container>

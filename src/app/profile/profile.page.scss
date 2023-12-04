@@ -61,7 +61,7 @@
         position: relative; /* for the ion-ripple-effect */
         overflow: hidden; /* so that ion-ripple-effect respects border-radius */
         gap: 0.625rem;
-        background: transparent;
+        background: var(--ion-card-background);
         color: var(--primary-darker);
 
         &-icon {

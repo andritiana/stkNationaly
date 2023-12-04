@@ -47,8 +47,4 @@ export class ActualityDetailsPage {
     this.currentIndex$.next(await this.slides!.getActiveIndex());
   }
 
-  goToHome() {
-    this.router.navigate(['/tabs/home']);
-  }
-
 }

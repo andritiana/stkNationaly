@@ -5,7 +5,6 @@
   @include page.host;
   .badges {
     &-outer {
-      --ion-color-primary: #19338F;
       @include page.content-wrapper {
         align-content: flex-start;
       };

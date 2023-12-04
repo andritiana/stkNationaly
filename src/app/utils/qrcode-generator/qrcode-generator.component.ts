@@ -11,7 +11,7 @@ import {
 import { toCanvas } from 'qrcode';
 import * as color from 'color';
 import { WINDOW } from '../browser.service';
-import { Platform } from '@ionic/angular';
+import { IonContent, IonRouterOutlet, Platform } from '@ionic/angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { startWith } from 'rxjs';
 
@@ -31,18 +31,23 @@ export class QrcodeGeneratorComponent {
   private color: string = '';
   private bgColor: string = '';
   platform = inject(Platform);
+  private parentRouterOutlet = inject(IonRouterOutlet);
 
   constructor(@Inject(WINDOW) private window: Window, private eltRef: ElementRef<HTMLElement>) {}
 
   ngOnInit(): void {
-    const style = this.window.getComputedStyle(this.eltRef.nativeElement);
-    this.bgColor = style.getPropertyValue('--background').trim();
-    this.color = style.getPropertyValue('--ion-color-primary').trim();
+    /** Retrieve the CSS custom properties from ion-router-outlet because Ionic/Stencil first attaches
+     *  this element as a not-slotted child of ion-router-outlet and the custom properties we seek
+     *  are not in scope */
+    const style = this.window.getComputedStyle(this.parentRouterOutlet.nativeEl);
+    this.bgColor = style.getPropertyValue('--ion-card-background').trim();
+    this.color = style.getPropertyValue('--ion-card-color').trim();
 
     const canvas = this.canvasRef?.nativeElement;
     this.ctx = this.canvasRef?.nativeElement.getContext('2d');
     this.platform.resize.pipe(startWith(void 0), untilDestroyed(this)).subscribe(() => this.drawQrCode(canvas));
   }
+
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.data?.currentValue && this.bgColor && this.color) {

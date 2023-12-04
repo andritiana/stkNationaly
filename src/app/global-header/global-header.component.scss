@@ -1,17 +1,22 @@
 :host {
-  margin-top: calc(-1 * var(--padding-top));
-  margin-bottom: calc(-1 * var(--padding-bottom));
-  padding-top: var(--padding-top);
-  padding-bottom: var(--padding-bottom);
-  display: block;
+  // margin-top: calc(-1 * var(--ion-safe-area-top, var(--padding-top)));
+  // margin-bottom: calc(-1 * var(--ion-safe-area-bottom, var(--padding-bottom)));
+  display: contents;
   position: relative;
   ion-toolbar {
-    --background: #FFF;
-    &:last-of-type {
-      --border-width: 0;
+    padding: max(var(--ion-safe-area-top), var(--padding-top))
+             max(var(--ion-safe-area-right), var(--padding-right))
+             max(var(--ion-safe-area-top), var(--padding-bottom))
+             max(var(--ion-safe-area-left), var(--padding-left));
+    // --background: #FFF;
+    @media(prefers-color-scheme: dark) {
+      img {
+        filter: invert(1) saturate(0);
+        border-radius: 5px;
+      }
     }
     text-align: center;
-    padding: 0 1.75rem 0 1rem;
+    z-index: 0; /* ionic sets it to 10, which hides the progress bar */
   }
   .header-home-link-icon {
       height: clamp(42px, 5vh, 60px);

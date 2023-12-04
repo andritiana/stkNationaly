@@ -2,7 +2,6 @@
 @use "src/theme/components/card";
 
 :host {
-  display: block;
   @include page.host;
   --content-gap: 1.5rem;
 
@@ -12,14 +11,14 @@
     }
 
     &-segment {
-      --background: #FFF;
+      --background: var(--ion-color-light);
       --border-radius: 150px;
       border-radius: var(--border-radius);
       @include card.shadow;
       &-button {
-        --indicator-color: #DDE0EE;
+        --indicator-color: var(--ion-color-step-250, var(--ion-background-color, #fff));
         --background-checked: transparent;
-        --border-style: none;
+        // --border-style: none;
         --border-radius: 150px;
         display: none;
         position: relative;

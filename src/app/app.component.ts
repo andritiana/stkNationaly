@@ -1,18 +1,18 @@
-import { Component, EnvironmentInjector, HostBinding, NgZone, inject } from '@angular/core';
-import { ActionSheetController, Platform, ToastController } from '@ionic/angular';
-import { FpmaApiService } from './services/fpma-api.service';
-import { ContentUpdateService } from './services/content-update.service';
-import type { LastVisitTimestamps, LastVisitUpdates } from './models/lastVisitTimestamps.interface';
-import { StorageService } from './utils/storage.service';
-import { FirebaseAnalytics } from '@awesome-cordova-plugins/firebase-analytics/ngx';
-import OneSignal from 'onesignal-cordova-plugin';
+import { Component, EnvironmentInjector, NgZone, inject } from '@angular/core';
 import type { NavigationExtras } from '@angular/router';
 import { Router } from '@angular/router';
-import { combineLatest, concat, distinctUntilChanged, iif, Observable} from 'rxjs';
-import { bindCallback, EMPTY, filter, from, map, of, switchMap, tap, throwError } from 'rxjs';
+import { FirebaseAnalytics } from '@awesome-cordova-plugins/firebase-analytics/ngx';
+import { ActionSheetController, Platform, ToastController } from '@ionic/angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { differenceInBusinessDays } from 'date-fns/esm';
-import {register} from 'swiper/element/bundle';
+import OneSignal from 'onesignal-cordova-plugin';
+import type { Observable} from 'rxjs';
+import { EMPTY, bindCallback, combineLatest, concat, distinctUntilChanged, filter, from, map, of, switchMap, tap, throwError } from 'rxjs';
+import { register } from 'swiper/element/bundle';
+import type { LastVisitTimestamps, LastVisitUpdates } from './models/lastVisitTimestamps.interface';
+import { ContentUpdateService } from './services/content-update.service';
+import { FpmaApiService } from './services/fpma-api.service';
+import { StorageService } from './utils/storage.service';
 
 const enum NotificationPermissionStatus {
   /** The user hasn't yet made a choice about whether the app is allowed to schedule notifications. */
@@ -34,8 +34,6 @@ const enum NotificationPermissionStatus {
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  @HostBinding('class.splash-showing')
-  public showSplash = true;
   environmentInjector = inject(EnvironmentInjector);
 
   constructor(
@@ -195,7 +193,7 @@ export class AppComponent {
 
     // Si l'application est deja ouverte
     // on force le rafraichissement du nombre de contenus mis a jour, comme si on venait de lancer l'application
-    // eslint-disable-next-line @typescript-eslint/unbound-method
+
     bindCallback(OneSignal.setNotificationWillShowInForegroundHandler.bind(OneSignal))().pipe(
       switchMap(event =>
           this.checkNbUpdatedContent().pipe(map(() => event)),
@@ -206,7 +204,7 @@ export class AppComponent {
       event.complete(event.getNotification()),
       );
 
-    // eslint-disable-next-line @typescript-eslint/unbound-method
+
     bindCallback(OneSignal.setNotificationOpenedHandler.bind(OneSignal))().pipe(
       switchMap(data => {
       // Redirige vers le détail de l'article selon sa catégorie

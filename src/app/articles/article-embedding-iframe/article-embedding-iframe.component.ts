@@ -5,7 +5,7 @@ import '../../../assets/js/soundcloud-api.js';
 
 @Component({
   selector: "mystk-article-embedding-iframe",
-  templateUrl: "./article-embedding-iframe.component.html",
+  template: '',
   styleUrls: ["./article-embedding-iframe.component.scss"],
   encapsulation: ViewEncapsulation.None,
 })
@@ -69,7 +69,7 @@ export class ArticleEmbeddingIframeComponent implements OnInit {
     });
   }
 
-  pauseIframePlayers(): void {
+  private pauseIframePlayers(): void {
     const iframes = this.eltRef.nativeElement.querySelectorAll('iframe');
     if (!iframes || iframes.length < 1) {
       return;

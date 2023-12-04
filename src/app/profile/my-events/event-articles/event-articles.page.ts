@@ -3,19 +3,22 @@ import type { ElementRef, OnInit } from '@angular/core';
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectorRef, Component, ViewChild, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonicModule, Platform, ViewDidLeave } from '@ionic/angular';
+import type { ViewDidLeave } from '@ionic/angular';
+import { IonicModule, Platform } from '@ionic/angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ForModule } from '@rx-angular/template/for';
 import { LetModule } from '@rx-angular/template/let';
 import { deepEqual } from 'fast-equals';
+import type {
+  Observable,
+  Subscription} from 'rxjs';
 import {
   BehaviorSubject,
   EMPTY,
-  Observable,
-  Subscription,
   combineLatest,
   delayWhen,
   distinctUntilChanged,
+  exhaustMap,
   filter,
   fromEventPattern,
   map,
@@ -279,7 +282,7 @@ export class EventArticlesPage implements OnInit, ViewDidLeave {
       this.routeState
         ? of(this.routeState)
         : this.profileService.getMyEvents().pipe(
-            filter((evt) => evt.eventName.replace(' ', '_') === eventName),
+            exhaustMap(events => events.filter((evt) => evt.eventName.replace(' ', '_') === eventName)),
             shareReplay({ refCount: true })
           )
     );

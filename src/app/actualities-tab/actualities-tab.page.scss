@@ -2,7 +2,7 @@
   display: flex;
   margin: 1rem;
   height: 8rem;
-  background-color: white;
+  // background-color: white;
   padding: 1rem;
   border-radius: 5px;
   &:first-of-type {
@@ -13,25 +13,39 @@
     width: 30%;
     height: 100%;
     object-fit: cover;
+    @media(prefers-color-scheme: dark) {
+      background: #AAAAAA99;
+      border-radius: 5px;
+    }
   }
   .titles-container {
     display: flex;
     padding-left: 1rem;
     flex-direction: column;
     overflow: hidden;
-    div {
+
+    %titles-item {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      &.actuality-title {
-        color: #19338F;
-        font-weight: bolder;
-        margin-bottom: 5px;
-      }
-      &.actuality-date {
-        color: darkgray;
-        margin-bottom: 5px;
-      }
+    }
+    .actuality-title {
+      @extend %titles-item;
+      color: var(--mystk-card-title-color, var(--ion-item-color));
+      font-weight: bolder;
+      margin-bottom: 5px;
+    }
+    .actuality-date {
+      @extend %titles-item;
+      color: darkgray;
+      margin-bottom: 5px;
+    }
+    .actuality-excerpt {
+      @extend %titles-item;
+      -webkit-line-clamp: 3;
+      white-space: wrap;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
     }
   }
 }

@@ -1,15 +1,15 @@
-import type { OnInit} from '@angular/core';
+import type { OnInit } from '@angular/core';
 import { Component, inject } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { isAfter, isWithinInterval, parseISO } from 'date-fns/esm';
-import type { Observable} from 'rxjs';
-import { partition, shareReplay, toArray } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { exhaustMap, partition, take, toArray } from 'rxjs';
 import { PurifyMethodPipe } from 'src/app/utils/purify-method/purify-method.pipe';
 import { GlobalHeaderModule } from '../../global-header/global-header.module';
-import type { EventCardInfo} from '../profile.service';
+import type { EventCardInfo } from '../profile.service';
 import { ProfileService } from '../profile.service';
 
 
@@ -115,7 +115,7 @@ export class MyEventsPage implements OnInit {
     const [ongoingEvent$, pastOrFutureEvents$] = partition(
       this.profileService
         .getMyEvents()
-        .pipe(shareReplay({ refCount: true })),
+        .pipe(take(1),exhaustMap(events => events)),
       ({ eventStartAt, eventEndAt }) =>
         isWithinInterval(new Date(), { start: parseISO(eventStartAt), end: parseISO(eventEndAt) })
     );

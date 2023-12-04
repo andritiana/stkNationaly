@@ -34,7 +34,7 @@
           <ion-label class="edit-profile-form-field-label" position="floating">Mot de passe actuel<ion-text color="danger">*</ion-text></ion-label>
           <ion-input class="edit-profile-form-field-input" required formControlName="passwordCurrent"  passwordRevelator
                      #revelator1="revelator" [icon]="passwordIcon1" autocomplete="current-password"></ion-input>
-          <ion-icon slot="end" #passwordIcon1 color="primary" (click)="revelator1.toggle()"></ion-icon>
+          <ion-icon class="edit-profile-form-field-password-revelator" slot="end" #passwordIcon1 color="primary" (click)="revelator1.toggle()"></ion-icon>
         </ion-item>
         <ion-item [ngClass]="{'edit-profile-form-field-error': true, 'edit-profile-form-field-error-visible': editForm.controls.passwordCurrent.errors?.required && editForm.controls.passwordCurrent.touched}" lines="none">
           <ion-text color="danger" class="edit-profile-form-error">
@@ -48,7 +48,7 @@
           <ion-item class="edit-profile-form-field">
             <ion-label class="edit-profile-form-field-label" position="floating">Nouveau mot de passe</ion-label>
             <ion-input class="edit-profile-form-field-input" formControlName="passwordNew" passwordRevelator #revelator2="revelator" [icon]="passwordIcon2" autocomplete="new-password"></ion-input>
-            <ion-icon slot="end" #passwordIcon2 color="primary" (click)="revelator2.toggle()"></ion-icon>
+            <ion-icon class="edit-profile-form-field-password-revelator" slot="end" #passwordIcon2 color="primary" (click)="revelator2.toggle()"></ion-icon>
           </ion-item>
           <ion-item [ngClass]="{'edit-profile-form-field-error': true, 'edit-profile-form-field-error-visible': $any(editForm.controls.changePassword).controls.passwordNew.invalid && $any(editForm.controls.changePassword).controls.passwordNew.touched}" lines="none">
             <ion-text color="danger" class="edit-profile-form-error">
@@ -59,7 +59,7 @@
           <ion-item class="edit-profile-form-field">
             <ion-label class="edit-profile-form-field-label" position="floating">Confirmation du nouveau mot de passe</ion-label>
             <ion-input class="edit-profile-form-field-input" formControlName="passwordNewConfirmation" passwordRevelator #revelator3="revelator" [icon]="passwordIcon3" autocomplete="new-password"></ion-input>
-            <ion-icon slot="end" #passwordIcon3 color="primary" (click)="revelator3.toggle()"></ion-icon>
+            <ion-icon class="edit-profile-form-field-password-revelator" slot="end" #passwordIcon3 color="primary" (click)="revelator3.toggle()"></ion-icon>
           </ion-item>
           <ion-item [ngClass]="{'edit-profile-form-field-error': true, 'edit-profile-form-field-error-visible': $any(editForm.controls.changePassword).errors?.same && $any(editForm.controls.changePassword).controls.passwordNewConfirmation.touched}" lines="none">
             <ion-text color="danger" class="edit-profile-form-error">

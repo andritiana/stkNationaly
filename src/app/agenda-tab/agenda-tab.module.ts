@@ -1,16 +1,30 @@
-import { IonicModule } from '@ionic/angular';
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { AgendaTabPage } from './agenda-tab.page';
-import { AgendaTabPageRoutingModule } from './agenda-tab-routing.module';
-import { NgCalendarModule  } from 'ionic2-calendar';
-import { registerLocaleData } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
-import { AgendaDetailsPage } from './agenda-details-page/agenda-details.page';
+import { Directive, NgModule, TemplateRef, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { IonicModule } from '@ionic/angular';
+import { NgCalendarModule } from 'ionic2-calendar';
 import { GlobalHeaderModule } from '../global-header/global-header.module';
 import { DecodeHtmlEntitiesModule } from '../utils/html-entities/decode-html-entities.module';
-registerLocaleData(localeFr, 'fr-FR');
+import { AgendaDetailsPage } from './agenda-details-page/agenda-details.page';
+import { AgendaTabPageRoutingModule } from './agenda-tab-routing.module';
+import { AgendaTabPage } from './agenda-tab.page';
+import { PurifyMethodPipe } from '../utils/purify-method/purify-method.pipe';
+
+type MonthViewEventDetailTemplateContext = import('ionic2-calendar/calendar').IMonthViewEventDetailTemplateContext & {showEventDetail: boolean};
+type TimeSelected = import('ionic2-calendar/calendar').ITimeSelected
+
+@Directive({
+  selector: '[monthViewEventDetail]',
+  exportAs: 'monthViewEventDetail',
+  standalone: true,
+})
+export class MonthViewEventDetailTemplateDirective {
+  templateRef = inject(TemplateRef<MonthViewEventDetailTemplateContext>);
+  static ngTemplateContextGuard(directive: MonthViewEventDetailTemplateDirective, context: unknown): context is MonthViewEventDetailTemplateContext {
+    return true;
+  }
+}
 
 @NgModule({
   imports: [
@@ -20,7 +34,9 @@ registerLocaleData(localeFr, 'fr-FR');
     AgendaTabPageRoutingModule,
     NgCalendarModule,
     GlobalHeaderModule,
-    DecodeHtmlEntitiesModule
+    DecodeHtmlEntitiesModule,
+    MonthViewEventDetailTemplateDirective,
+    PurifyMethodPipe,
   ],
   declarations: [AgendaTabPage, AgendaDetailsPage]
 })

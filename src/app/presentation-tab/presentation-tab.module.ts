@@ -6,16 +6,18 @@ import { PresentationTabPageRoutingModule } from './presentation-tab-routing.mod
 import { PresentationTabPage } from './presentation-tab.page';
 import { PresentationDetailsPage } from './presentation-details-page/presentation-details.page';
 import { GlobalHeaderModule } from '../global-header/global-header.module';
+import { ArticleEmbeddingIframeComponentModule } from "../articles/article-embedding-iframe/article-embedding-iframe.module";
 
 
 @NgModule({
-  imports: [
-    IonicModule,
-    CommonModule,
-    FormsModule,
-    PresentationTabPageRoutingModule,
-    GlobalHeaderModule,
-  ],
-  declarations: [PresentationTabPage, PresentationDetailsPage]
+    declarations: [PresentationTabPage, PresentationDetailsPage],
+    imports: [
+        IonicModule,
+        CommonModule,
+        FormsModule,
+        PresentationTabPageRoutingModule,
+        GlobalHeaderModule,
+        ArticleEmbeddingIframeComponentModule
+    ]
 })
 export class PresentationTabModule {}

@@ -1,77 +1,86 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <app-global-header></app-global-header>
-  </ion-toolbar>
+  <app-global-header></app-global-header>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <mystk-page-title>Agenda</mystk-page-title>
-  <ion-spinner *ngIf="loading; else list" name="dots"></ion-spinner>
-  <ng-template #list>
-    <ion-row>
-      <!-- Move back one screen of the slides -->
-      <ion-col size="2">
-        <ion-button fill="clear" (click)="back()">
-          <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
-        </ion-button>
-      </ion-col>
-
-      <ion-col size="8" class="ion-text-center">
-        <h2 class="currentMonth">{{ currentMonth }}</h2>
-      </ion-col>
-
-      <!-- Move forward one screen of the slides -->
-      <ion-col size="2">
-        <ion-button fill="clear" (click)="next()">
-          <ion-icon name="arrow-forward" slot="icon-only"></ion-icon>
-        </ion-button>
-      </ion-col>
-    </ion-row>
-
-    <ng-template #monthviewEventDetailSTKTemplate let-showEventDetail="showEventDetail" let-selectedDate="selectedDate" let-noEventsLabel="noEventsLabel">
-      <ion-list class="event-detail-container" has-bouncing="false" *ngIf="showEventDetail" overflow-scroll="false">
-         <div class="horizontal-button" *ngFor="let event of selectedDate?.events" (click)="onEventSelected(event)">
-           <span *ngIf="!event.allDay && DateHelper.getDateFormat(event.startTime) === DateHelper.getDateFormat(event.endTime); else differentDates" class="monthview-eventdetail-timecolumn">
-            {{DateHelper.getHours(event.startTime)}} - {{DateHelper.getHours(event.endTime)}}
-           </span>
-           <ng-template #differentDates>
-            <span *ngIf="!event.allDay" class="monthview-eventdetail-timecolumn">
-              {{DateHelper.getDateFormat(event.startTime)}} - <br> {{DateHelper.getDateFormat(event.endTime)}}
-             </span>
-           </ng-template>
-           <span *ngIf="event.allDay" class="monthview-eventdetail-timecolumn">Toute la journée</span>
-           <span class="event-detail"> {{event.title | decodeHtmlEntities}}</span>
-          </div>
-          <div class="no-events-label" *ngIf="selectedDate?.events.length==0">
-            <span>{{noEventsLabel}}</span>
-          </div>
-        </ion-list>
-      </ng-template>
-
-      <ng-template #monthviewDisplayEventSTKTemplate let-view="view" let-row="row" let-col="col">
-        <div [class.with-event]="view.dates[row*7+col].hasEvent">
-          {{view.dates[row*7+col].label}}
-          <div class="indicator-container">
-            <div class="event-indicator" *ngFor="let e of view.dates[row*7+col].events"></div>
-          </div>
-        </div>
-      </ng-template>
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($any($event))">
+    <ion-refresher-content
+      refreshingSpinner="crescent"
+      refreshingText="Mise à jour...">
+    </ion-refresher-content>
+  </ion-refresher>
+  <mystk-page-title>
+  Agenda
+  <ion-button [ngClass]="{'refresh-button': true, 'refresh-button-disabled': loading}"
+              icon-only
+              [disabled]="loading"
+              fill="clear"
+              (click)="refresh()">
+    <ion-icon name="refresh" slot="icon-only"></ion-icon>
+  </ion-button>
+</mystk-page-title>
 
 
+  <nav class="calendar-nav">
+    <!-- Move back one screen of the slides -->
+    <ion-button class="calendar-nav-button" fill="clear" (click)="back()">
+      <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+    </ion-button>
+
+    <h2 class="calendar-nav-current">{{ currentMonth }}</h2>
+
+    <!-- Move forward one screen of the slides -->
+    <ion-button class="calendar-nav-button" fill="clear" (click)="next()">
+      <ion-icon name="arrow-forward" slot="icon-only"></ion-icon>
+    </ion-button>
+  </nav>
+
+  <main class="events-calendar-outer">
+    <ion-spinner *ngIf="loading"
+               name="dots"
+               class="events-calendar-spinner"></ion-spinner>
     <calendar
-      locale="fr-FR"
+      [ngClass]="{'events-calendar': true, 'events-calendar-loading': loading}"
+      [locale]="locale"
       [eventSource]="events"
+      [queryMode]="calendar.queryMode"
+      [calendarMode]="calendar.mode"
       [currentDate]="calendar.currentDate"
-      (onTitleChanged)="onViewTitleChanged($event)"
+      (onRangeChanged)="calendarViewRangeChanged($event)"
       (onEventSelected)="onEventSelected($any($event))"
       noEventsLabel="Aucun évènement pour ce jour"
-      [monthviewEventDetailTemplate]="monthviewEventDetailSTKTemplate"
+      [monthviewEventDetailTemplate]="monthviewEventDetailDir.templateRef"
       [monthviewDisplayEventTemplate]="monthviewDisplayEventSTKTemplate"
       [startingDayMonth]="1"
       >
       </calendar>
-  </ng-template>
+  </main>
 </ion-content>
 
+<!-- TEMPLATES FOR CALENDAR -->
+<ng-template monthViewEventDetail let-showEventDetail="showEventDetail" let-selectedDate="selectedDate" let-noEventsLabel="noEventsLabel"
+             #monthviewEventDetailDir="monthViewEventDetail">
+  <ion-list class="event-detail-container" has-bouncing="false" *ngIf="showEventDetail" overflow-scroll="false">
+    <div class="no-events-label"
+         *ngIf="selectedDate?.events?.length === 0">
+      {{noEventsLabel}}
+    </div>
+     <ion-card class="horizontal-button" *ngFor="let event of selectedDate?.events"
+               (click)="onEventSelected($any(event))">
+       <span class="monthview-eventdetail-timecolumn">
+        {{event | method:computeEventTime}}
+       </span>
+       <span class="event-detail"> {{event.title | decodeHtmlEntities}}</span>
+      </ion-card>
 
+    </ion-list>
+  </ng-template>
 
+  <ng-template #monthviewDisplayEventSTKTemplate let-view="view" let-row="row" let-col="col">
+    <div [class.with-event]="view.dates[row*7+col].hasEvent">
+      {{view.dates[row*7+col].label}}
+      <div class="indicator-container">
+        <div class="event-indicator" *ngFor="let e of view.dates[row*7+col].events"></div>
+      </div>
+    </div>
+  </ng-template>

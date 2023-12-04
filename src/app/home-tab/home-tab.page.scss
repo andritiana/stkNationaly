@@ -5,7 +5,7 @@ ion-spinner {
 }
 
 ion-content {
-    --background: #f8f8f8;
+    // --background: #f8f8f8;
 }
 
 .verse-container {
@@ -42,63 +42,72 @@ ion-content {
   flex-direction: column;
 }
 .button-tag-container {
-  background-color: #f8f8f8;
+  // background-color: #f8f8f8;
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
   justify-content: space-around;
   padding: 1rem;
-  .horizontal-button {
-      display: flex;
-      align-items: center;
-      margin: 0.5rem 0;
-      padding: 2rem;
-      height: 10vh;
-      background-color: white;
-      color: #19338F;
-      font-size: 16px;
-      font-weight: bold;
-      box-shadow: 1px 1px 1px 0px #656565;
-      border-left: solid 5px #19338F;
-      border-radius: 5px;
-      span {
-          padding-left: 1rem;
-      }
-      img {
-          fill: #19338F;
-          height: 4rem;
-          width: 4rem;
-      }
+}
+.horizontal-button {
+  margin: 0.5rem 0;
+  padding: 0 2rem;
+  height: 10vh;
+  // background-color: white;
+  // color: #19338F;
+  font-size: 16px;
+  font-weight: bold;
+  box-shadow: 1px 1px 1px 0px var(--ion-color-step-600);
+  border-left: solid 5px var(--ion-text-color);
+  border-radius: 5px;
+  &::part(native) {
+    display: flex;
+    align-items: center;
+    height: 100%;
   }
-  .two-buttons {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 0.5rem;
-      .button-column {
+  span {
+      padding-left: 1rem;
+  }
+  &-icon {
+      height: 4rem;
+      width: 4rem;
+  }
+}
+.two-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+    .button-column {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 45%;
+        height: 16vh;
+        margin: 0;
+        background-color: #19338F;
+        border-radius: 5px;
+        padding: 1rem;
+        color: white;
+        &::part(native) {
           display: flex;
-          flex-direction: column;
-          align-items: center;
           justify-content: center;
-          width: 45%;
-          height: 16vh;
-          background-color: #19338F;
-          border-radius: 5px;
-          padding: 1rem;
-          color: white;
-          .button-title {
-              font-size: 16px;
-              font-weight: bold;
-              text-align: center;
-          }
-          .button-text {
-              margin-top: 2vh;
-              text-align: center;
-          }
-          &.prime {
-              background-color: #19338F;
-          }
-      }
-  }
+          align-items: center;
+          height: 100%;
+        }
+        .button-title {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .button-text {
+            margin-top: 2vh;
+            text-align: center;
+        }
+        &.prime {
+            background-color: #19338F;
+        }
+    }
 }
 .profile-link {
   font-size: 2rem;

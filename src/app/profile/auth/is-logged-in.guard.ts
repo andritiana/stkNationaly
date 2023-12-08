@@ -3,6 +3,7 @@ import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTr
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, isEmpty, map, switchMap, take } from 'rxjs/operators';
 import { AuthService } from '../auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -31,13 +32,19 @@ export class IsLoggedInGuard implements CanActivate {
             return this.allowUnlessTemporaryPassword();
           } else {
             return this.authService.refresh().pipe(
-              isEmpty(),
-              catchError(error => error.status === 401 ? of(true) : throwError(error)),
-              map(wontRefresh => {
-                if (wontRefresh && route.url[0]?.path !== 'login') {
-                  return this.router.parseUrl('/login')
+              catchError((error: unknown) => {
+                if (error instanceof HttpErrorResponse && error.status === 401) {
+                  return of({type: 'FAIL'});
                 } else {
+                  console.error('refreshing token failed in guard %o', error);
+                  return throwError(() => error);
+                }
+              }),
+              map(({type: refreshResult}) => {
+                if (['SUCCESS', 'FRESH'].includes(refreshResult)) {
                   return true;
+                } else {
+                  return this.router.parseUrl('/login')
                 }
               }),
             );

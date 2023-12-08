@@ -1,10 +1,9 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { compareDesc, parseISO } from 'date-fns/esm';
 import type { Observable } from 'rxjs';
 import { EMPTY, throwError } from 'rxjs';
-import { catchError, exhaustMap, filter, map, switchMap } from 'rxjs/operators';
+import { catchError, filter, map, switchMap } from 'rxjs/operators';
 import { createCache } from '../utils/cache/cache';
 import { AuthService } from './auth.service';
 import type { Badge, EditProfileBodyRequest, Profile } from './profile.model';
@@ -15,10 +14,12 @@ export type EventCardInfo = Omit<Badge, 'badgeString' | 'roomInfos' | 'remarks'>
   providedIn: 'root'
 })
 export class ProfileService {
-  readonly badgeCache = createCache<Badge[]>({expiry: {days: 1}});
-  readonly eventsCache = createCache<EventCardInfo>({expiry: {days: 1}});
-  readonly profileCache = createCache<Profile>({expiry: {days: 1}});
+
   private readonly baseAPI = 'https://stk.fpma.church/api/mystk';
+
+  readonly badgeCache = createCache<Badge[]>({expiry: {days: 1}});
+  readonly eventsCache = createCache<EventCardInfo[]>({expiry: {days: 1}});
+  readonly profileCache = createCache<Profile>({expiry: {days: 1}});
 
   constructor(
     private authService: AuthService,
@@ -51,20 +52,6 @@ export class ProfileService {
     );
   }
 
-  getMyProfile(): Observable<Profile> {
-    return this.authService.getMyId().pipe(
-      switchMap(id => {
-        if (id == null) {
-          return EMPTY;
-        } else {
-          return this.http.get<Profile>(`${this.baseAPI}/profile/${id}`);
-        }
-      }),
-      map(profile => correctNulls(profile)),
-      this.profileCache.doCache(),
-    )
-  }
-
   getMyBadges(): Observable<Badge[]> {
     return this.authService.getMyId().pipe(
       switchMap(id => {
@@ -83,18 +70,31 @@ export class ProfileService {
   /**
    * Extracts events from badges and spreads the resulting array.
    */
-  getMyEvents(): Observable<EventCardInfo> {
+  getMyEvents(): Observable<EventCardInfo[]> {
     return this.getMyBadges()
     .pipe(
-      exhaustMap((badges) => badges), // prefer exhaustMap to switchMap so the Observable completes at the end of the array
-      map((badge) => {
+      map((badges) => badges.map((badge) => {
         const { badgeString, roomInfos, remarks, ...event } = badge;
         return event;
-      }),
+      })),
       this.eventsCache.doCache(),
-      // shareReplay({refCount: false, bufferSize: 1, windowTime: milliseconds({days: 1})}),
     );
   }
+
+  getMyProfile(): Observable<Profile> {
+    return this.authService.getMyId().pipe(
+      switchMap(id => {
+        if (id == null) {
+          return EMPTY;
+        } else {
+          return this.http.get<Profile>(`${this.baseAPI}/profile/${id}`);
+        }
+      }),
+      map(profile => correctNulls(profile)),
+      this.profileCache.doCache(),
+    )
+  }
+
 }
 
 function correctNulls<O extends object>(o: O): O {
@@ -106,6 +106,7 @@ function correctNulls<O extends object>(o: O): O {
 }
 
 class MySTKUnexpectedError extends Error {
+
   constructor(message: string, private context: unknown) {
     super(message);
   }
@@ -116,4 +117,5 @@ class MySTKUnexpectedError extends Error {
 
     ${this.stack}`
   }
+
 }

@@ -1,17 +1,44 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import type { HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 import { inject, Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-import { JwtConfig, JwtHelperService } from '@auth0/angular-jwt';
+import type { JwtConfig} from '@auth0/angular-jwt';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { differenceInMinutes } from 'date-fns';
-import { BehaviorSubject, combineLatest, EMPTY, firstValueFrom, forkJoin, Observable, of, timer } from 'rxjs';
-import { distinctUntilChanged, filter, map, retry, shareReplay, switchMap, take, tap } from 'rxjs/operators';
+import type {
+  Observable} from 'rxjs';
+import {
+  asapScheduler,
+  BehaviorSubject,
+  combineLatest,
+  concat,
+  EMPTY,
+  firstValueFrom,
+  forkJoin,
+  iif,
+  of,
+  timer,
+} from 'rxjs';
+import {
+  distinctUntilChanged,
+  filter,
+  last,
+  map,
+  observeOn,
+  retry,
+  shareReplay,
+  switchMap,
+  take,
+  tap,
+} from 'rxjs/operators';
 import { StorageService } from '../utils/storage.service';
 import { FpmaApiService } from './../services/fpma-api.service';
 
 export const AUTH_STORAGE_KEY = 'auth_token';
 export const REFRESH_STORAGE_KEY = 'refresh_token';
 
+type RefreshResult = { type: 'FRESH' } | { type: 'FAIL'; error?: unknown } | (AuthPairResponse & { type: 'SUCCESS' });
 interface AuthPairResponse {
   accessToken: string;
   refreshToken: string;
@@ -103,19 +130,31 @@ export class AuthService {
   }
 
   async logOut(redirect = true) {
-    await this.setAccesToken(null);
-    await this.setRefreshToken(null);
-    this.isPasswordTemporary$()
-      .pipe(switchMap((isTemporary) => (isTemporary ? this.invalidateRefreshToken() : of(true))))
-      .subscribe();
-    return redirect ? this.router.navigateByUrl('/') : Promise.resolve(false);
+    return firstValueFrom(
+      this.isPasswordTemporary$().pipe(
+        take(1),
+        switchMap((isTemporary) => {
+          if (isTemporary) {
+            return this.invalidateRefreshToken();
+          } else {
+            return this.setRefreshToken(null);
+          }
+        }),
+        switchMap(() => this.setAccesToken(null)),
+        switchMap(() => (redirect ? this.router.navigateByUrl('/') : of(false)))
+      )
+    );
   }
 
   /**
-   * Uses the refresh token to refresh the access token. If no refresh token is available, complete immediately.
-   * Completes without emitting any value to signify it couldn't refresh (AuthExpirationInterceptor relies on that behaviour)
+   * Uses the refresh token to refresh the access token.
+   * Returns {type: 'FAIL'} if it couldn't refresh (AuthExpirationInterceptor relies on that behaviour)
    */
-  refresh() {
+  refresh(): Observable<RefreshResult> {
+    const refreshResult: { [k in Exclude<RefreshResult['type'], 'SUCCESS'>]: RefreshResult } = {
+      FRESH: { type: 'FRESH' },
+      FAIL: { type: 'FAIL' },
+    };
     return combineLatest([refreshToken$, this.userId$]).pipe(
       take(1),
       switchMap(([refreshToken, userId]) => {
@@ -126,26 +165,32 @@ export class AuthService {
             distinctUntilChanged(),
             filter((isRefreshing) => !isRefreshing),
             take(1),
+            observeOn(asapScheduler), // give priority of execution to the main refreshing loop
             tap(() => this.pendingRefreshes--),
+            switchMap(() => this.shouldRefresh$()),
+            take(1),
+            map((shouldRefresh) => (shouldRefresh ? refreshResult.FAIL : refreshResult.FRESH))
           );
         } else if (!!refreshToken && userId) {
           if (differenceInMinutes(new Date(), this.lastSuccessfulRefresh) < 1) {
-            return of(true);
+            return of(refreshResult.FRESH);
           }
           this.isRefreshing$.next(true);
-          return this.http.post<AuthPairResponse>(`${this.baseAPI}/auth/token/refresh`, { refreshToken, userId });
+          return this.http
+            .post<AuthPairResponse>(`${this.baseAPI}/auth/token/refresh`, { refreshToken, userId })
+            .pipe(map((pair) => ({ type: 'SUCCESS' as const, ...pair })));
         } else {
-          return EMPTY;
+          return of(refreshResult.FAIL);
         }
       }),
-      switchMap((tokensOrRefresh) =>
-        // if `tokensOrRefresh` is boolean, no http request was necessary
-        typeof tokensOrRefresh === 'boolean'
-          ? of(null)
-          : forkJoin([
-              this.setAccesToken(tokensOrRefresh.accessToken),
-              this.setRefreshToken(tokensOrRefresh.refreshToken),
-            ])
+      switchMap(
+        (result) =>
+          concat(
+            result.type === 'SUCCESS'
+              ? forkJoin([this.setAccesToken(result.accessToken), this.setRefreshToken(result.refreshToken)])
+              : EMPTY,
+            of(result)
+          ).pipe(last()) as Observable<RefreshResult>
       ),
       tap({
         // eslint-disable-next-line rxjs/no-implicit-any-catch
@@ -159,7 +204,10 @@ export class AuthService {
         resetOnSuccess: true,
         delay: (error: HttpErrorResponse, retryCount) => {
           if (error.status === 0) {
-            return timer((1000 * 2) ^ retryCount).pipe(take(1), tap(() => this.isRefreshing$.next(false)));
+            return timer((1000 * 2) ^ retryCount).pipe(
+              take(1),
+              tap(() => this.isRefreshing$.next(false))
+            );
           } else {
             this.isRefreshing$.next(false);
             return of(1);
@@ -168,21 +216,22 @@ export class AuthService {
       }),
       take(1),
       tap({
-        next: (r) => {
-          if (typeof ngDevMode !== 'undefined' && !!ngDevMode || this.fpmaService.isDevMode) {
-            console.log('refreshed %o', r);
+        next: ({ type: result, ...resultRest }) => {
+          if ((typeof ngDevMode !== 'undefined' && !!ngDevMode) || this.fpmaService.isDevMode) {
+            console.log('refreshed %o', { type: result, ...(resultRest ?? {}) });
           }
-          if (r instanceof Array) {
+          if ('accessToken' in resultRest) {
             this.lastSuccessfulRefresh = new Date();
             // wait for this stream to fully process before letting pending streams through
-            this.ngZone.runOutsideAngular(() => setTimeout(() => this.isRefreshing$.next(false)));
+            this.isRefreshing$.next(false);
           }
         },
-        error: () => {
+        error: (e: unknown) => {
+          console.error('refresh failed after retries, %o', e);
           this.isRefreshing$.next(false);
           void this.setRefreshToken(null);
         },
-      }),
+      })
     );
   }
 
@@ -209,9 +258,16 @@ export class AuthService {
     }
   }
 
+  /**
+   * Invalidate the refresh token on the server and nullify the local copy
+   */
   private invalidateRefreshToken() {
     const refreshToken = refreshToken$.value;
-    return refreshToken ? this.http.post(`${this.baseAPI}/auth/token/invalidate`, { refreshToken }) : of();
+    return iif(
+      () => !!refreshToken,
+      this.http.post(`${this.baseAPI}/auth/token/invalidate`, { refreshToken }),
+      of(null)
+    ).pipe(switchMap(() => this.setRefreshToken(null)));
   }
 
   private setAccesToken(accessToken: string | null): Promise<string | null> {

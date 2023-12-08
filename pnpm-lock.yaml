@@ -18,6 +18,7 @@ specifiers:
   '@angular/core': ^14.2.12
   '@angular/forms': ^14.2.12
   '@angular/language-service': ~14.2.12
+  '@angular/localize': ^14
   '@angular/platform-browser': ^14.2.12
   '@angular/platform-browser-dynamic': ^14.2.12
   '@angular/router': ^14.2.12
@@ -46,6 +47,7 @@ specifiers:
   color: ^4.2.3
   cordova-android: ^11.0.0
   cordova-ios: ^6.2.0
+  cordova-plugin-android-dark-mode-support: ^2.0.0
   cordova-plugin-androidx-adapter: ^1.1.3
   cordova-plugin-device: ^2.1.0
   cordova-plugin-firebase-analytics: ^7.0.5
@@ -90,6 +92,7 @@ dependencies:
   '@angular/common': 14.3.0_bhkymh3mvb6yhwbs35nl4cllki
   '@angular/core': 14.3.0_rxjs@7.8.0+zone.js@0.11.8
   '@angular/forms': 14.3.0_svagmnkchkyph4an4yuyyh3pd4
+  '@angular/localize': 14.3.0_cqwiofdtgqwkx67gfnt5blkgxu
   '@angular/platform-browser': 14.3.0_vfvstxrqwyf64j6egrpcvwompq
   '@angular/platform-browser-dynamic': 14.3.0_g6dy3flmndcjsdvyeiq6davm7u
   '@angular/router': 14.3.0_svagmnkchkyph4an4yuyyh3pd4
@@ -98,7 +101,7 @@ dependencies:
   '@awesome-cordova-plugins/firebase-analytics': 6.3.0_ntg3f3zqlxxfimid6yk2jr2ztu
   '@awesome-cordova-plugins/onesignal': 6.3.0_ntg3f3zqlxxfimid6yk2jr2ztu
   '@ionic/angular': 6.7.0_3fzbrz2jxpio33aaizjosenm3i
-  '@ionic/cordova-builders': 7.0.0_gkeoc4qcbaqxncabkukiruxlri
+  '@ionic/cordova-builders': 7.0.0_zgxjhzwddeolfma724z7etat5u
   '@ionic/core': 6.7.0
   '@ionic/storage-angular': 3.0.6_bhkymh3mvb6yhwbs35nl4cllki
   '@ngneat/until-destroy': 9.2.3_bhkymh3mvb6yhwbs35nl4cllki
@@ -106,6 +109,7 @@ dependencies:
   '@rx-angular/template': 14.0.0_l2abunqb72gidavv3uebvf4e4q
   '@wordpress/html-entities': 3.29.0
   color: 4.2.3
+  cordova-plugin-android-dark-mode-support: 2.0.0
   cordova-plugin-firebase-analytics: 7.0.5
   cordova-res: 0.15.4
   cordova-sqlite-storage: 6.0.0
@@ -130,7 +134,7 @@ optionalDependencies:
 
 devDependencies:
   '@angular-devkit/architect': 0.1402.11
-  '@angular-devkit/build-angular': 14.2.11_gkeoc4qcbaqxncabkukiruxlri
+  '@angular-devkit/build-angular': 14.2.11_zgxjhzwddeolfma724z7etat5u
   '@angular-devkit/core': 14.2.11
   '@angular-devkit/schematics': 14.2.11
   '@angular-eslint/builder': 14.1.2_eky3x5i7y7l4yby5jbcncpkdgu
@@ -205,7 +209,7 @@ packages:
     transitivePeerDependencies:
       - chokidar
 
-  /@angular-devkit/build-angular/14.2.11_gkeoc4qcbaqxncabkukiruxlri:
+  /@angular-devkit/build-angular/14.2.11_zgxjhzwddeolfma724z7etat5u:
     resolution: {integrity: sha512-O3X7GXcCBCGceVSHT+GIJ2JrRCg2YcO7HtNavpmPrraNr1o+aCdTkmT5WTS2cqWkZBm/z0wqKR8PsX/ZoD2r1A==}
     engines: {node: ^14.15.0 || >=16.10.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
     peerDependencies:
@@ -236,6 +240,7 @@ packages:
       '@angular-devkit/build-webpack': 0.1402.11_5dd563k4hzvcd467glv3c6l4f4
       '@angular-devkit/core': 14.2.11
       '@angular/compiler-cli': 14.2.12_ldxvyn7sfxql3enqylvzy5khzu
+      '@angular/localize': 14.3.0_cqwiofdtgqwkx67gfnt5blkgxu
       '@babel/core': 7.18.10
       '@babel/generator': 7.18.12
       '@babel/helper-annotate-as-pure': 7.18.6
@@ -582,6 +587,22 @@ packages:
     engines: {node: ^14.15.0 || >=16.10.0}
     dev: true
 
+  /@angular/localize/14.3.0_cqwiofdtgqwkx67gfnt5blkgxu:
+    resolution: {integrity: sha512-YmwlOEGnFonfDrIcWqlxXVFFjd0Q6yXeHGZCBFBfwbtjIseiJJ4UBmkTUgFeq7qlWevSFQzHdQnraFRGZpnMig==}
+    engines: {node: ^14.15.0 || >=16.10.0}
+    hasBin: true
+    peerDependencies:
+      '@angular/compiler': 14.3.0
+      '@angular/compiler-cli': 14.3.0
+    dependencies:
+      '@angular/compiler': 14.2.12_@angular+core@14.3.0
+      '@angular/compiler-cli': 14.2.12_ldxvyn7sfxql3enqylvzy5khzu
+      '@babel/core': 7.18.9
+      glob: 8.0.3
+      yargs: 17.6.2
+    transitivePeerDependencies:
+      - supports-color
+
   /@angular/platform-browser-dynamic/14.3.0_g6dy3flmndcjsdvyeiq6davm7u:
     resolution: {integrity: sha512-rneZiMrIiYRhrkQvdL40E2ErKRn4Zdo6EtjBM9pAmWeyoM8oMnOZb9gz5vhrkNWg06kVMVg0yKqluP5How7j3A==}
     engines: {node: ^14.15.0 || >=16.10.0}
@@ -647,7 +668,7 @@ packages:
     peerDependencies:
       rxjs: ^5.5.0 || ^6.5.0 || ^7.3.0
     dependencies:
-      '@types/cordova': 11.0.0
+      '@types/cordova': 11.0.3
       rxjs: 7.8.0
     dev: false
 
@@ -658,7 +679,7 @@ packages:
       rxjs: ^5.5.0 || ^6.5.0 || ^7.3.0
     dependencies:
       '@awesome-cordova-plugins/core': 6.3.0_rxjs@7.8.0
-      '@types/cordova': 11.0.0
+      '@types/cordova': 11.0.3
       rxjs: 7.8.0
     dev: false
 
@@ -669,7 +690,7 @@ packages:
       rxjs: ^5.5.0 || ^6.5.0 || ^7.3.0
     dependencies:
       '@awesome-cordova-plugins/core': 6.3.0_rxjs@7.8.0
-      '@types/cordova': 11.0.0
+      '@types/cordova': 11.0.3
       rxjs: 7.8.0
     dev: false
 
@@ -691,6 +712,28 @@ packages:
       '@babel/code-frame': 7.18.6
       '@babel/generator': 7.20.4
       '@babel/helper-compilation-targets': 7.20.0_@babel+core@7.18.10
+      '@babel/helper-module-transforms': 7.20.2
+      '@babel/helpers': 7.20.1
+      '@babel/parser': 7.20.3
+      '@babel/template': 7.18.10
+      '@babel/traverse': 7.20.1
+      '@babel/types': 7.20.2
+      convert-source-map: 1.8.0
+      debug: 4.3.4
+      gensync: 1.0.0-beta.2
+      json5: 2.2.1
+      semver: 6.3.0
+    transitivePeerDependencies:
+      - supports-color
+
+  /@babel/core/7.18.9:
+    resolution: {integrity: sha512-1LIb1eL8APMy91/IMW+31ckrfBM4yCoLaVzoDhZUKSM4cu1L1nIidyxkCgzPAgrC5WEz36IPEr/eSeSF9pIn+g==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      '@ampproject/remapping': 2.2.0
+      '@babel/code-frame': 7.18.6
+      '@babel/generator': 7.20.4
+      '@babel/helper-compilation-targets': 7.20.0_@babel+core@7.18.9
       '@babel/helper-module-transforms': 7.20.2
       '@babel/helpers': 7.20.1
       '@babel/parser': 7.20.3
@@ -764,6 +807,18 @@ packages:
     dependencies:
       '@babel/compat-data': 7.20.1
       '@babel/core': 7.18.10
+      '@babel/helper-validator-option': 7.18.6
+      browserslist: 4.21.4
+      semver: 6.3.0
+
+  /@babel/helper-compilation-targets/7.20.0_@babel+core@7.18.9:
+    resolution: {integrity: sha512-0jp//vDGp9e8hZzBc6N/KwA5ZK3Wsm/pfm4CrY7vzegkVxc65SgSn6wYOnwHe9Js9HRQ1YTCKLGPzDtaS3RoLQ==}
+    engines: {node: '>=6.9.0'}
+    peerDependencies:
+      '@babel/core': ^7.0.0
+    dependencies:
+      '@babel/compat-data': 7.20.1
+      '@babel/core': 7.18.9
       '@babel/helper-validator-option': 7.18.6
       browserslist: 4.21.4
       semver: 6.3.0
@@ -2099,11 +2154,11 @@ packages:
     dev: false
     optional: true
 
-  /@ionic/cordova-builders/7.0.0_gkeoc4qcbaqxncabkukiruxlri:
+  /@ionic/cordova-builders/7.0.0_zgxjhzwddeolfma724z7etat5u:
     resolution: {integrity: sha512-Z+/ld4CCXGilq8HbcWlwJTGsoWZC0d+8WBdoeeGF+/67HwLaw6CG2IkHIeo0Avww3+7QUo+ob8khB8kbXkeCGg==}
     dependencies:
       '@angular-devkit/architect': 0.1400.7
-      '@angular-devkit/build-angular': 14.2.11_gkeoc4qcbaqxncabkukiruxlri
+      '@angular-devkit/build-angular': 14.2.11_zgxjhzwddeolfma724z7etat5u
       '@angular-devkit/core': 14.2.11
       '@angular-devkit/schematics': 14.2.11
       '@schematics/angular': 14.2.11
@@ -2568,8 +2623,8 @@ packages:
   /@types/cookie/0.4.1:
     resolution: {integrity: sha512-XW/Aa8APYr6jSVVA1y/DEIZX0/GMKLEVekNG727R8cs56ahETkRAy/3DR7+fJyh7oUgGwNQaRfXCun0+KbWY7Q==}
 
-  /@types/cordova/11.0.0:
-    resolution: {integrity: sha512-AtBm1IAqqXsXszJe6XxuA2iXLhraNCj25p/FHRyikPeW0Z3YfgM6qzWb+VJglJTmZc5lqRNy84cYM/sQI5v6Vw==}
+  /@types/cordova/11.0.3:
+    resolution: {integrity: sha512-kyuRQ40/NWQVhqGIHq78Ehu2Bf9Mlg0LhmSmis6ZFJK7z933FRfYi8tHe/k/0fB+PGfCf95rJC6TO7dopaFvAg==}
     dev: false
 
   /@types/cors/2.8.12:
@@ -4064,6 +4119,11 @@ packages:
       xcode: 3.0.1
       xml-escape: 1.1.0
     dev: true
+
+  /cordova-plugin-android-dark-mode-support/2.0.0:
+    resolution: {integrity: sha512-7WQBz9Db3yo40O3+WYmCKYtcoCgzUSjk2P34ImGBo2gZ6EgNzfT3mFB1LZuXzCO2IwY+vQmMHzrmJ8SpPwNF1w==}
+    engines: {cordovaDependencies: {1.0.0: {cordova: '>= 7.0.0', cordova-android: '>=6.4.0'}, 2.0.0: {cordova: '>= 9.0.0', cordova-android: '>=11.0.0'}}}
+    dev: false
 
   /cordova-plugin-androidx-adapter/1.1.3:
     resolution: {integrity: sha512-W1SImn0cCCvOSTSfWWp5TnanIQrSuh2Bch+dcZXIzEn0km3Qb7VryeAqHhgBQYwwzC5Ollk1DtUAk/AJSojuZA==}
@@ -8992,14 +9052,6 @@ packages:
       strip-ansi: 3.0.1
     dev: false
 
-  /string-width/4.2.0:
-    resolution: {integrity: sha512-zUz5JD+tgqtuDjMhwIg5uFVV3dtqZ9yQJlZVfq4I01/K5Paj5UHj7VyrQOJvzawSVlKpObApbfD0Ed6yJc+1eg==}
-    engines: {node: '>=8'}
-    dependencies:
-      emoji-regex: 8.0.0
-      is-fullwidth-code-point: 3.0.0
-      strip-ansi: 6.0.1
-
   /string-width/4.2.3:
     resolution: {integrity: sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==}
     engines: {node: '>=8'}
@@ -9902,7 +9954,7 @@ packages:
       require-directory: 2.1.1
       require-main-filename: 2.0.0
       set-blocking: 2.0.0
-      string-width: 4.2.0
+      string-width: 4.2.3
       which-module: 2.0.0
       y18n: 4.0.0
       yargs-parser: 18.1.3

@@ -87,7 +87,7 @@ describe('AuthService', () => {
     return;
   });
 
-  it('refresh with error', async () => {
+  fit('refresh with error', async () => {
     await login();
 
     let counter = 0;
@@ -102,19 +102,22 @@ describe('AuthService', () => {
     //   expect(res).toBeNull();
     //   expect(counter).withContext('should emit after the first refresh').toBe(1);
     // });
-    const refreshReq = http.expectOne(refreshMatcher);
+    let refreshReq = http.expectOne(refreshMatcher);
 
     await expectAsync(refresh1).toBePending();
     // await expectAsync(refresh2).toBePending();
     await async(() => refreshReq.flush('Refresh périmé', { status: 400, statusText: 'une erreur' }));
-    console.log('1st')
     await expectAsync(refresh1).toBePending();
-    console.log('2nd')
-    await async(() => refreshReq.flush('Refresh périmé', { status: 400, statusText: 'une erreur' }));
+    console.log('1st retry')
+    await async(() => http.expectOne(refreshMatcher).flush('Refresh périmé', { status: 400, statusText: 'une erreur' }));
     await expectAsync(refresh1).toBePending();
-    await async(() => refreshReq.flush('Refresh périmé', { status: 400, statusText: 'une erreur' }));
-    console.log('2rd')
+    console.log('2nd retry')
+    await async(() => http.expectOne(refreshMatcher).flush('Refresh périmé', { status: 400, statusText: 'une erreur' }));
     await expectAsync(refresh1).toBePending();
+    console.log('3rd retry')
+    await async(() => http.expectOne(refreshMatcher).flush('Refresh périmé', { status: 400, statusText: 'une erreur' }));
+    await expectAsync(refresh1).toBePending();
+    console.log('4th')
     // await expectAsync(refresh2).toBeResolved();
     http.expectNone(refreshMatcher);
 

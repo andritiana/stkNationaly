@@ -65,12 +65,6 @@ app-agenda-details ion-header ion-back-button.hydrated {
   visibility: visible;
 }
 
-.homeMenu,
-.refresh-button {
-  font-size: 2rem;
-  color: #19338F;
-}
-
 #eventNotification,
   #broadcastNotification,
   #newsNotification,
@@ -89,15 +83,27 @@ app-agenda-details ion-header ion-back-button.hydrated {
   }
 
 
-// .my-pop-up {
-//   .alert-wrapper{
-//       background-color: white;
-//   }
-// }
-
-// TODO when dark mode is handled : delete
 ion-item {
   --ion-item-background: #f8f8f8;
+}
+
+ion-button[icon-only][fill=clear] {
+  --padding-start: 5px;
+  --padding-end: 5px;
+  --padding-bottom: 5px;
+  --padding-top: 5px;
+  height: calc(1em + var(--pading-top) + var(--padding-bottom));
+  width: calc(1em + var(--pading-start) + var(--padding-end));
+  box-sizing: content-box;
+  font-size: 1rem;
+  ion-icon {
+    font-size: 1em;
+  }
+}
+
+/* on iOS, ion-refresher is hidden by a big --offset-top */
+ion-refresher {
+  z-index: 0;
 }
 
 

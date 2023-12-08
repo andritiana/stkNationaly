@@ -17,7 +17,7 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "lib": [
-      "es2018",
+      "ES2019",
       "dom"
     ]
   },

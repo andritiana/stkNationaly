@@ -6,25 +6,25 @@ import type { MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { EMPTY, ReplaySubject, Subject, asyncScheduler, firstValueFrom } from 'rxjs';
 import { filter, map, share, shareReplay, startWith, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
-
-type RxCacheEvent = LoadingEvent | {
-  resetSource: true;
-};
+type RxCacheEvent =
+  | LoadingEvent
+  | {
+      resetSource: true;
+    };
 interface LoadingEvent {
   error: boolean;
   isFirstSourceEmission: boolean;
   loading: boolean;
 }
 
-class RxCache<Src> {
+export class RxCache<Src> {
   private $?: Observable<Src>;
   private events = new CacheEventsInternal();
   private expiration$ = new Subject<void>();
   private feeder$!: ReplaySubject<Src | RxCache<Src>['NON_VALUE']>;
   private NON_VALUE = Symbol();
   private refresher$ = new Subject();
-  constructor(private lifetime?: number | Duration, private runnerOutsideAngular = (cb: () => unknown) => cb()) {
-  }
+  constructor(private lifetime?: number | Duration, private runnerOutsideAngular = (cb: () => unknown) => cb()) {}
 
   destroy() {
     this.feeder$?.complete();
@@ -43,7 +43,7 @@ class RxCache<Src> {
       return (src$: Observable<Src>) =>
         (this.$ = this.refresher$.pipe(
           startWith(null),
-          tap(() => this.events.setLoading(true, {isFirstSourceEmission})),
+          tap(() => this.events.setLoading(true, { isFirstSourceEmission })),
           switchMap(() => src$),
           // eslint-disable-next-line rxjs/no-unsafe-takeuntil
           takeUntil(this.expiration$),
@@ -63,11 +63,13 @@ class RxCache<Src> {
           this.isActualValue(),
           tap({
             next: () => {
-            this.events.setLoading(false, {isFirstSourceEmission});
-            isFirstSourceEmission = false;
-          },
-          error: () => {this.events.setLoading(false, {isFirstSourceEmission, error: true})}
-        })
+              this.events.setLoading(false, { isFirstSourceEmission });
+              isFirstSourceEmission = false;
+            },
+            error: () => {
+              this.events.setLoading(false, { isFirstSourceEmission, error: true });
+            },
+          })
         ));
     }
   }
@@ -82,11 +84,12 @@ class RxCache<Src> {
 
   refresh(value?: Src | ((prev: Src) => Src)) {
     if (value) {
+      this.events.setLoading(true);
       if (value instanceof Function) {
         const updated$ = this.feeder$.pipe(
           this.isActualValue(),
           map((v) => value(v)),
-          tap((v) => this.feeder$.next(v)),
+          tap((v) => this.feeder$.next(v))
         );
         return firstValueFrom(updated$);
       } else {
@@ -120,46 +123,52 @@ class RxCache<Src> {
 
 export type CacheEventsPublic = Omit<CacheEventsInternal, 'setLoading' | 'setResettingSource'>;
 class CacheEventsInternal {
-  $ = new ReplaySubject<LoadingEvent | {resetSource: true}>(1, 100);
+  $ = new ReplaySubject<LoadingEvent | { resetSource: true }>(1, 100);
 
   destroy() {
     this.$.complete();
   }
 
   isLoading$() {
-    return this.$.pipe(this.getLoadingEvents(), map(({loading}) => loading));
+    return this.$.pipe(
+      this.getLoadingEvents(),
+      map(({ loading }) => loading)
+    );
   }
 
-  setLoading(loading: boolean, opts: {isFirstSourceEmission: boolean; error?: boolean}) {
-    const {isFirstSourceEmission, error = false} = opts;
-    this.$.next({loading, isFirstSourceEmission, error});
+  setLoading(
+    loading: boolean,
+    opts: { error?: boolean; isFirstSourceEmission: boolean } = { isFirstSourceEmission: false }
+  ) {
+    const { isFirstSourceEmission, error = false } = opts;
+    this.$.next({ loading, isFirstSourceEmission, error });
   }
 
   setResettingSource() {
-    this.$.next({resetSource: true});
+    this.$.next({ resetSource: true });
   }
 
   private getLoadingEvents() {
     return filter((event: RxCacheEvent): event is LoadingEvent => 'loading' in event && event.loading);
   }
 
-// export function isLoadingEvent() {
-//   return filter((event: RxCacheEvent): event is LoadingEvent => 'loading' in event && event.loading);
-// }
+  // export function isLoadingEvent() {
+  //   return filter((event: RxCacheEvent): event is LoadingEvent => 'loading' in event && event.loading);
+  // }
 }
 
 export class RxCacheByKey<Key, Value> {
-  private registry = new Map<Key,RxCache<Value>>();
-  constructor(private lifetime?: number | Duration, private runnerOutsideAngular = (cb: () => unknown) => cb()) {
-  }
+  private registry = new Map<Key, RxCache<Value>>();
+  constructor(private lifetime?: number | Duration, private runnerOutsideAngular = (cb: () => unknown) => cb()) {}
 
   destroy() {
-    this.registry.forEach(cache => cache.destroy());
+    this.registry.forEach((cache) => cache.destroy());
   }
 
   doCacheByKey(k: Key) {
     if (this.registry.has(k)) {
-      return this.registry.get(k)?.doCache();
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      return this.registry.get(k)!.doCache();
     } else {
       const cache = new RxCache<Value>(this.lifetime, this.runnerOutsideAngular);
       this.registry.set(k, cache);
@@ -167,7 +176,15 @@ export class RxCacheByKey<Key, Value> {
     }
   }
 
+  expireAll() {
+    this.registry.forEach(cache => cache.expireNow());
+  }
+
+  refreshAll(value?: Value | ((prev: Value) => Value)): Promise<Value[]> {
+    return Promise.all(Array.from(this.registry).map(([_, cache]) => cache.refresh(value)));
+  }
 }
+
 @Injectable({
   providedIn: 'root',
 })
@@ -175,8 +192,38 @@ export class CacheService {
   private registry: Set<RxCache<any>> = new Set();
   private registryOfCacheByKey: Set<RxCacheByKey<unknown, unknown>> = new Set();
 
+  /** Use the function instead of this static method.
+   * Implemented as a static method to access private methods.
+   * @private
+   */
+  static createCache<V>(opts?: { expiry?: number | Duration }) {
+      const { expiry } = (opts ??= {});
+      const service = inject(CacheService);
+      const ngZone = inject(NgZone);
+      const runOutsideNgZone = ngZone.runOutsideAngular.bind(ngZone);
+      // const timestampProvider = inject(TIMESTAMP_PROVIDER, {optional: true}) ?? undefined;
+      const sharedCache = new RxCache<V>(expiry, runOutsideNgZone);
+      service.register(sharedCache);
+      return sharedCache;
+    }
+
+  /** Use the function instead of this static method.
+   * Implemented as a static method to access private methods.
+   * @private
+   */
+  static createCacheByKey<K, V>(opts?: { expiry?: number | Duration }) {
+    const { expiry } = (opts ??= {});
+    const service = inject(CacheService);
+    const ngZone = inject(NgZone);
+    const runOutsideNgZone = ngZone.runOutsideAngular.bind(ngZone);
+    // const timestampProvider = inject(TIMESTAMP_PROVIDER, {optional: true}) ?? undefined;
+    const sharedCache = new RxCacheByKey<K, V>(expiry, runOutsideNgZone);
+    service.register(sharedCache);
+    return sharedCache;
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  register<Src>(cacheInstance: RxCache<Src> | RxCacheByKey<any, any>) {
+  private register<Src>(cacheInstance: RxCache<Src> | RxCacheByKey<any, any>) {
     if (cacheInstance instanceof RxCacheByKey) {
       return this.registryOfCacheByKey.add(cacheInstance);
     } else {
@@ -188,27 +235,12 @@ export class CacheService {
     this.registry.forEach((instance) => instance.destroy());
     this.registryOfCacheByKey.forEach((instance) => instance.destroy());
   }
+
 }
 
-export function createCache<V>(opts?: { expiry?: number | Duration; inject?: <T>(Ctor: Type<T>) => T }) {
-
-  const { expiry /* , inject: injekt = inject */ } = (opts ??= {});
-  const service = inject(CacheService);
-  const ngZone = inject(NgZone);
-  const runOutsideNgZone = ngZone.runOutsideAngular.bind(ngZone);
-  // const timestampProvider = inject(TIMESTAMP_PROVIDER, {optional: true}) ?? undefined;
-  const sharedCache = new RxCache<V>(expiry, runOutsideNgZone);
-  service.register(sharedCache);
-  return sharedCache;
+export function createCache<V>(opts?: { expiry?: number | Duration }) {
+  return CacheService.createCache<V>(opts);
 }
-export function createCacheByKey<K,V>(opts?: { expiry?: number | Duration; inject?: <T>(Ctor: Type<T>) => T }) {
-
-  const { expiry /* , inject: injekt = inject */ } = (opts ??= {});
-  const service = inject(CacheService);
-  const ngZone = inject(NgZone);
-  const runOutsideNgZone = ngZone.runOutsideAngular.bind(ngZone);
-  // const timestampProvider = inject(TIMESTAMP_PROVIDER, {optional: true}) ?? undefined;
-  const sharedCache = new RxCacheByKey<K,V>(expiry, runOutsideNgZone);
-  service.register(sharedCache);
-  return sharedCache;
+export function createCacheByKey<K, V>(opts?: { expiry?: number | Duration }) {
+  return CacheService.createCacheByKey<K, V>(opts);
 }

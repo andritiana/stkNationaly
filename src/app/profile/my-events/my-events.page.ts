@@ -18,9 +18,7 @@ import { ProfileService } from '../profile.service';
   selector: 'mystk-my-events',
   template: `
     <ion-header>
-      <ion-toolbar>
-        <app-global-header></app-global-header>
-      </ion-toolbar>
+      <app-global-header></app-global-header>
     </ion-header>
     <ion-content fullscreen>
       <main class="my-events-outer">

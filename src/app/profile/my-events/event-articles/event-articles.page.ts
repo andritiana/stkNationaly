@@ -58,9 +58,7 @@ type ListWithSelectedIndexOfGenericPost = GenericPostIndexed[] & {
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   template: `
     <ion-header>
-      <ion-toolbar>
-        <app-global-header></app-global-header>
-      </ion-toolbar>
+      <app-global-header></app-global-header>
     </ion-header>
     <ion-content fullscreen>
       <main class="event-article-outer">

@@ -3,7 +3,7 @@ import { Component, LOCALE_ID, ViewChild, ViewEncapsulation, inject } from '@ang
 import type { NavigationExtras } from '@angular/router';
 import { Router } from '@angular/router';
 import type { RefresherEventDetail } from '@ionic/core';
-import { add, format, getMonth, getYear, isSameDay } from 'date-fns/esm';
+import { add, format, getMonth, getYear, isSameDay, isSameMinute } from 'date-fns/esm';
 import { fr } from 'date-fns/esm/locale';
 import { CalendarComponent } from 'ionic2-calendar';
 import type { AgendaEvent } from '../models/agenda-event.interface';
@@ -30,18 +30,16 @@ export class AgendaTabPage {
     currentDate: new Date(),
     queryMode: 'remote' as const,
   };
-  readonly agendaCache = createCacheByKey<string, AgendaEvent[]>({expiry: { minutes: 10 }});
+  readonly agendaCache = createCacheByKey<string, AgendaEvent[]>({ expiry: { minutes: 10 } });
   readonly locale = inject(LOCALE_ID);
 
-
-  @ViewChild(CalendarComponent, {static: true}) myCal: CalendarComponent | undefined;
+  @ViewChild(CalendarComponent, { static: true }) myCal: CalendarComponent | undefined;
 
   constructor(
     private fpmaApiService: FpmaApiService,
     private router: Router,
     private contentUpdateService: ContentUpdateService
-  ) {
-  }
+  ) {}
 
   ionViewWillEnter() {
     /* could be today or the last selected date if we entered the page before */
@@ -56,7 +54,7 @@ export class AgendaTabPage {
   }
 
   computeEventTime = (event: AgendaEvent) => {
-    const {startTime, endTime, allDay} = event;
+    const { startTime, endTime, allDay } = event;
     if (!allDay) {
       let format: string;
       if (isSameDay(startTime, endTime)) {
@@ -64,11 +62,13 @@ export class AgendaTabPage {
       } else {
         format = 'dd/MM/yyyy';
       }
-      return [startTime, endTime].map(t => formatDate(t, format, this.locale)).join(' - ');
+      return (isSameMinute(startTime, endTime) ? [startTime] : [startTime, endTime])
+        .map((t) => formatDate(t, format, this.locale))
+        .join(' - ');
     } else {
       return 'Toute la journée';
     }
-  }
+  };
 
   isDateValid(date: Date) {
     if (date.toString() !== 'Invalid Date') {
@@ -88,24 +88,24 @@ export class AgendaTabPage {
     this.myCal?.slidePrev();
   }
 
-  calendarViewRangeChanged(e: { startTime: Date, endTime: Date }) {
+  calendarViewRangeChanged(e: { startTime: Date; endTime: Date }) {
     const { startTime } = e;
     this.loading = true;
     const dayInViewedMonth = add(startTime, { weeks: 1 });
-    this.currentMonth = format(dayInViewedMonth, 'MMMM yyyy', {locale: fr});
+    this.currentMonth = format(dayInViewedMonth, 'MMMM yyyy', { locale: fr });
 
     const monthNum = getMonth(dayInViewedMonth) + 1;
     const year = getYear(dayInViewedMonth);
     this.loadNewAgenda(monthNum, year);
   }
 
-  onEventSelected(event: Pick<AgendaEvent,'id'>) {
+  onEventSelected(event: Pick<AgendaEvent, 'id'>) {
     const navigationExtras: NavigationExtras = { state: { events: this.events, id: event.id } };
     this.router.navigate(['/tabs/agenda-tab/details'], navigationExtras);
   }
 
   refresh(evt?: CustomEvent<RefresherEventDetail>) {
-    if( this.loading === false ) {
+    if (this.loading === false) {
       this.loading = true;
       this.agendaCache.refreshAll().finally(() => {
         this.loading = false;
@@ -115,16 +115,17 @@ export class AgendaTabPage {
   }
 
   private loadNewAgenda(m: number, y: number) {
-    this.fpmaApiService.loadMonthsEventsAgenda(m, y).pipe(
-      this.agendaCache.doCacheByKey([m,y].join('-')),
-    ).subscribe(
-      (events: AgendaEvent[]) => {
-        this.events = events;
-        this.loading = false;
-      },
-      (err: unknown) => {
-        this.loading = false;
-      }
-    );
+    this.fpmaApiService
+      .loadMonthsEventsAgenda(m, y)
+      .pipe(this.agendaCache.doCacheByKey([m, y].join('-')))
+      .subscribe(
+        (events: AgendaEvent[]) => {
+          this.events = events;
+          this.loading = false;
+        },
+        (err: unknown) => {
+          this.loading = false;
+        }
+      );
   }
 }

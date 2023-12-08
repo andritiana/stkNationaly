@@ -13,17 +13,20 @@
       <ion-item>
         <ion-label position="floating">Nom d'utilisateur ou adresse e-mail</ion-label>
         <ion-input formControlName="login" autocomplete="username" type="email" name="username" id="username"></ion-input>
+        <ion-note slot="error">{{loginForm.controls.login.errors?.credentials}}</ion-note>
       </ion-item>
       <ion-item>
         <ion-label position="floating">Mot de passe</ion-label>
         <ion-input passwordRevelator
                    [icon]="passwordIcon"
+                   clearInput="false"
                    #revelator="revelator"
                    formControlName="password"
                    id="password"
                    type="password"
                    name="password"
                    autocomplete="current-password"></ion-input>
+        <ion-note slot="error">{{loginForm.controls.password.errors?.credentials}}</ion-note>
         <ion-icon color="primary" #passwordIcon (click)="revelator.toggle()" slot="end"></ion-icon>
       </ion-item>
       <button style="position: absolute; visibility: hidden; pointer-events: none;"></button>
@@ -37,7 +40,8 @@
                   class="login-actions-reset-password"
                   fill="clear"
                   type="button"
-                  [routerLink]="['/reset-password']">Mot de passe oublié ?</ion-button>
+                  [routerLink]="['/reset-password']"
+                  [state]="$any(resetPasswordNavState$ | async)">Mot de passe oublié ?</ion-button>
     </div>
   </section>
 

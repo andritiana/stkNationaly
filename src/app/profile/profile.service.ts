@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { compareDesc, parseISO } from 'date-fns/esm';
 import type { Observable } from 'rxjs';
 import { EMPTY, throwError } from 'rxjs';
-import { catchError, filter, map, switchMap } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, take } from 'rxjs/operators';
 import { createCache } from '../utils/cache/cache';
 import { AuthService } from './auth.service';
 import type { Badge, EditProfileBodyRequest, Profile } from './profile.model';
@@ -34,6 +34,7 @@ export class ProfileService {
 
   editMyProfile(body: EditProfileBodyRequest) {
     return this.authService.getMyId().pipe(
+      take(1),
       switchMap(id => this.http.patch(`${this.baseAPI}/profile/${id}`, body)),
       catchError((error: unknown) => {
         if (error instanceof HttpErrorResponse) {

@@ -6,6 +6,8 @@ import { GlobalHeaderModule } from "../global-header/global-header.module";
 import { LiveSectionDetailsPagePage } from "./live-section-details-page/live-section-details-page.page";
 import { LiveSectionsPagePageRoutingModule } from "./live-sections-page-routing.module";
 import { LiveSectionsPagePage } from "./live-sections-page.page";
+import { ArticleEmbeddingIframeComponentModule } from "../articles/article-embedding-iframe/article-embedding-iframe.module";
+import { DecodeHtmlEntitiesPipe } from "../utils/html-entities/decode-html-entities.pipe";
 
 @NgModule({
   imports: [
@@ -14,6 +16,8 @@ import { LiveSectionsPagePage } from "./live-sections-page.page";
     IonicModule,
     LiveSectionsPagePageRoutingModule,
     GlobalHeaderModule,
+    ArticleEmbeddingIframeComponentModule,
+    DecodeHtmlEntitiesPipe,
   ],
   declarations: [LiveSectionsPagePage, LiveSectionDetailsPagePage],
 })

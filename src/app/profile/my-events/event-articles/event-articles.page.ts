@@ -4,7 +4,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectorRef, Component, ViewChild, inject
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import type { ViewDidLeave } from '@ionic/angular';
-import { IonicModule, Platform } from '@ionic/angular';
+import { IonContent, IonicModule, Platform } from '@ionic/angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ForModule } from '@rx-angular/template/for';
 import { LetModule } from '@rx-angular/template/let';
@@ -141,6 +141,8 @@ export class EventArticlesPage implements OnInit, ViewDidLeave {
   swiper?: Swiper;
   trio$: Observable<ListWithSelectedIndexOfGenericPost>;
 
+  @ViewChild(IonContent)
+  private scrollContainer!: IonContent;
   @ViewChild('swiper')
   set swiperContainer(elt: ElementRef<SwiperContainer> | undefined) {
     this.swiper = elt?.nativeElement.swiper;
@@ -267,6 +269,7 @@ export class EventArticlesPage implements OnInit, ViewDidLeave {
     // swiper's slide changed so it holds the reference and the segment should follow
     if (swiper.realIndex !== trio.slideIndex) {
       this.segmentControl.setValue(trio[swiper.realIndex].index.toString());
+      void this.scrollContainer.scrollToTop(800);
     }
   }
 

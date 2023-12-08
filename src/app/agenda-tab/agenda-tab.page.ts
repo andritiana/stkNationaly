@@ -3,20 +3,21 @@ import { Component, LOCALE_ID, ViewChild, ViewEncapsulation, inject } from '@ang
 import type { NavigationExtras } from '@angular/router';
 import { Router } from '@angular/router';
 import type { RefresherEventDetail } from '@ionic/core';
-import { add, format, getMonth, getYear, isSameDay, isSameMinute } from 'date-fns/esm';
+import { add, compareAsc, format, getMonth, getYear, isSameDay, isSameMinute } from 'date-fns/esm';
 import { fr } from 'date-fns/esm/locale';
 import { CalendarComponent } from 'ionic2-calendar';
 import type { AgendaEvent } from '../models/agenda-event.interface';
 import { ContentUpdateService } from '../services/content-update.service';
-import { FpmaApiService } from '../services/fpma-api.service';
-import { CacheService, createCacheByKey } from '../utils/cache/cache';
+import { CacheService } from '../utils/cache/cache';
+import { AgendaService } from './../agenda/agenda.service';
+
 
 @Component({
   selector: 'app-agenda-tab',
   templateUrl: 'agenda-tab.page.html',
   styleUrls: ['agenda-tab.page.scss'],
   encapsulation: ViewEncapsulation.None,
-  providers: [CacheService],
+  providers: [CacheService, AgendaService],
 })
 export class AgendaTabPage {
   url = '';
@@ -30,13 +31,12 @@ export class AgendaTabPage {
     currentDate: new Date(),
     queryMode: 'remote' as const,
   };
-  readonly agendaCache = createCacheByKey<string, AgendaEvent[]>({ expiry: { minutes: 10 } });
   readonly locale = inject(LOCALE_ID);
+  private readonly agendaService = inject(AgendaService);
 
   @ViewChild(CalendarComponent, { static: true }) myCal: CalendarComponent | undefined;
 
   constructor(
-    private fpmaApiService: FpmaApiService,
     private router: Router,
     private contentUpdateService: ContentUpdateService
   ) {}
@@ -50,10 +50,10 @@ export class AgendaTabPage {
     this.contentUpdateService.resetNbUpdated('events');
   }
   ionViewDidLeave() {
-    this.agendaCache.expireAll();
+    this.agendaService.agendaCache.expireAll();
   }
 
-  computeEventTime = (event: AgendaEvent) => {
+  computeEventTime = (event: Pick<AgendaEvent, 'startTime' | 'endTime' | 'allDay'>) => {
     const { startTime, endTime, allDay } = event;
     if (!allDay) {
       let format: string;
@@ -70,13 +70,6 @@ export class AgendaTabPage {
     }
   };
 
-  isDateValid(date: Date) {
-    if (date.toString() !== 'Invalid Date') {
-      return true;
-    } else {
-      return false;
-    }
-  }
 
   next() {
     this.loading = true;
@@ -99,15 +92,15 @@ export class AgendaTabPage {
     this.loadNewAgenda(monthNum, year);
   }
 
-  onEventSelected(event: Pick<AgendaEvent, 'id'>) {
-    const navigationExtras: NavigationExtras = { state: { events: this.events, id: event.id } };
+  onEventSelected(event: AgendaEvent) {
+    const navigationExtras: NavigationExtras = { state: { events: this.events, id: [event.startTime, event.title].join('_') } };
     this.router.navigate(['/tabs/agenda-tab/details'], navigationExtras);
   }
 
   refresh(evt?: CustomEvent<RefresherEventDetail>) {
     if (this.loading === false) {
       this.loading = true;
-      this.agendaCache.refreshAll().finally(() => {
+      this.agendaService.agendaCache.refreshAll().finally(() => {
         this.loading = false;
         evt?.detail.complete();
       });
@@ -115,12 +108,11 @@ export class AgendaTabPage {
   }
 
   private loadNewAgenda(m: number, y: number) {
-    this.fpmaApiService
+    this.agendaService
       .loadMonthsEventsAgenda(m, y)
-      .pipe(this.agendaCache.doCacheByKey([m, y].join('-')))
       .subscribe(
         (events: AgendaEvent[]) => {
-          this.events = events;
+          this.events = events.sort(({startTime: a}, {startTime: b}) => compareAsc(a, b));
           this.loading = false;
         },
         (err: unknown) => {

@@ -3,7 +3,7 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-spinner *ngIf="loading; else eventContent" name="dots"pager="true"></ion-spinner>
+  <ion-spinner *ngIf="loading; else eventContent" name="dots" pager="true"></ion-spinner>
 
 
   <ng-template #eventContent>
@@ -14,25 +14,24 @@
           <div class="article-container">
             <div class='article-content'>
               <h3>{{event.title | decodeHtmlEntities}} </h3>
-              <br>
-              <div>
-                <span *ngIf="event.startTime.getTime() != event.endTime.getTime(); else uniqueDate">
-                  <span *ngIf="DateHelper.getDateFormat(event.startTime) === DateHelper.getDateFormat(event.endTime); else differentDates">
-                    Le  <strong>{{DateHelper.getFrenchWeekDay(event.startTime)}} {{DateHelper.getDateWrittenFr(event.startTime)}} </strong> de {{DateHelper.getHours(event.startTime)}} à {{DateHelper.getHours(event.endTime)}}
-                  </span>
+              <div class="article-content-header-date">
+                <ng-container *ngIf="event | method:hasDifferentStartAndEndDate; else uniqueDate">
+                  <ng-container *ngIf="event | method:isEventSameDay as formatted; else differentDates">
+                    Le  <strong>{{formatted.startDay}}</strong> de {{formatted.startTime}} à {{formatted.endTime}}
+                  </ng-container>
                   <ng-template #differentDates>
-                    Du <strong>{{DateHelper.getFrenchWeekDay(event.startTime)}} {{DateHelper.getDateWrittenFr(event.startTime)}} </strong>  à {{DateHelper.getHours(event.startTime)}}
-                    au  <strong>{{DateHelper.getFrenchWeekDay(event.endTime)}} {{DateHelper.getDateWrittenFr(event.endTime)}}</strong>  à {{DateHelper.getHours(event.endTime)}}
+                    Du <strong>{{event.startTime | method:formatToFrDate}}</strong> à {{event.startTime | method:formatToTime}}
+                    au <strong>{{event.endTime | method:formatToFrDate}}</strong> à {{event.endTime | method:formatToTime}}
                   </ng-template>
 
-                </span>
+                </ng-container>
                 <ng-template #uniqueDate>
-                  Le  <strong>{{DateHelper.getFrenchWeekDay(event.startTime)}} {{DateHelper.getDateWrittenFr(event.startTime)}} </strong> à {{DateHelper.getHours(event.startTime)}}
+                  Le <strong>{{event.startTime | method:formatToFrDate}}</strong> à {{event.startTime | method:formatToTime}}
                 </ng-template>
               </div>
               <br>
               <img *ngIf='event.thumbnail' [src]="event.thumbnail"/>
-              <div [innerHTML]="event.text"></div>
+              <mystk-article-embedding-iframe [article]="event.text"></mystk-article-embedding-iframe>
             </div>
           </div>
         </div>

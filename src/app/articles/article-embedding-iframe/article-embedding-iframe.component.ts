@@ -1,15 +1,31 @@
-import { Component, ElementRef, HostBinding, Input, OnInit, SimpleChanges, ViewEncapsulation } from "@angular/core";
+import type {
+  SimpleChanges} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostBinding,
+  Input,
+  ViewEncapsulation,
+  inject
+} from '@angular/core';
+
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
-import { BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import '../../../assets/js/soundcloud-api.js';
+import { MystkViewerjsDirective } from '../mystk-viewerjs/mystk-viewerjs.directive';
+
 
 @Component({
   selector: "mystk-article-embedding-iframe",
-  template: '',
+  template: ``,
+  host: {
+    '(click)': 'onClick($event)',
+  },
+  providers: [MystkViewerjsDirective], // TODO replace with hostDirectives
   styleUrls: ["./article-embedding-iframe.component.scss"],
   encapsulation: ViewEncapsulation.None,
 })
-export class ArticleEmbeddingIframeComponent implements OnInit {
+export class ArticleEmbeddingIframeComponent {
   @Input()
   article?: string;
   @HostBinding('class.article-is-visible')
@@ -25,13 +41,14 @@ export class ArticleEmbeddingIframeComponent implements OnInit {
   @HostBinding('innerHTML')
   processedArticle?: SafeHtml;
 
+
+  private images: HTMLImageElement[] = [];
+  private viewer = inject(MystkViewerjsDirective, {self: true});
+
   constructor(
     private domSanitizer: DomSanitizer,
     private eltRef: ElementRef<HTMLElement>,
   ) { }
-
-  ngOnInit() {
-  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.article) {
@@ -40,6 +57,7 @@ export class ArticleEmbeddingIframeComponent implements OnInit {
         "text/html"
       );
       const iframes = container.getElementsByTagName("iframe");
+      this.images = Array.from(container.body.querySelectorAll('img'));
 
       this.enableYouTubeAPI(iframes);
 
@@ -55,6 +73,10 @@ export class ArticleEmbeddingIframeComponent implements OnInit {
     }
   }
 
+  ngAfterViewInit() {
+    this.viewer.ngAfterViewInit();
+  }
+
   /** Ajouter le paramètre 'enablejsapi' dans l'iframe
    * pour pouvoir mettre en pause/stop les vidéos: https://stackoverflow.com/a/30358006
    **/
@@ -67,6 +89,15 @@ export class ArticleEmbeddingIframeComponent implements OnInit {
         iframe.src = mediaUrl.href;
       }
     });
+  }
+
+  private onClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (target.tagName === 'IMG') {
+      const img = target as HTMLImageElement;
+      const imgIndex = this.images.indexOf(img);
+      this.viewer.show(imgIndex);
+    }
   }
 
   private pauseIframePlayers(): void {

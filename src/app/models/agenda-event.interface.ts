@@ -1,7 +1,8 @@
 import type { IEvent } from "ionic2-calendar/calendar";
 
 export interface AgendaEvent extends IEvent {
-  id: number;
+  /** almost never present */
+  id?: number;
   title: string;
   startTime: Date;
   endTime: Date;

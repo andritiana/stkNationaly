@@ -13,6 +13,7 @@ import type { LastVisitTimestamps, LastVisitUpdates } from './models/lastVisitTi
 import { ContentUpdateService } from './services/content-update.service';
 import { FpmaApiService } from './services/fpma-api.service';
 import { StorageService } from './utils/storage.service';
+import { AgendaService } from './agenda/agenda.service';
 
 const enum NotificationPermissionStatus {
   /** The user hasn't yet made a choice about whether the app is allowed to schedule notifications. */
@@ -35,6 +36,7 @@ const enum NotificationPermissionStatus {
 })
 export class AppComponent {
   environmentInjector = inject(EnvironmentInjector);
+  agendaService = inject(AgendaService);
 
   constructor(
     private platform: Platform,
@@ -236,7 +238,7 @@ export class AppComponent {
             }),
           );
           case 'evenements':
-            return this.fpmaService.loadAgendaById(id).pipe(
+            return this.agendaService.loadAgendaById(id).pipe(
               switchMap(post => {
               if (post) {
                 const navigationExtras: NavigationExtras = { state: { events: [post], id: 0 } };

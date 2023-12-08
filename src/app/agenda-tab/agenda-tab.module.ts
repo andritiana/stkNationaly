@@ -6,7 +6,6 @@ import { NgCalendarModule } from 'ionic2-calendar';
 import { GlobalHeaderModule } from '../global-header/global-header.module';
 import { DecodeHtmlEntitiesModule } from '../utils/html-entities/decode-html-entities.module';
 import { PurifyMethodPipe } from '../utils/purify-method/purify-method.pipe';
-import { AgendaDetailsPage } from './agenda-details-page/agenda-details.page';
 import { AgendaTabPageRoutingModule } from './agenda-tab-routing.module';
 import { AgendaTabPage } from './agenda-tab.page';
 
@@ -36,6 +35,6 @@ export class MonthViewEventDetailTemplateDirective {
     MonthViewEventDetailTemplateDirective,
     PurifyMethodPipe,
   ],
-  declarations: [AgendaTabPage, AgendaDetailsPage]
+  declarations: [AgendaTabPage]
 })
 export class AgendaTabPageModule {}

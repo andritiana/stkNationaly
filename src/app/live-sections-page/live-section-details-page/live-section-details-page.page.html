@@ -12,7 +12,7 @@
           <div class='article-content'>
             <h5>{{DateHelper.getDateWrittenFr(post.created)}}</h5>
             <h3>{{post.title}}</h3>
-            <div [innerHTML]="post.fulltext"></div>
+            <mystk-article-embedding-iframe [article]="post.fulltext"></mystk-article-embedding-iframe>
           </div>
         </div>
       </div>

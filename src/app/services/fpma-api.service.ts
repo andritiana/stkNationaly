@@ -17,7 +17,7 @@ import { DateHelper } from '../utils/date-helper';
 })
 export class FpmaApiService {
 
-  private FPMA_DOMAIN = 'https://stk.fpma.church/';
+  readonly FPMA_DOMAIN = 'https://stk.fpma.church/';
   readonly isDevMode$ = new BehaviorSubject(false);
   get isDevMode(): boolean {
     return this.isDevMode$.value;
@@ -31,83 +31,6 @@ export class FpmaApiService {
   ) {
   }
 
-  /**
-   * Method that retrieve list of events from the stk.fpma api
-   */
-  public loadAgenda(): Observable<AgendaEvent[]> {
-    const httpOptions =  this.isDevMode ? {
-      headers: new HttpHeaders({
-        'dev-mode':  ''
-      })
-    } : {};
-
-    return this.http.get<APIResponse<'events', RawEvent[]>>(`${this.FPMA_DOMAIN}api/events`, httpOptions)
-      .pipe(
-        map(res => {
-          const events: AgendaEvent[] = [];
-          if (res?.events?.data?.length) {
-            res.events.data.forEach((event, index) => {
-              if (event.startdate) {
-                const e: AgendaEvent = this.parseEvent(event);
-                e.id = index;
-                events.push(e);
-              }
-            });
-          }
-          return events;
-        }),
-      );
-  }
-
-  public loadMonthsEventsAgenda(month: number, year: number): Observable<AgendaEvent[]>{
-    const httpOptions =  this.isDevMode ? {
-      headers: new HttpHeaders({
-        'dev-mode':  ''
-      })
-    } : {};
-    return this.http.get<APIResponse<'events', RawEvent[]>>(`${this.FPMA_DOMAIN}api/events/${year}/${month}`, httpOptions)
-      .pipe(
-        map(res => {
-          const events: AgendaEvent[] = [];
-          if (res?.events?.data?.length) {
-            res.events.data.forEach((event, index) => {
-              if (event.startdate) {
-                const e: AgendaEvent = {
-                  ...this.parseEvent(event),
-                  id: index,
-                };
-                events.push(e);
-              }
-            });
-          }
-          return events;
-        }),
-      );
-  }
-
-  public loadAgendaById(id: number): Observable<AgendaEvent | null> {
-    return this.http.get<APIResponse<'events', RawEvent>>(`${this.FPMA_DOMAIN}api/events/${id}`)
-      .pipe(
-        map(res => {
-          if (res?.events?.data) {
-            return this.parseEvent(res.events.data);
-          }
-          return null;
-        }),
-      );
-  }
-
-  private parseEvent(elem: RawEvent): AgendaEvent {
-    return {
-      id: -1,
-      title: elem.title,
-      startTime: DateHelper.getDate(elem.startdate),
-      endTime: elem.enddate ?  DateHelper.getDate(elem.enddate) : DateHelper.getDate(elem.startdate),
-      text : elem.desc,
-      thumbnail: this.parseThumbnailUrl(elem.image),
-      allDay: false,
-    };
-}
 
   /**
    * Method that retrieve list of spi article from the stk.fpma api
@@ -373,7 +296,7 @@ export class FpmaApiService {
     return posts;
   }
 
-  private parseThumbnailUrl(thumbnailUrl: string): string {
+  parseThumbnailUrl(thumbnailUrl: string): string {
     if (thumbnailUrl) {
       if (thumbnailUrl.startsWith('http')) {
         return thumbnailUrl;
@@ -435,20 +358,7 @@ interface RawPartage {
 type RawBroadcast = RawPartage;
 type RawPresentation = RawPartage;
 type RawGenericPost = RawPartage;
-interface RawEvent {
-  created: string;
-  desc: string;
-  /** ISO Date yyyy-MM-dd HH:mm:ss */
-  enddate: string;
-  id: string | null;
-  /** URL */
-  image: string;
-  rawDesc: string;
-  /** ISO Date yyyy-MM-dd HH:mm:ss */
-  startdate: string;
-  tags: string[];
-  title: string;
-}
+
 interface RawLiveSection {
   category: number;
   description: string;

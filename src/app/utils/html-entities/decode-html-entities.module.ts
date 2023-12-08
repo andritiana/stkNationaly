@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { DecodeHtmlEntitiesPipe } from './decode-html-entities.pipe';
 
 @NgModule({
-  declarations: [DecodeHtmlEntitiesPipe],
   imports: [
-    CommonModule
+    CommonModule,
+    DecodeHtmlEntitiesPipe,
   ],
   exports: [DecodeHtmlEntitiesPipe]
 })

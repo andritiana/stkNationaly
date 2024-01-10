@@ -5,6 +5,34 @@
   },
   "config_munge": {
     "files": {
+      "*-Info.plist": {
+        "parents": {
+          "NSLocationWhenInUseUsageDescription": [
+            {
+              "xml": "<string>Pour son fonctionnement l'application a besoin d'avoir accès à ta position quand tu l'utilises.</string>",
+              "count": 17
+            }
+          ],
+          "FIREBASE_ANALYTICS_COLLECTION_ENABLED": [
+            {
+              "xml": "<string>true</string>",
+              "count": 1
+            }
+          ],
+          "FirebaseAutomaticScreenReportingEnabled": [
+            {
+              "xml": "<string>true</string>",
+              "count": 1
+            }
+          ],
+          "UIBackgroundModes": [
+            {
+              "xml": "<array><string>remote-notification</string></array>",
+              "count": 1
+            }
+          ]
+        }
+      },
       "config.xml": {
         "parents": {
           "/*": [
@@ -21,7 +49,7 @@
               "count": 1
             },
             {
-              "xml": "<preference name=\"deployment-target\" value=\"11.0\" />",
+              "xml": "<preference name=\"deployment-target\" value=\"15.0\" />",
               "count": 1
             },
             {
@@ -50,28 +78,6 @@
             },
             {
               "xml": "<feature name=\"OneSignalPush\"><param name=\"ios-package\" value=\"OneSignalPush\" /></feature>",
-              "count": 1
-            }
-          ]
-        }
-      },
-      "*-Info.plist": {
-        "parents": {
-          "FIREBASE_ANALYTICS_COLLECTION_ENABLED": [
-            {
-              "xml": "<string>true</string>",
-              "count": 1
-            }
-          ],
-          "FirebaseAutomaticScreenReportingEnabled": [
-            {
-              "xml": "<string>true</string>",
-              "count": 1
-            }
-          ],
-          "UIBackgroundModes": [
-            {
-              "xml": "<array><string>remote-notification</string></array>",
               "count": 1
             }
           ]
@@ -119,9 +125,6 @@
       "PACKAGE_NAME": "com.stknational.app"
     },
     "cordova-sqlite-storage": {
-      "PACKAGE_NAME": "com.stknational.app"
-    },
-    "cordova-support-android-plugin": {
       "PACKAGE_NAME": "com.stknational.app"
     },
     "onesignal-cordova-plugin": {
@@ -209,7 +212,6 @@
     "cordova-plugin-ionic-webview": "5.0.0",
     "cordova-plugin-statusbar": "3.0.0",
     "cordova-sqlite-storage": "6.0.0",
-    "cordova-support-android-plugin": "2.0.4",
     "onesignal-cordova-plugin": "3.3.1"
   }
 }

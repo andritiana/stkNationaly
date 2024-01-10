@@ -103,11 +103,24 @@ pnpm install --frozen-lockfile
   
 ### build Mac M1 
 ```
-arch -x86_64  pnpm ionic cordova plugin add  onesignal-cordova-plugin
+ arch -x86_64  pnpm ionic cordova plugin add  onesignal-cordova-plugin
 ```
 
-Avec Xcode 14.3, modifier les fichiers -frameworks.sh pour ajouter -f après les readlink 
+- Avec Xcode 14.3, modifier les fichiers -frameworks.sh pour ajouter -f après les readlink 
 source : https://developer.apple.com/forums/thread/725230
+
+- Avec Xcode 15, 
+```
+DT_TOOLCHAIN_DIR cannot be used to evaluate LIBRARY_SEARCH_PATHS
+```
+modifier toutes les instances DT_TOOLCHAIN_DIR par TOOLCHAIN_DIR
+source : https://developermemos.com/posts/fixing-dt-toolchain-dir-error-flutter-xcode
+
+- Pour les erreurs, 
+```
+xcodebuild: Command failed with exit code 65
+```
+lancer le build dans xcode pour avoir plus de détail sur l'erreur de build. 
 
 ### workflow dev
 

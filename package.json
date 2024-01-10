@@ -13,6 +13,7 @@
     "build:android:debug": "ionic cordova build android --prod --debug",
     "prepare:android:no-build": "ionic cordova prepare android -c production --no-build",
     "prepare:android": "ionic cordova prepare android -c production",
+    "build:ios": "ionic cordova build ios --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "pnpm -C e2e serve"
@@ -53,7 +54,7 @@
     "localforage": "^1.10.0",
     "moment": "^2.28.0",
     "ng2-pdf-viewer": "^9.1.3",
-    "onesignal-cordova-plugin": "^3.3.0",
+    "onesignal-cordova-plugin": "^3.3.1",
     "qrcode": "^1.5.0",
     "rxjs": "^7.8.0",
     "swiper": "^9.3.2",
@@ -119,14 +120,15 @@
       "cordova-plugin-firebase-analytics": {
         "ANALYTICS_COLLECTION_ENABLED": "true",
         "AUTOMATIC_SCREEN_REPORTING_ENABLED": "true",
-        "ANDROID_FIREBASE_ANALYTICS_VERSION": "18.0.+"
+        "ANDROID_FIREBASE_ANALYTICS_VERSION": "18.0.+",
+        "IOS_FIREBASE_POD_VERSION": "9.3.0"
       },
       "onesignal-cordova-plugin": {},
       "cordova-plugin-androidx-adapter": {}
     },
     "platforms": [
-      "ios",
-      "android"
+      "android",
+      "ios"
     ]
   },
   "optionalDependencies": {

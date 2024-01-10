@@ -79,7 +79,6 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
     "cordova-plugin-ionic-webview": "5.0.0",
     "cordova-plugin-statusbar": "3.0.0",
     "cordova-sqlite-storage": "6.0.0",
-    "cordova-support-android-plugin": "2.0.4",
     "onesignal-cordova-plugin": "3.3.1"
   };
 });

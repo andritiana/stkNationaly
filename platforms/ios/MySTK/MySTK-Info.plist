@@ -17,11 +17,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>5.2.0-beta.5</string>
+	<string>5.3.1</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>5.2.0</string>
+	<string>5.3.1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSMainNibFile</key>
@@ -47,21 +47,23 @@
 	</array>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
 			<key>stk.fpma.church</key>
 			<dict/>
 			<key>www.youtube.com</key>
 			<dict/>
-			<key>soundcloud.com</key>
+			<key>soundcloud.com/*</key>
 			<dict>
 				<key>NSIncludesSubdomains</key>
 				<true/>
 			</dict>
 		</dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
 	</dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Pour son fonctionnement l'application a besoin d'avoir accès à ta position quand tu l'utilises.</string>
 	<key>FIREBASE_ANALYTICS_COLLECTION_ENABLED</key>
 	<string>true</string>
 	<key>FirebaseAutomaticScreenReportingEnabled</key>
